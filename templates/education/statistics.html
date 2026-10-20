@@ -1,0 +1,110 @@
+{% extends "base.html" %}
+
+{% block title %}
+Education Statistics & Reports | Smart City Uganda
+{% endblock %}
+
+{% block content %}
+
+<div class="container-fluid education-module">
+
+    <div class="education-module-header">
+
+        <div class="education-module-icon">
+            <i class="bi bi-bar-chart"></i>
+        </div>
+
+        <h1>Education Statistics & Reports</h1>
+
+        <p>
+            View published education statistics and reports
+            configured by authorized administrators.
+        </p>
+
+    </div>
+
+
+    {% if statistics %}
+
+    <div class="education-card-grid">
+
+        {% for statistic in statistics %}
+
+        <div class="education-card education-stat-card">
+
+            <span class="education-badge">
+                {{ statistic.year }}
+            </span>
+
+            <h3 class="mt-3">
+                {{ statistic.title }}
+            </h3>
+
+            <div class="education-stat-value">
+                {{ statistic.value }}
+            </div>
+
+            <div class="education-stat-unit">
+                {{ statistic.unit }}
+            </div>
+
+            {% if statistic.district %}
+            <div class="education-card-meta">
+                <i class="bi bi-geo-alt"></i>
+                {{ statistic.district }}
+            </div>
+            {% endif %}
+
+            {% if statistic.description %}
+            <p>
+                {{ statistic.description }}
+            </p>
+            {% endif %}
+
+            {% if statistic.source %}
+            <small class="text-muted">
+                Source: {{ statistic.source }}
+            </small>
+            {% endif %}
+
+            {% if statistic.source_url %}
+            <div class="mt-3">
+
+                <a
+                    href="{{ statistic.source_url }}"
+                    target="_blank"
+                    class="education-secondary-button"
+                >
+                    View Source
+                    <i class="bi bi-box-arrow-up-right"></i>
+                </a>
+
+            </div>
+            {% endif %}
+
+        </div>
+
+        {% endfor %}
+
+    </div>
+
+    {% else %}
+
+    <div class="education-empty">
+
+        <i class="bi bi-bar-chart"></i>
+
+        <h3>No statistics available</h3>
+
+        <p>
+            Authorized administrators can publish education statistics
+            and reports here.
+        </p>
+
+    </div>
+
+    {% endif %}
+
+</div>
+
+{% endblock %}

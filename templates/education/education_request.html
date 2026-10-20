@@ -1,0 +1,207 @@
+{% extends "base.html" %}
+
+{% block title %}
+Submit Education Request | Smart City Uganda
+{% endblock %}
+
+{% block content %}
+
+<div class="education-page">
+
+    <a
+        href="{% url 'education:home' %}"
+        class="education-back-link"
+    >
+        <i class="bi bi-arrow-left"></i>
+        Back to Education Services
+    </a>
+
+
+    <div class="education-form-wrapper">
+
+        <div class="education-form-header">
+
+            <div class="institution-detail-icon">
+
+                <i class="bi bi-mortarboard"></i>
+
+            </div>
+
+            <div>
+
+                <h1>
+                    Submit Education Request
+                </h1>
+
+                <p>
+                    Provide the information below so your request
+                    can be directed to the appropriate education department.
+                </p>
+
+            </div>
+
+        </div>
+
+
+        {% if error %}
+
+            <div class="education-form-error">
+
+                <i class="bi bi-exclamation-triangle"></i>
+
+                {{ error }}
+
+            </div>
+
+        {% endif %}
+
+
+        <form method="post">
+
+            {% csrf_token %}
+
+            <div class="education-form-grid">
+
+                <div class="education-form-group">
+
+                    <label>
+                        Request Type
+                    </label>
+
+                    <select name="request_type" required>
+
+                        {% for value, label in request_types %}
+
+                            <option value="{{ value }}">
+                                {{ label }}
+                            </option>
+
+                        {% endfor %}
+
+                    </select>
+
+                </div>
+
+
+                <div class="education-form-group">
+
+                    <label>
+                        Institution
+                    </label>
+
+                    <select name="institution">
+
+                        <option value="">
+                            Select institution (optional)
+                        </option>
+
+                        {% for institution in institutions %}
+
+                            <option value="{{ institution.id }}">
+
+                                {{ institution.name }}
+                                — {{ institution.district }}
+
+                            </option>
+
+                        {% endfor %}
+
+                    </select>
+
+                </div>
+
+
+                <div class="education-form-group">
+
+                    <label>
+                        Your Name
+                    </label>
+
+                    <input
+                        type="text"
+                        name="citizen_name"
+                        value="Guest Citizen"
+                        placeholder="Enter your full name"
+                        required
+                    >
+
+                </div>
+
+
+                <div class="education-form-group">
+
+                    <label>
+                        Phone Number
+                    </label>
+
+                    <input
+                        type="text"
+                        name="citizen_phone"
+                        placeholder="+256 7XX XXX XXX"
+                    >
+
+                </div>
+
+
+                <div class="education-form-group">
+
+                    <label>
+                        District / City
+                    </label>
+
+                    <input
+                        type="text"
+                        name="citizen_district"
+                        placeholder="e.g. Kampala"
+                    >
+
+                </div>
+
+
+                <div class="education-form-group education-full-width">
+
+                    <label>
+                        Describe Your Request
+                    </label>
+
+                    <textarea
+                        name="description"
+                        rows="7"
+                        placeholder="Describe the education service or information you need..."
+                        required
+                    ></textarea>
+
+                </div>
+
+            </div>
+
+
+            <div class="education-form-actions">
+
+                <a
+                    href="{% url 'education:home' %}"
+                    class="education-cancel-button"
+                >
+                    Cancel
+                </a>
+
+                <button
+                    type="submit"
+                    class="education-primary-button"
+                >
+
+                    <i class="bi bi-send"></i>
+
+                    Submit Education Request
+
+                </button>
+
+            </div>
+
+        </form>
+
+    </div>
+
+</div>
+
+{% endblock %}

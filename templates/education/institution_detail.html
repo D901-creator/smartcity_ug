@@ -1,0 +1,174 @@
+{% extends "base.html" %}
+
+{% block title %}
+{{ institution.name }} | Education | Smart City Uganda
+{% endblock %}
+
+{% block content %}
+
+<div class="container-fluid education-module">
+
+    <div class="education-module-header">
+
+        <div class="education-module-icon">
+            <i class="bi bi-building"></i>
+        </div>
+
+        <span class="education-badge">
+            {{ institution.get_institution_type_display }}
+        </span>
+
+        <h1 class="mt-2">
+            {{ institution.name }}
+        </h1>
+
+        <p>
+            {{ institution.description }}
+        </p>
+
+    </div>
+
+
+    <div class="row g-3">
+
+        <div class="col-lg-8">
+
+            <div class="education-card">
+
+                <h3>Institution Information</h3>
+
+                <div class="education-card-meta">
+                    <i class="bi bi-geo-alt"></i>
+                    {{ institution.district }}
+                    {% if institution.location %}
+                        — {{ institution.location }}
+                    {% endif %}
+                </div>
+
+                {% if institution.phone_number %}
+                <div class="education-card-meta">
+                    <i class="bi bi-telephone"></i>
+                    {{ institution.phone_number }}
+                </div>
+                {% endif %}
+
+                {% if institution.email %}
+                <div class="education-card-meta">
+                    <i class="bi bi-envelope"></i>
+                    {{ institution.email }}
+                </div>
+                {% endif %}
+
+                {% if institution.website %}
+                <div class="education-card-meta">
+                    <i class="bi bi-globe"></i>
+                    <a href="{{ institution.website }}" target="_blank">
+                        Visit website
+                    </a>
+                </div>
+                {% endif %}
+
+                {% if institution.programs %}
+                <hr>
+
+                <h5>Programmes and Services</h5>
+
+                <p>
+                    {{ institution.programs }}
+                </p>
+                {% endif %}
+
+            </div>
+
+        </div>
+
+
+        <div class="col-lg-4">
+
+            <div class="education-card">
+
+                <h3>Ownership</h3>
+
+                <p>
+                    {{ institution.get_ownership_display }}
+                </p>
+
+                {% if institution.opening_hours %}
+
+                <hr>
+
+                <h5>Opening Hours</h5>
+
+                <p>
+                    {{ institution.opening_hours }}
+                </p>
+
+                {% endif %}
+
+                <a
+                    href="{% url 'education:request' %}"
+                    class="education-button"
+                >
+                    <i class="bi bi-plus-circle"></i>
+                    Make a Request
+                </a>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    {% if programmes %}
+
+    <div class="mt-4">
+
+        <div class="education-module-header">
+
+            <h2>Programmes Available</h2>
+
+            <p>
+                Published programmes associated with this institution.
+            </p>
+
+        </div>
+
+        <div class="education-card-grid">
+
+            {% for programme in programmes %}
+
+            <div class="education-card">
+
+                <span class="education-badge">
+                    {{ programme.get_programme_type_display }}
+                </span>
+
+                <h3 class="mt-2">
+                    {{ programme.title }}
+                </h3>
+
+                <p>
+                    {{ programme.description|truncatewords:30 }}
+                </p>
+
+                {% if programme.duration %}
+                <div class="education-card-meta">
+                    <i class="bi bi-clock"></i>
+                    {{ programme.duration }}
+                </div>
+                {% endif %}
+
+            </div>
+
+            {% endfor %}
+
+        </div>
+
+    </div>
+
+    {% endif %}
+
+</div>
+
+{% endblock %}

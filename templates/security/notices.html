@@ -1,0 +1,420 @@
+{% extends "base.html" %}
+
+{% block title %}
+Missing Persons & Community Notices | Smart City Uganda
+{% endblock %}
+
+{% block content %}
+
+<div class="container-fluid py-3">
+
+    <!-- Header -->
+    <div class="d-flex flex-wrap justify-content-between align-items-center mb-3">
+
+        <div>
+            <h3 class="mb-1">
+                <i class="bi bi-person-exclamation text-danger"></i>
+                Missing Persons & Community Notices
+            </h3>
+
+            <p class="text-muted mb-0">
+                View approved missing-person notices and important
+                community notices.
+            </p>
+        </div>
+
+    </div>
+
+
+    <!-- Notice -->
+    <div class="alert alert-warning d-flex align-items-start">
+
+        <i class="bi bi-info-circle-fill fs-4 me-3"></i>
+
+        <div>
+            <strong>Important Information</strong>
+
+            <div class="small mt-1">
+                If you have information about a missing person,
+                use the contact information provided in the official
+                notice or contact the appropriate authorities.
+            </div>
+        </div>
+
+    </div>
+
+
+    <!-- Search and filters -->
+    <div class="card border-0 shadow-sm mb-4">
+
+        <div class="card-body">
+
+            <form method="get">
+
+                <div class="row g-2">
+
+                    <div class="col-md-4">
+
+                        <label class="form-label small">
+                            Search
+                        </label>
+
+                        <input
+                            type="text"
+                            name="q"
+                            value="{{ search_query|default:'' }}"
+                            class="form-control"
+                            placeholder="Search notices..."
+                        >
+
+                    </div>
+
+
+                    <div class="col-md-3">
+
+                        <label class="form-label small">
+                            Notice Type
+                        </label>
+
+                        <select
+                            name="notice_type"
+                            class="form-select"
+                        >
+
+                            <option value="">
+                                All Types
+                            </option>
+
+                            {% for value, label in notice_types %}
+
+                                <option
+                                    value="{{ value }}"
+                                    {% if selected_type == value %}
+                                        selected
+                                    {% endif %}
+                                >
+                                    {{ label }}
+                                </option>
+
+                            {% endfor %}
+
+                        </select>
+
+                    </div>
+
+
+                    <div class="col-md-2">
+
+                        <label class="form-label small">
+                            District / City
+                        </label>
+
+                        <input
+                            type="text"
+                            name="district"
+                            value="{{ selected_district|default:'' }}"
+                            class="form-control"
+                            placeholder="District"
+                        >
+
+                    </div>
+
+
+                    <div class="col-md-2">
+
+                        <label class="form-label small">
+                            Status
+                        </label>
+
+                        <select
+                            name="status"
+                            class="form-select"
+                        >
+
+                            <option value="">
+                                All Statuses
+                            </option>
+
+                            {% for value, label in statuses %}
+
+                                <option
+                                    value="{{ value }}"
+                                    {% if selected_status == value %}
+                                        selected
+                                    {% endif %}
+                                >
+                                    {{ label }}
+                                </option>
+
+                            {% endfor %}
+
+                        </select>
+
+                    </div>
+
+
+                    <div class="col-md-1 d-flex align-items-end">
+
+                        <button
+                            type="submit"
+                            class="btn btn-primary w-100"
+                        >
+                            <i class="bi bi-search"></i>
+                        </button>
+
+                    </div>
+
+                </div>
+
+            </form>
+
+        </div>
+
+    </div>
+
+
+    <!-- Notices -->
+    <div class="row g-3">
+
+        {% for notice in notices %}
+
+            <div class="col-xl-4 col-lg-6">
+
+                <div class="card h-100 border-0 shadow-sm">
+
+                    {% if notice.image %}
+
+                        <img
+                            src="{{ notice.image.url }}"
+                            class="card-img-top"
+                            style="height: 200px; object-fit: cover;"
+                            alt="{{ notice.title }}"
+                        >
+
+                    {% endif %}
+
+
+                    <div class="card-body">
+
+                        <!-- Badges -->
+                        <div class="d-flex flex-wrap gap-2 mb-2">
+
+                            <span class="badge bg-primary">
+                                {{ notice.get_notice_type_display }}
+                            </span>
+
+                            {% if notice.status == "active" %}
+
+                                <span class="badge bg-danger">
+                                    Active
+                                </span>
+
+                            {% elif notice.status == "resolved" %}
+
+                                <span class="badge bg-success">
+                                    Resolved
+                                </span>
+
+                            {% else %}
+
+                                <span class="badge bg-secondary">
+                                    Closed
+                                </span>
+
+                            {% endif %}
+
+
+                            {% if notice.is_featured %}
+
+                                <span class="badge bg-dark">
+                                    <i class="bi bi-star-fill"></i>
+                                    Featured
+                                </span>
+
+                            {% endif %}
+
+                        </div>
+
+
+                        <h5 class="card-title">
+                            {{ notice.title }}
+                        </h5>
+
+
+                        {% if notice.person_name %}
+
+                            <div class="mb-2">
+
+                                <strong>
+                                    Person:
+                                </strong>
+
+                                {{ notice.person_name }}
+
+                            </div>
+
+                        {% endif %}
+
+
+                        {% if notice.age or notice.gender %}
+
+                            <div class="small text-muted mb-2">
+
+                                {% if notice.age %}
+                                    Age: {{ notice.age }}
+                                {% endif %}
+
+                                {% if notice.age and notice.gender %}
+                                    &nbsp; • &nbsp;
+                                {% endif %}
+
+                                {% if notice.gender %}
+                                    Gender: {{ notice.gender }}
+                                {% endif %}
+
+                            </div>
+
+                        {% endif %}
+
+
+                        {% if notice.district %}
+
+                            <div class="small mb-1">
+
+                                <i class="bi bi-geo-alt"></i>
+
+                                {{ notice.district }}
+
+                                {% if notice.location %}
+                                    — {{ notice.location }}
+                                {% endif %}
+
+                            </div>
+
+                        {% endif %}
+
+
+                        {% if notice.summary %}
+
+                            <p class="text-muted small mt-2">
+                                {{ notice.summary }}
+                            </p>
+
+                        {% endif %}
+
+
+                        <p class="small">
+                            {{ notice.description|truncatewords:40 }}
+                        </p>
+
+
+                        {% if notice.physical_description %}
+
+                            <div class="alert alert-light border small">
+
+                                <strong>
+                                    Description:
+                                </strong>
+
+                                {{ notice.physical_description|truncatewords:30 }}
+
+                            </div>
+
+                        {% endif %}
+
+
+                        {% if notice.last_seen_location %}
+
+                            <div class="small mb-1">
+
+                                <strong>
+                                    Last Seen:
+                                </strong>
+
+                                {{ notice.last_seen_location }}
+
+                            </div>
+
+                        {% endif %}
+
+
+                        {% if notice.last_seen_date %}
+
+                            <div class="small text-muted">
+
+                                <i class="bi bi-calendar-event"></i>
+
+                                {{ notice.last_seen_date|date:"d M Y H:i" }}
+
+                            </div>
+
+                        {% endif %}
+
+
+                        {% if notice.contact_information %}
+
+                            <div class="alert alert-primary py-2 mt-3 mb-2 small">
+
+                                <strong>
+                                    Contact:
+                                </strong>
+
+                                {{ notice.contact_information }}
+
+                            </div>
+
+                        {% endif %}
+
+
+                        {% if notice.issuing_organization %}
+
+                            <div class="small text-muted">
+
+                                <strong>
+                                    Issued by:
+                                </strong>
+
+                                {{ notice.issuing_organization }}
+
+                            </div>
+
+                        {% endif %}
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        {% empty %}
+
+            <div class="col-12">
+
+                <div class="card border-0 shadow-sm">
+
+                    <div class="card-body text-center py-5">
+
+                        <i class="bi bi-person-exclamation fs-1 text-muted"></i>
+
+                        <h5 class="mt-3">
+                            No community notices available
+                        </h5>
+
+                        <p class="text-muted mb-0">
+                            There are currently no published notices
+                            matching your search.
+                        </p>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        {% endfor %}
+
+    </div>
+
+</div>
+
+{% endblock %}

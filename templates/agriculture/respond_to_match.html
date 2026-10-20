@@ -1,0 +1,134 @@
+{% extends "base.html" %}
+
+{% block title %}Respond to Match{% endblock %}
+
+{% block content %}
+
+<div class="container">
+
+    <div class="card shadow-sm">
+
+        <div class="card-header bg-primary text-white">
+
+            <h3 class="mb-0">
+                <i class="bi bi-chat-dots"></i>
+                Respond to Farmer–Buyer Match
+            </h3>
+
+        </div>
+
+        <div class="card-body">
+
+            <div class="alert alert-info">
+
+                <strong>
+                    {{ match.buyer_request.product_required }}
+                </strong>
+
+                <br>
+
+                Match score:
+                <strong>{{ match.match_score }}%</strong>
+
+            </div>
+
+
+            <form method="post">
+
+                {% csrf_token %}
+
+                <div class="mb-3">
+
+                    <label class="form-label fw-bold">
+                        Buyer Message
+                    </label>
+
+                    {{ form.buyer_message }}
+
+                </div>
+
+
+                <div class="mb-3">
+
+                    <label class="form-label fw-bold">
+                        Farmer Message
+                    </label>
+
+                    {{ form.farmer_message }}
+
+                </div>
+
+
+                <div class="row">
+
+                    <div class="col-md-6 mb-3">
+
+                        <label class="form-label fw-bold">
+                            Agreed Quantity
+                        </label>
+
+                        {{ form.agreed_quantity }}
+
+                    </div>
+
+
+                    <div class="col-md-6 mb-3">
+
+                        <label class="form-label fw-bold">
+                            Agreed Price per Unit
+                        </label>
+
+                        {{ form.agreed_price }}
+
+                    </div>
+
+                </div>
+
+
+                <div class="mb-3">
+
+                    <label class="form-label fw-bold">
+                        Match Status
+                    </label>
+
+                    {{ form.status }}
+
+                </div>
+
+
+                <div class="mb-3">
+
+                    <label class="form-label fw-bold">
+                        Transaction Notes
+                    </label>
+
+                    {{ form.transaction_notes }}
+
+                </div>
+
+
+                <button type="submit"
+                        class="btn btn-success">
+
+                    <i class="bi bi-check-circle"></i>
+                    Save Response
+
+                </button>
+
+
+                <a href="{% url 'agriculture:match_detail' match.id %}"
+                   class="btn btn-secondary">
+
+                    Cancel
+
+                </a>
+
+            </form>
+
+        </div>
+
+    </div>
+
+</div>
+
+{% endblock %}

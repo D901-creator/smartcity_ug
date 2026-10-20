@@ -1,0 +1,347 @@
+
+{% extends "city_admin/base.html" %}
+{% load static %}
+
+{% block title %}Dashboard{% endblock %}
+{% block page_heading %}System overview{% endblock %}
+
+{% block extra_css %}
+<style>
+    .uganda-dashboard-banner {
+        position: relative;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 24px;
+        min-height: 190px;
+        margin-bottom: 26px;
+        padding: 28px 32px;
+        overflow: hidden;
+        color: #fff;
+
+        /* Smart city background image with a dark readability overlay */
+        background:
+            linear-gradient(
+                110deg,
+                rgba(10, 22, 38, .88) 0%,
+                rgba(15, 35, 55, .72) 52%,
+                rgba(13, 29, 45, .45) 100%
+            ),
+            url("{% static 'images/smart-city-background.png' %}");
+
+        background-size: cover;
+        background-position: center 55%;
+        background-repeat: no-repeat;
+
+        border: 1px solid rgba(245, 208, 0, .4);
+        border-radius: 20px;
+        box-shadow: 0 10px 28px rgba(18, 30, 48, .12);
+    }
+
+    .uganda-dashboard-banner::before {
+        position: absolute;
+        inset: 0 auto 0 0;
+        width: 7px;
+        content: "";
+        background: linear-gradient(
+            to bottom,
+            #f9d400 0 33.33%,
+            #d90000 33.33% 66.66%,
+            #111 66.66% 100%
+        );
+    }
+
+    .uganda-banner-copy {
+        position: relative;
+        z-index: 1;
+        max-width: 620px;
+    }
+
+    .uganda-banner-eyebrow {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        margin-bottom: 12px;
+        color: #ffdf38;
+        font-size: .75rem;
+        font-weight: 800;
+        letter-spacing: 1.8px;
+        text-transform: uppercase;
+    }
+
+    .uganda-banner-copy h1 {
+        margin: 0 0 10px;
+        color: #fff;
+        font-size: clamp(1.45rem, 3vw, 2.15rem);
+        font-weight: 800;
+        line-height: 1.2;
+    }
+
+    .uganda-banner-copy p {
+        max-width: 560px;
+        margin: 0;
+        color: #f0f4fa;
+        font-size: .96rem;
+        line-height: 1.7;
+    }
+
+    .uganda-banner-logo-wrap {
+        position: relative;
+        z-index: 1;
+        display: grid;
+        flex: 0 0 128px;
+        width: 128px;
+        height: 128px;
+        place-items: center;
+        padding: 7px;
+        background: rgba(255, 255, 255, .96);
+        border: 3px solid #f5d000;
+        border-radius: 22px;
+        box-shadow: 0 0 0 7px rgba(245, 208, 0, .1);
+    }
+
+    .uganda-banner-logo {
+        display: block;
+        width: 100%;
+        height: 100%;
+        object-fit: contain;
+        border-radius: 13px;
+    }
+
+    .uganda-banner-watermark {
+        position: absolute;
+        right: 125px;
+        bottom: -65px;
+        color: rgba(255, 255, 255, .035);
+        font-size: 250px;
+        pointer-events: none;
+    }
+
+    @media (max-width: 600px) {
+        .uganda-dashboard-banner {
+            align-items: flex-start;
+            padding: 24px 20px 24px 25px;
+            gap: 16px;
+            background-position: center;
+        }
+
+        .uganda-banner-logo-wrap {
+            flex-basis: 72px;
+            width: 72px;
+            height: 72px;
+            padding: 4px;
+            border-radius: 14px;
+        }
+
+        .uganda-banner-logo {
+            border-radius: 8px;
+        }
+
+        .uganda-banner-copy p {
+            font-size: .85rem;
+        }
+
+        .uganda-banner-eyebrow {
+            font-size: .65rem;
+            letter-spacing: 1px;
+        }
+    }
+
+    @media (max-width: 390px) {
+        .uganda-dashboard-banner {
+            flex-direction: column-reverse;
+        }
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+
+<section class="uganda-dashboard-banner">
+    <i class="bi bi-buildings uganda-banner-watermark" aria-hidden="true"></i>
+
+    <div class="uganda-banner-copy">
+        <span class="uganda-banner-eyebrow">
+            <i class="bi bi-shield-check"></i>
+            National Administration Centre
+        </span>
+
+        <h1>Smart City Uganda</h1>
+
+        <p>
+            National Digital Citizen Services and City Management.
+            Monitor administration, manage verification, and oversee
+            public service delivery across Uganda.
+        </p>
+    </div>
+
+    
+</section>
+
+<section class="page-intro">
+    <div>
+        <h1>National system overview</h1>
+        <p>Monitor the main services and administration areas of Smart City Uganda.</p>
+    </div>
+
+    <span class="preview-label">
+        <i class="bi bi-info-circle"></i>
+        Initial portal preview
+    </span>
+</section>
+
+<div class="row g-3 mb-4">
+    <div class="col-6 col-xl-3">
+        <article class="admin-card">
+            <div class="stat-top">
+                <span>Total citizens</span>
+                <span class="stat-icon"><i class="bi bi-people"></i></span>
+            </div>
+            <div class="stat-number">{{ total_citizens|default:"—" }}</div>
+            <div class="stat-note">Registered citizen accounts</div>
+        </article>
+    </div>
+
+    <div class="col-6 col-xl-3">
+        <article class="admin-card">
+            <div class="stat-top">
+                <span>Officers</span>
+                <span class="stat-icon"><i class="bi bi-person-badge"></i></span>
+            </div>
+            <div class="stat-number">{{ total_officers|default:"—" }}</div>
+            <div class="stat-note">Government service personnel</div>
+        </article>
+    </div>
+
+    <div class="col-6 col-xl-3">
+        <article class="admin-card">
+            <div class="stat-top">
+                <span>Pending verification</span>
+                <span class="stat-icon"><i class="bi bi-person-check"></i></span>
+            </div>
+            <div class="stat-number">{{ pending_verifications|default:"—" }}</div>
+            <div class="stat-note">Accounts awaiting review</div>
+        </article>
+    </div>
+
+    <div class="col-6 col-xl-3">
+        <article class="admin-card">
+            <div class="stat-top">
+                <span>Service requests</span>
+                <span class="stat-icon"><i class="bi bi-inbox"></i></span>
+            </div>
+            <div class="stat-number">{{ total_requests|default:"—" }}</div>
+            <div class="stat-note">Requests recorded by the system</div>
+        </article>
+    </div>
+</div>
+
+<div class="row g-4">
+    <div class="col-12 col-xl-7">
+        <section class="admin-card">
+            <div class="panel-heading">
+                <h2>Recent system activity</h2>
+                <span>Audit and administrative events</span>
+            </div>
+
+            {% if recent_activity %}
+                <div class="table-responsive">
+                    <table class="table table-hover align-middle mb-0">
+                        <thead>
+                            <tr>
+                                <th>Activity</th>
+                                <th>Performed by</th>
+                                <th>Date</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for activity in recent_activity %}
+                                <tr>
+                                    <td>{{ activity }}</td>
+                                    <td>Recorded event</td>
+                                    <td>—</td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            {% else %}
+                <div class="activity-empty">
+                    <i class="bi bi-clock-history"></i>
+                    <strong>No activity displayed yet</strong>
+                    <p>
+                        Account approvals, service changes and audit events
+                        will appear here when connected to the relevant project models.
+                    </p>
+                </div>
+            {% endif %}
+        </section>
+    </div>
+
+    <div class="col-12 col-xl-5">
+        <section class="admin-card">
+            <div class="panel-heading">
+                <h2>Administration modules</h2>
+                <span>6 areas</span>
+            </div>
+
+            <div class="module-list">
+                <div class="module-row">
+                    <span class="module-icon"><i class="bi bi-people"></i></span>
+                    <div class="module-copy">
+                        <strong>User management &amp; verification</strong>
+                        <small>Accounts, submissions and review decisions</small>
+                    </div>
+                    <span class="module-state">Planned</span>
+                </div>
+
+                <div class="module-row">
+                    <span class="module-icon"><i class="bi bi-diagram-3"></i></span>
+                    <div class="module-copy">
+                        <strong>Departments &amp; services</strong>
+                        <small>Offices, categories and citizen services</small>
+                    </div>
+                    <span class="module-state">Planned</span>
+                </div>
+
+                <div class="module-row">
+                    <span class="module-icon"><i class="bi bi-geo-alt"></i></span>
+                    <div class="module-copy">
+                        <strong>National locations &amp; maps</strong>
+                        <small>Administrative hierarchy and geography</small>
+                    </div>
+                    <span class="module-state">Planned</span>
+                </div>
+
+                <div class="module-row">
+                    <span class="module-icon"><i class="bi bi-bell"></i></span>
+                    <div class="module-copy">
+                        <strong>Notifications &amp; settings</strong>
+                        <small>System alerts and preferences</small>
+                    </div>
+                    <span class="module-state">Planned</span>
+                </div>
+
+                <div class="module-row">
+                    <span class="module-icon"><i class="bi bi-database"></i></span>
+                    <div class="module-copy">
+                        <strong>Database management</strong>
+                        <small>Permitted records through Django</small>
+                    </div>
+                    <span class="module-state">Planned</span>
+                </div>
+
+                <div class="module-row">
+                    <span class="module-icon"><i class="bi bi-shield-check"></i></span>
+                    <div class="module-copy">
+                        <strong>Security, permissions &amp; audit</strong>
+                        <small>Controlled access and accountability</small>
+                    </div>
+                    <span class="module-state">Planned</span>
+                </div>
+            </div>
+        </section>
+    </div>
+</div>
+
+{% endblock %}

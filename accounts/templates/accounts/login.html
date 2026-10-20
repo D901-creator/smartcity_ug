@@ -1,0 +1,554 @@
+
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Sign In | Smart City Uganda</title>
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
+
+    <style>
+        :root {
+            --brand: #137547;
+            --brand-dark: #0b5332;
+            --brand-light: #eaf6ef;
+            --text: #1c2d25;
+            --muted: #728078;
+            --border: #dfe8e2;
+        }
+
+        * { box-sizing: border-box; }
+
+        body {
+            margin: 0;
+            min-height: 100vh;
+            background: #f4f7f5;
+            color: var(--text);
+            font-family: Inter, "Segoe UI", Arial, sans-serif;
+        }
+
+        .topbar {
+            min-height: 76px;
+            background: #fff;
+            border-bottom: 1px solid #e7eee9;
+            display: flex;
+            align-items: center;
+        }
+
+        .brand-mark {
+            width: 44px;
+            height: 44px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            background: var(--brand-light);
+            color: var(--brand);
+            border-radius: 13px;
+            font-size: 25px;
+        }
+
+        .brand-title {
+            font-size: 17px;
+            font-weight: 800;
+            letter-spacing: .2px;
+        }
+
+        .brand-subtitle {
+            color: var(--muted);
+            font-size: 11px;
+            letter-spacing: 1.3px;
+            text-transform: uppercase;
+        }
+
+        .top-register {
+            color: var(--brand);
+            font-weight: 700;
+            text-decoration: none;
+        }
+
+        .page-wrap {
+            max-width: 1200px;
+            width: 96%;
+            margin: 35px auto;
+            padding: 0 10px;
+        }
+
+        .login-shell {
+            display: grid;
+            grid-template-columns: 40% minmax(0, 1fr);
+            width: 100%;
+            background: #fff;
+            border: 1px solid #e3ebe5;
+            border-radius: 22px;
+            overflow: hidden;
+            box-shadow: 0 18px 55px rgba(22, 58, 37, .07);
+        }
+
+        .intro-panel {
+            position: relative;
+            overflow: hidden;
+            padding: 40px 32px;
+            background: linear-gradient(155deg, #0b5332, #137547 68%, #218b58);
+            color: #fff;
+        }
+
+        .intro-panel::after {
+            content: "";
+            position: absolute;
+            width: 240px;
+            height: 240px;
+            border: 1px solid rgba(255,255,255,.13);
+            border-radius: 50%;
+            right: -110px;
+            bottom: -70px;
+            box-shadow: 0 0 0 30px rgba(255,255,255,.035),
+                        0 0 0 60px rgba(255,255,255,.025);
+            pointer-events: none;
+        }
+
+        .uganda-emblem {
+            position: relative;
+            z-index: 1;
+            display: flex;
+            justify-content: center;
+            width: 100%;
+            margin: 0 auto 24px;
+        }
+
+        .uganda-emblem img {
+            width: 80px;
+            height: 100px;
+            object-fit: contain;
+            display: block;
+            background: #fff;
+            border-radius: 65px;
+            padding: 8px;
+            box-shadow: 0 8px 24px rgba(0, 0, 0, .12);
+        }
+
+        .intro-badge {
+            position: relative;
+            z-index: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            width: fit-content;
+            margin: 0 auto;
+            padding: 8px 12px;
+            background: rgba(255,255,255,.12);
+            border: 1px solid rgba(255,255,255,.16);
+            border-radius: 30px;
+            font-size: 12px;
+            text-align: center;
+        }
+
+        .intro-panel h1 {
+            position: relative;
+            z-index: 1;
+            margin-top: 30px;
+            font-size: 30px;
+            font-weight: 800;
+            line-height: 1.3;
+        }
+
+        .intro-panel > p {
+            position: relative;
+            z-index: 1;
+            color: rgba(255,255,255,.82);
+            line-height: 1.8;
+            font-size: 14px;
+        }
+
+        .trust-item {
+            position: relative;
+            z-index: 1;
+            display: flex;
+            gap: 12px;
+            align-items: flex-start;
+            margin-top: 25px;
+        }
+
+        .trust-icon {
+            width: 39px;
+            height: 39px;
+            flex-shrink: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 11px;
+            background: rgba(255,255,255,.14);
+            color: #d9ffe7;
+            font-size: 18px;
+        }
+
+        .trust-item strong {
+            display: block;
+            font-size: 13px;
+            margin-bottom: 4px;
+        }
+
+        .trust-item small {
+            color: rgba(255,255,255,.77);
+            line-height: 1.6;
+            display: block;
+            font-size: 12px;
+        }
+
+        .form-panel {
+            padding: 48px 42px;
+            min-width: 0;
+        }
+
+        .eyebrow {
+            color: var(--brand);
+            font-size: 11px;
+            font-weight: 800;
+            letter-spacing: 1.4px;
+            text-transform: uppercase;
+        }
+
+        .form-title {
+            font-size: 29px;
+            font-weight: 800;
+            margin: 9px 0;
+        }
+
+        .form-description {
+            color: var(--muted);
+            font-size: 14px;
+            line-height: 1.7;
+            margin-bottom: 30px;
+        }
+
+        .form-label {
+            font-size: 12px;
+            font-weight: 700;
+            color: #35463c;
+            margin-bottom: 8px;
+        }
+
+        .input-wrap { position: relative; }
+
+        .input-wrap > .bi {
+            position: absolute;
+            z-index: 2;
+            left: 14px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #198754;
+            font-size: 17px;
+            pointer-events: none;
+        }
+
+        .input-wrap .form-control {
+            min-height: 49px;
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            padding: 12px 43px;
+            font-size: 14px;
+            background: #fff;
+        }
+
+        .input-wrap .form-control:focus {
+            border-color: #48a879;
+            box-shadow: 0 0 0 3px rgba(25,135,84,.10);
+        }
+
+        .password-toggle {
+            position: absolute;
+            right: 10px;
+            top: 50%;
+            transform: translateY(-50%);
+            border: 0;
+            background: transparent;
+            color: #718078;
+            padding: 6px;
+            z-index: 3;
+        }
+
+        .btn-login {
+            min-height: 49px;
+            border: 0;
+            border-radius: 10px;
+            background: var(--brand);
+            color: #fff;
+            font-size: 14px;
+            font-weight: 750;
+            transition: .2s ease;
+        }
+
+        .btn-login:hover {
+            background: var(--brand-dark);
+            color: #fff;
+            transform: translateY(-1px);
+        }
+
+        .security-note {
+            display: flex;
+            gap: 10px;
+            align-items: flex-start;
+            padding: 13px 15px;
+            border-radius: 11px;
+            background: #f0f8f3;
+            color: #365c46;
+            font-size: 12px;
+            line-height: 1.6;
+            margin: 23px 0;
+        }
+
+        .security-note .bi {
+            font-size: 18px;
+            color: #198754;
+        }
+
+        .bottom-note {
+            text-align: center;
+            color: var(--muted);
+            font-size: 12px;
+            line-height: 1.8;
+            margin-top: 24px;
+        }
+
+        .bottom-note a {
+            color: var(--brand);
+            font-weight: 750;
+            text-decoration: none;
+        }
+
+        .footer {
+            text-align: center;
+            color: #89958e;
+            font-size: 11px;
+            padding: 22px 10px;
+        }
+
+        @media (max-width: 760px) {
+            .login-shell { grid-template-columns: 1fr; }
+            .intro-panel { padding: 28px; }
+            .intro-panel h1 { margin-top: 22px; font-size: 26px; }
+            .form-panel { padding: 32px 26px; }
+        }
+
+        @media (max-width: 520px) {
+            .topbar { min-height: 66px; }
+            .brand-title { font-size: 14px; }
+            .brand-subtitle { font-size: 9px; }
+            .brand-mark { width: 38px; height: 38px; }
+            .page-wrap { margin: 20px auto; padding: 0 10px; }
+            .login-shell { border-radius: 16px; }
+            .intro-panel { padding: 24px 21px; }
+            .form-panel { padding: 28px 20px; }
+            .form-title { font-size: 25px; }
+        }
+    </style>
+</head>
+
+<body>
+<header class="topbar">
+    <div class="container d-flex align-items-center justify-content-between">
+        <a href="/" class="d-flex align-items-center gap-3 text-decoration-none text-dark">
+            <span class="brand-mark"><i class="bi bi-buildings-fill"></i></span>
+            <span>
+                <span class="brand-title d-block">SMART CITY UGANDA</span>
+                <span class="brand-subtitle">Digital citizen services</span>
+            </span>
+        </a>
+
+        <div class="small">
+            <span class="text-secondary d-none d-sm-inline me-2">New here?</span>
+            <a href="{% url 'accounts:register' %}" class="top-register">
+                Create account <i class="bi bi-arrow-right"></i>
+            </a>
+        </div>
+    </div>
+</header>
+
+<main class="page-wrap">
+    <div class="login-shell">
+
+        <aside class="intro-panel">
+            <div class="uganda-emblem">
+                <img src="{% static 'images/img.jpg' %}"
+                     alt="Coat of arms of Uganda">
+            </div>
+
+            <span class="intro-badge">
+                <i class="bi bi-shield-lock-fill"></i>
+                Secure public service portal
+            </span>
+
+            <h1>Welcome back.</h1>
+            <p>
+                Sign in to access your Smart City Uganda account,
+                manage your requests and keep track of service updates.
+            </p>
+
+            <div class="trust-item">
+                <span class="trust-icon"><i class="bi bi-shield-check"></i></span>
+                <div>
+                    <strong>Protected access</strong>
+                    <small>Your account is protected by Django authentication.</small>
+                </div>
+            </div>
+
+            <div class="trust-item">
+                <span class="trust-icon"><i class="bi bi-person-check-fill"></i></span>
+                <div>
+                    <strong>Personalised services</strong>
+                    <small>Access the services available to your account.</small>
+                </div>
+            </div>
+        </aside>
+
+        <section class="form-panel">
+            <div class="eyebrow">Account access</div>
+            <h2 class="form-title">Sign in to your account</h2>
+            <p class="form-description">
+                Enter your username and password to continue.
+            </p>
+
+            {% if messages %}
+                {% for message in messages %}
+                    <div class="alert alert-info alert-dismissible fade show small" role="alert">
+                        {{ message }}
+                        <button type="button" class="btn-close"
+                                data-bs-dismiss="alert" aria-label="Close"></button>
+                    </div>
+                {% endfor %}
+            {% endif %}
+
+            {% if form.non_field_errors %}
+                <div class="alert alert-danger small" role="alert">
+                    <i class="bi bi-exclamation-circle-fill me-2"></i>
+                    {% for error in form.non_field_errors %}
+                        {{ error }}
+                    {% endfor %}
+                </div>
+            {% endif %}
+
+            <form method="post"
+                  action="{% url 'accounts:login' %}"
+                  accept-charset="UTF-8">
+                {% csrf_token %}
+
+                {% if next %}
+                    <input type="hidden" name="next" value="{{ next }}">
+                {% endif %}
+
+                <div class="mb-4">
+                    <label for="id_username" class="form-label">Username</label>
+                    <div class="input-wrap">
+                        <i class="bi bi-person-fill"></i>
+                        <input
+                            type="text"
+                            name="username"
+                            id="id_username"
+                            class="form-control"
+                            placeholder="Enter your username"
+                            autocomplete="username"
+                            value="{{ form.username.value|default_if_none:'' }}"
+                            required
+                            autofocus>
+                    </div>
+
+                    {% for error in form.username.errors %}
+                        <div class="text-danger small mt-1">{{ error }}</div>
+                    {% endfor %}
+                </div>
+
+                <div class="mb-3">
+                    <label for="id_password" class="form-label">Password</label>
+                    <div class="input-wrap">
+                        <i class="bi bi-lock-fill"></i>
+                        <input
+                            type="password"
+                            name="password"
+                            id="id_password"
+                            class="form-control"
+                            placeholder="Enter your password"
+                            autocomplete="current-password"
+                            required>
+
+                        <button type="button"
+                                class="password-toggle"
+                                id="togglePassword"
+                                aria-label="Show password"
+                                aria-pressed="false">
+                            <i class="bi bi-eye" id="passwordIcon"></i>
+                        </button>
+                    </div>
+
+                    {% for error in form.password.errors %}
+                        <div class="text-danger small mt-1">{{ error }}</div>
+                    {% endfor %}
+                </div>
+
+                <div class="security-note">
+                    <i class="bi bi-info-circle-fill"></i>
+                    <div>
+                        <strong>Keep your account secure.</strong><br>
+                        Never share your password with anyone. Privileged
+                        government accounts may require additional verification.
+                    </div>
+                </div>
+
+                <button type="submit" class="btn btn-login w-100">
+                    Sign in <i class="bi bi-arrow-right ms-2"></i>
+                </button>
+
+                <div class="bottom-note mt-3">
+                    <a href="{% url 'accounts:password_reset' %}">
+                        <i class="bi bi-key-fill me-1"></i> Forgot password?
+                    </a>
+                </div>
+
+                <div class="bottom-note">
+                    Don't have an account yet?
+                    <a href="{% url 'accounts:register' %}">Create one</a>
+                </div>
+            </form>
+        </section>
+    </div>
+
+    <div class="footer">
+        &copy; {% now "Y" %} Smart City Uganda · Digital public services
+    </div>
+</main>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+
+<script>
+(function () {
+    "use strict";
+
+    const passwordInput = document.getElementById("id_password");
+    const togglePassword = document.getElementById("togglePassword");
+    const passwordIcon = document.getElementById("passwordIcon");
+
+    if (passwordInput && togglePassword && passwordIcon) {
+        togglePassword.addEventListener("click", function () {
+            const showingPassword = passwordInput.type === "text";
+
+            passwordInput.type = showingPassword ? "password" : "text";
+            passwordIcon.className = showingPassword
+                ? "bi bi-eye"
+                : "bi bi-eye-slash";
+
+            togglePassword.setAttribute(
+                "aria-label",
+                showingPassword ? "Show password" : "Hide password"
+            );
+            togglePassword.setAttribute(
+                "aria-pressed",
+                String(!showingPassword)
+            );
+        });
+    }
+})();
+</script>
+</body>
+</html>

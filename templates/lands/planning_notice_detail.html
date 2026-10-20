@@ -1,0 +1,214 @@
+{% extends "base.html" %}
+
+{% block title %}
+    {{ notice.title }}
+{% endblock %}
+
+{% block content %}
+
+<div class="container-fluid">
+
+    <div class="mb-3">
+
+        <a
+            href="{% url 'lands:planning_notices' %}"
+            class="btn btn-sm btn-outline-secondary"
+        >
+            <i class="bi bi-arrow-left"></i>
+            Back to Notices
+        </a>
+
+    </div>
+
+
+    <div class="card border-0 shadow-sm">
+
+        {% if notice.image %}
+
+            <img
+                src="{{ notice.image.url }}"
+                class="card-img-top"
+                alt="{{ notice.title }}"
+                style="max-height: 400px; object-fit: cover;"
+            >
+
+        {% endif %}
+
+
+        <div class="card-body p-4">
+
+            <div class="d-flex flex-wrap gap-2 mb-3">
+
+                <span class="badge bg-success-subtle text-success">
+
+                    {{ notice.get_notice_type_display }}
+
+                </span>
+
+
+                {% if notice.priority == "urgent" %}
+
+                    <span class="badge bg-danger">
+                        Urgent
+                    </span>
+
+                {% elif notice.priority == "high" %}
+
+                    <span class="badge bg-warning text-dark">
+                        High Priority
+                    </span>
+
+                {% else %}
+
+                    <span class="badge bg-secondary">
+                        {{ notice.get_priority_display }}
+                    </span>
+
+                {% endif %}
+
+
+                {% if notice.is_featured %}
+
+                    <span class="badge bg-warning text-dark">
+
+                        <i class="bi bi-star-fill"></i>
+
+                        Featured
+
+                    </span>
+
+                {% endif %}
+
+            </div>
+
+
+            <h3 class="mb-2">
+                {{ notice.title }}
+            </h3>
+
+
+            {% if notice.location or notice.district %}
+
+                <p class="text-muted">
+
+                    <i class="bi bi-geo-alt"></i>
+
+                    {% if notice.location %}
+                        {{ notice.location }}
+                    {% endif %}
+
+                    {% if notice.district %}
+                        {% if notice.location %} · {% endif %}
+                        {{ notice.district }}
+                    {% endif %}
+
+                </p>
+
+            {% endif %}
+
+
+            <hr>
+
+
+            <h5>
+                Notice Summary
+            </h5>
+
+            <p>
+                {{ notice.summary|linebreaks }}
+            </p>
+
+
+            <h5 class="mt-4">
+                Notice Information
+            </h5>
+
+            <p>
+                {{ notice.content|linebreaks }}
+            </p>
+
+
+            {% if notice.important_date %}
+
+                <div class="alert alert-warning mt-4">
+
+                    <i class="bi bi-calendar-event"></i>
+
+                    <strong>Important Date:</strong>
+
+                    {{ notice.important_date|date:"d M Y" }}
+
+                </div>
+
+            {% endif %}
+
+
+            <div class="row g-3 mt-3">
+
+                {% if notice.issuing_organization %}
+
+                    <div class="col-md-6">
+
+                        <div class="border rounded p-3 h-100">
+
+                            <small class="text-muted">
+                                Issuing Organization
+                            </small>
+
+                            <div class="fw-semibold">
+                                {{ notice.issuing_organization }}
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                {% endif %}
+
+
+                <div class="col-md-6">
+
+                    <div class="border rounded p-3 h-100">
+
+                        <small class="text-muted">
+                            Published
+                        </small>
+
+                        <div class="fw-semibold">
+
+                            {{ notice.published_at|date:"d M Y, H:i" }}
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            {% if notice.contact_information %}
+
+                <hr class="my-4">
+
+                <h5>
+                    Contact Information
+                </h5>
+
+                <div class="alert alert-light border">
+
+                    <i class="bi bi-telephone"></i>
+
+                    {{ notice.contact_information|linebreaks }}
+
+                </div>
+
+            {% endif %}
+
+        </div>
+
+    </div>
+
+</div>
+
+{% endblock %}

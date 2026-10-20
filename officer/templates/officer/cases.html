@@ -1,0 +1,206 @@
+
+{% extends "officer/base.html" %}
+
+{% block title %}My Cases{% endblock %}
+{% block header_title %}My Cases{% endblock %}
+
+{% block content %}
+<div class="d-flex flex-wrap justify-content-between align-items-center gap-2 mb-3">
+    <div>
+        <h2 class="page-title mb-1">Case Management</h2>
+        <p class="small text-secondary mb-0">
+            Review and track cases assigned to your office.
+        </p>
+    </div>
+
+    <span class="badge text-bg-light border">
+        {{ cases|length }} case{{ cases|length|pluralize }}
+    </span>
+</div>
+
+<!-- Case statistics -->
+<div class="row g-2 mb-3">
+    <div class="col-6 col-lg-3">
+        <div class="card compact-card h-100">
+            <div class="card-body">
+                <div class="stat-label text-secondary">Total Cases</div>
+                <div class="stat-value">{{ total_cases }}</div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-6 col-lg-3">
+        <div class="card compact-card h-100">
+            <div class="card-body">
+                <div class="stat-label text-secondary">Open Cases</div>
+                <div class="stat-value">{{ open_cases }}</div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-6 col-lg-3">
+        <div class="card compact-card h-100">
+            <div class="card-body">
+                <div class="stat-label text-secondary">In Progress</div>
+                <div class="stat-value">{{ in_progress_cases }}</div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-6 col-lg-3">
+        <div class="card compact-card h-100">
+            <div class="card-body">
+                <div class="stat-label text-secondary">Resolved</div>
+                <div class="stat-value">{{ resolved_cases }}</div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Search and filters -->
+<div class="card compact-card mb-3">
+    <div class="card-body">
+        <form method="get" class="row g-2 align-items-end">
+            <div class="col-12 col-md-5">
+                <label for="case-search" class="form-label small">
+                    Search cases
+                </label>
+                <input
+                    type="search"
+                    id="case-search"
+                    name="q"
+                    value="{{ search_query }}"
+                    class="form-control form-control-sm"
+                    placeholder="Reference, title or description"
+                >
+            </div>
+
+            <div class="col-12 col-md-3">
+                <label for="case-status" class="form-label small">
+                    Status
+                </label>
+                <select id="case-status"
+                        name="status"
+                        class="form-select form-select-sm">
+                    <option value="">All statuses</option>
+                    {% for value, label in status_choices %}
+                        <option value="{{ value }}"
+                            {% if selected_status == value %}selected{% endif %}>
+                            {{ label }}
+                        </option>
+                    {% endfor %}
+                </select>
+            </div>
+
+            <div class="col-12 col-md-2">
+                <label for="case-priority" class="form-label small">
+                    Priority
+                </label>
+                <select id="case-priority"
+                        name="priority"
+                        class="form-select form-select-sm">
+                    <option value="">All priorities</option>
+                    {% for value, label in priority_choices %}
+                        <option value="{{ value }}"
+                            {% if selected_priority == value %}selected{% endif %}>
+                            {{ label }}
+                        </option>
+                    {% endfor %}
+                </select>
+            </div>
+
+            <div class="col-12 col-md-2 d-flex gap-2">
+                <button type="submit" class="btn btn-success btn-sm flex-grow-1">
+                    <i class="bi bi-search me-1"></i> Filter
+                </button>
+                <a href="{% url 'officer:cases' %}"
+                   class="btn btn-outline-secondary btn-sm">
+                    Reset
+                </a>
+            </div>
+        </form>
+    </div>
+</div>
+
+<!-- Cases table -->
+<div class="card compact-card">
+    <div class="card-header bg-white py-3 d-flex justify-content-between align-items-center">
+        <h3 class="section-title mb-0">Cases Register</h3>
+        <span class="small text-secondary">
+            {{ cases|length }} result{{ cases|length|pluralize }}
+        </span>
+    </div>
+
+    <div class="card-body p-0">
+        <div class="table-responsive">
+            <table class="table table-hover align-middle mb-0">
+                <thead class="table-light">
+                    <tr>
+                        <th class="small text-nowrap">Reference</th>
+                        <th class="small">Case</th>
+                        <th class="small">Priority</th>
+                        <th class="small">Status</th>
+                        <th class="small text-nowrap">Deadline</th>
+                        <th class="small">Action</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+                    {% for case in cases %}
+                        <tr>
+                            <td class="small text-nowrap font-monospace">
+                                {{ case.reference|default:case.pk }}
+                            </td>
+
+                            <td>
+                                <div class="small fw-semibold">
+                                    {{ case.title }}
+                                </div>
+                                {% if case.description %}
+                                    <div class="small text-secondary">
+                                        {{ case.description|truncatechars:65 }}
+                                    </div>
+                                {% endif %}
+                            </td>
+
+                            <td class="small">
+                                {{ case.get_priority_display|default:case.priority|default:"Normal" }}
+                            </td>
+
+                            <td class="small">
+                                {{ case.get_status_display|default:case.status|default:"Open" }}
+                            </td>
+
+                            <td class="small text-nowrap">
+                                {% if case.deadline %}
+                                    {{ case.deadline|date:"d M Y" }}
+                                {% else %}
+                                    <span class="text-secondary">Not set</span>
+                                {% endif %}
+                            </td>
+
+                            <td>
+                                <span class="small text-secondary">
+                                    Details to be added
+                                </span>
+                            </td>
+                        </tr>
+                    {% empty %}
+                        <tr>
+                            <td colspan="6" class="text-center py-5">
+                                <i class="bi bi-folder2-open fs-3 text-secondary"></i>
+                                <p class="small fw-semibold mt-2 mb-1">
+                                    No cases found
+                                </p>
+                                <p class="small text-secondary mb-0">
+                                    Cases will appear here when available to this portal.
+                                </p>
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{% endblock %}

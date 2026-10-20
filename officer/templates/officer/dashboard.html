@@ -1,0 +1,205 @@
+
+{% extends "officer/base.html" %}
+
+{% block title %}Dashboard{% endblock %}
+{% block header_title %}Officer Dashboard{% endblock %}
+
+{% block content %}
+<div class="d-flex flex-wrap justify-content-between align-items-center gap-2 mb-4">
+    <div>
+        <h2 class="page-title mb-1">Officer Dashboard</h2>
+        <p class="text-secondary small mb-0">
+            Manage citizen requests and departmental work.
+        </p>
+    </div>
+
+    <a href="{% url 'officer:assigned_requests' %}"
+       class="btn btn-success btn-sm">
+        <i class="bi bi-inbox me-1"></i>
+        View requests
+    </a>
+</div>
+
+<!-- Statistics -->
+<div class="row g-3 mb-4">
+    <div class="col-6 col-xl-3">
+        <div class="card compact-card">
+            <div class="card-body">
+                <div class="d-flex justify-content-between align-items-start gap-2">
+                    <div>
+                        <div class="stat-label">Total requests</div>
+                        <div class="stat-value">{{ total_requests }}</div>
+                    </div>
+                    <span class="brand-mark">
+                        <i class="bi bi-inbox"></i>
+                    </span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-6 col-xl-3">
+        <div class="card compact-card">
+            <div class="card-body">
+                <div class="d-flex justify-content-between align-items-start gap-2">
+                    <div>
+                        <div class="stat-label">Pending</div>
+                        <div class="stat-value">{{ pending_requests }}</div>
+                    </div>
+                    <span class="brand-mark">
+                        <i class="bi bi-hourglass-split"></i>
+                    </span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-6 col-xl-3">
+        <div class="card compact-card">
+            <div class="card-body">
+                <div class="d-flex justify-content-between align-items-start gap-2">
+                    <div>
+                        <div class="stat-label">In progress</div>
+                        <div class="stat-value">{{ in_progress_requests }}</div>
+                    </div>
+                    <span class="brand-mark">
+                        <i class="bi bi-arrow-repeat"></i>
+                    </span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-6 col-xl-3">
+        <div class="card compact-card">
+            <div class="card-body">
+                <div class="d-flex justify-content-between align-items-start gap-2">
+                    <div>
+                        <div class="stat-label">Resolved</div>
+                        <div class="stat-value">{{ resolved_requests }}</div>
+                    </div>
+                    <span class="brand-mark">
+                        <i class="bi bi-check-circle"></i>
+                    </span>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row g-3">
+    <!-- Recent requests -->
+    <div class="col-12 col-xl-8">
+        <section class="card compact-card">
+            <div class="card-body">
+                <div class="d-flex flex-wrap justify-content-between align-items-center gap-2 mb-3">
+                    <div>
+                        <h3 class="section-title mb-1">Recent citizen requests</h3>
+                        <p class="text-secondary small mb-0">
+                            The latest requests recorded in the system.
+                        </p>
+                    </div>
+                    <a href="{% url 'officer:assigned_requests' %}"
+                       class="btn btn-outline-success btn-sm">
+                        View all
+                    </a>
+                </div>
+
+                {% if recent_requests %}
+                    <div class="table-responsive">
+                        <table class="table table-hover mb-0">
+                            <thead>
+                                <tr>
+                                    <th>Reference</th>
+                                    <th>Subject</th>
+                                    <th>Status</th>
+                                    <th>Created</th>
+                                    <th></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for item in recent_requests %}
+                                    <tr>
+                                        <td>
+                                            <span class="text-secondary">
+                                                {{ item.reference|stringformat:".8s" }}
+                                            </span>
+                                        </td>
+                                        <td>
+                                            <div class="fw-semibold">
+                                                {{ item.subject }}
+                                            </div>
+                                            <div class="text-secondary small">
+                                                {{ item.department }}
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <span class="badge rounded-pill text-bg-light border">
+                                                {{ item.get_status_display }}
+                                            </span>
+                                        </td>
+                                        <td class="text-nowrap">
+                                            {{ item.created_at|date:"d M Y" }}
+                                        </td>
+                                        <td>
+                                            <a class="btn btn-sm btn-outline-secondary"
+                                               href="{% url 'officer:request_detail' item.pk %}"
+                                               aria-label="View request details">
+                                                <i class="bi bi-arrow-up-right"></i>
+                                            </a>
+                                        </td>
+                                    </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                {% else %}
+                    <div class="text-center py-5">
+                        <i class="bi bi-inbox fs-2 text-secondary"></i>
+                        <p class="fw-semibold mt-2 mb-1">No requests recorded</p>
+                        <p class="text-secondary small mb-0">
+                            Requests will appear here when they are saved to the database.
+                        </p>
+                    </div>
+                {% endif %}
+            </div>
+        </section>
+    </div>
+
+    <!-- Work summary -->
+    <div class="col-12 col-xl-4">
+        <section class="card compact-card mb-3">
+            <div class="card-body">
+                <h3 class="section-title">Work summary</h3>
+
+                <div class="d-flex justify-content-between align-items-center py-2 border-bottom">
+                    <span class="text-secondary">Open cases</span>
+                    <strong>{{ open_cases }}</strong>
+                </div>
+
+                <div class="d-flex justify-content-between align-items-center py-2">
+                    <span class="text-secondary">Pending tasks</span>
+                    <strong>{{ pending_tasks }}</strong>
+                </div>
+            </div>
+        </section>
+
+        <section class="card compact-card">
+            <div class="card-body">
+                <div class="brand-mark mb-3">
+                    <i class="bi bi-arrow-right-circle"></i>
+                </div>
+                <h3 class="section-title mb-1">Request management</h3>
+                <p class="text-secondary small">
+                    Review citizen submissions, follow their progress,
+                    and respond through the request workflow.
+                </p>
+                <a href="{% url 'officer:assigned_requests' %}"
+                   class="btn btn-success btn-sm w-100">
+                    Open citizen requests
+                </a>
+            </div>
+        </section>
+    </div>
+</div>
+{% endblock %}

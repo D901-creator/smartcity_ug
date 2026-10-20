@@ -1,0 +1,305 @@
+{% extends "base.html" %}
+
+{% block title %}
+Report Drainage & Wastewater Problem | Smart City Uganda
+{% endblock %}
+
+{% block content %}
+
+<div class="container-fluid py-4">
+
+    <div class="d-flex
+                flex-column flex-md-row
+                justify-content-between
+                align-items-md-center
+                gap-3 mb-4">
+
+        <div>
+
+            <span class="badge bg-primary mb-2">
+                WATER & ENVIRONMENT
+            </span>
+
+            <h2 class="fw-bold mb-1">
+                Report Drainage & Wastewater Problem
+            </h2>
+
+            <p class="text-muted mb-0">
+                Provide accurate information about the problem.
+            </p>
+
+        </div>
+
+        <a
+            href="{% url 'water:drainage_wastewater' %}"
+            class="btn btn-outline-secondary"
+        >
+            <i class="bi bi-arrow-left me-1"></i>
+            Back
+        </a>
+
+    </div>
+
+
+    <div class="row g-4">
+
+        <!-- FORM -->
+        <div class="col-12 col-lg-8">
+
+            <div class="card border-0 shadow-sm">
+
+                <div class="card-header bg-white py-3">
+
+                    <h5 class="fw-semibold mb-0">
+                        <i class="bi bi-file-earmark-text me-2"></i>
+                        Problem Details
+                    </h5>
+
+                </div>
+
+                <div class="card-body">
+
+                    <form
+                        method="post"
+                        enctype="multipart/form-data"
+                    >
+
+                        {% csrf_token %}
+
+
+                        {% if form.non_field_errors %}
+
+                            <div class="alert alert-danger">
+
+                                {{ form.non_field_errors }}
+
+                            </div>
+
+                        {% endif %}
+
+
+                        <div class="row g-3">
+
+                            <div class="col-12 col-md-6">
+
+                                <label class="form-label fw-semibold">
+                                    {{ form.citizen_name.label }}
+                                </label>
+
+                                {{ form.citizen_name }}
+
+                                {% for error in form.citizen_name.errors %}
+                                    <div class="text-danger small mt-1">
+                                        {{ error }}
+                                    </div>
+                                {% endfor %}
+
+                            </div>
+
+
+                            <div class="col-12 col-md-6">
+
+                                <label class="form-label fw-semibold">
+                                    {{ form.phone_number.label }}
+                                </label>
+
+                                {{ form.phone_number }}
+
+                                {% for error in form.phone_number.errors %}
+                                    <div class="text-danger small mt-1">
+                                        {{ error }}
+                                    </div>
+                                {% endfor %}
+
+                            </div>
+
+
+                            <div class="col-12 col-md-6">
+
+                                <label class="form-label fw-semibold">
+                                    {{ form.problem_type.label }}
+                                </label>
+
+                                {{ form.problem_type }}
+
+                            </div>
+
+
+                            <div class="col-12 col-md-6">
+
+                                <label class="form-label fw-semibold">
+                                    {{ form.urgency.label }}
+                                </label>
+
+                                {{ form.urgency }}
+
+                            </div>
+
+
+                            <div class="col-12">
+
+                                <label class="form-label fw-semibold">
+                                    {{ form.description.label }}
+                                </label>
+
+                                {{ form.description }}
+
+                            </div>
+
+
+                            <div class="col-12 col-md-6">
+
+                                <label class="form-label fw-semibold">
+                                    {{ form.district.label }}
+                                </label>
+
+                                {{ form.district }}
+
+                            </div>
+
+
+                            <div class="col-12 col-md-6">
+
+                                <label class="form-label fw-semibold">
+                                    {{ form.location.label }}
+                                </label>
+
+                                {{ form.location }}
+
+                            </div>
+
+
+                            <div class="col-12">
+
+                                <label class="form-label fw-semibold">
+                                    {{ form.photo.label }}
+                                </label>
+
+                                {{ form.photo }}
+
+                                <div class="form-text">
+                                    Upload a clear photo if available.
+                                </div>
+
+                            </div>
+
+
+                            <div class="col-12">
+
+                                <div class="d-flex
+                                            flex-wrap
+                                            gap-2
+                                            mt-2">
+
+                                    <button
+                                        type="submit"
+                                        class="btn btn-primary"
+                                    >
+                                        <i class="bi bi-send me-1"></i>
+                                        Submit Report
+                                    </button>
+
+                                    <a
+                                        href="{% url 'water:drainage_wastewater' %}"
+                                        class="btn btn-outline-secondary"
+                                    >
+                                        Cancel
+                                    </a>
+
+                                </div>
+
+                            </div>
+
+                        </div>
+
+                    </form>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <!-- INFORMATION -->
+        <div class="col-12 col-lg-4">
+
+            <div class="card border-0 shadow-sm">
+
+                <div class="card-header bg-white py-3">
+
+                    <h6 class="fw-bold mb-0">
+                        <i class="bi bi-info-circle me-2"></i>
+                        What Can You Report?
+                    </h6>
+
+                </div>
+
+                <div class="card-body">
+
+                    <div class="list-group list-group-flush">
+
+                        <div class="list-group-item px-0">
+                            <i class="bi bi-check-circle
+                                      text-primary me-2"></i>
+                            Blocked drainage
+                        </div>
+
+                        <div class="list-group-item px-0">
+                            <i class="bi bi-check-circle
+                                      text-primary me-2"></i>
+                            Damaged drainage
+                        </div>
+
+                        <div class="list-group-item px-0">
+                            <i class="bi bi-check-circle
+                                      text-primary me-2"></i>
+                            Flooding caused by drainage
+                        </div>
+
+                        <div class="list-group-item px-0">
+                            <i class="bi bi-check-circle
+                                      text-primary me-2"></i>
+                            Sewage overflow
+                        </div>
+
+                        <div class="list-group-item px-0">
+                            <i class="bi bi-check-circle
+                                      text-primary me-2"></i>
+                            Broken sewer lines
+                        </div>
+
+                        <div class="list-group-item px-0">
+                            <i class="bi bi-check-circle
+                                      text-primary me-2"></i>
+                            Wastewater discharge
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <div class="alert alert-warning mt-4">
+
+                <i class="bi bi-exclamation-triangle me-2"></i>
+
+                <strong>Emergency?</strong>
+
+                <p class="small mb-0 mt-1">
+                    Provide accurate location and urgency
+                    information so the responsible authorities
+                    can prioritize the report.
+                </p>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+{% endblock %}

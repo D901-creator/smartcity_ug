@@ -1,0 +1,46 @@
+
+{% extends "officer/base.html" %}
+
+{% block content %}
+<div class="container py-4">
+    <div class="card shadow-sm border-0">
+        <div class="card-body p-4">
+            <a href="{% url 'notifications:list' %}"
+               class="btn btn-sm btn-outline-secondary mb-3">
+                <i class="bi bi-arrow-left"></i> Back to notifications
+            </a>
+
+            <div class="d-flex justify-content-between align-items-start gap-3">
+                <div>
+                    <h3>{{ notification.title }}</h3>
+                    <p class="text-muted mb-3">
+                        {{ notification.get_notification_type_display }}
+                        &bull;
+                        {{ notification.created_at|date:"d M Y, H:i" }}
+                    </p>
+                </div>
+
+                {% if notification.is_read %}
+                    <span class="badge text-bg-secondary">Read</span>
+                {% else %}
+                    <span class="badge text-bg-success">Unread</span>
+                {% endif %}
+            </div>
+
+            <hr>
+
+            <div class="mb-4" style="white-space: pre-line;">
+                {{ notification.message }}
+            </div>
+
+            <form method="post"
+                  action="{% url 'notifications:dismiss' notification.id %}">
+                {% csrf_token %}
+                <button type="submit" class="btn btn-outline-secondary">
+                    Dismiss notification
+                </button>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,215 @@
+{% extends "base.html" %}
+
+{% block title %}Agricultural Market{% endblock %}
+
+{% block content %}
+
+<div class="container-fluid">
+
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <div>
+            <h1 class="fw-bold">
+                <i class="bi bi-shop"></i>
+                Agricultural Market
+            </h1>
+
+            <p class="text-muted">
+                Connect farmers with buyers across Uganda.
+            </p>
+        </div>
+
+        <div>
+            <a href="{% url 'agriculture:create_market_listing' %}"
+               class="btn btn-success me-2">
+                <i class="bi bi-plus-circle"></i>
+                Sell Product
+            </a>
+
+            <a href="{% url 'agriculture:create_buyer_request' %}"
+               class="btn btn-primary">
+                <i class="bi bi-search"></i>
+                Find Product
+            </a>
+        </div>
+    </div>
+
+
+    <!-- AVAILABLE PRODUCTS -->
+
+    <div class="card shadow-sm mb-4">
+
+        <div class="card-header bg-success text-white">
+            <h4 class="mb-0">
+                <i class="bi bi-basket"></i>
+                Available Agricultural Products
+            </h4>
+        </div>
+
+        <div class="card-body">
+
+            {% if listings %}
+
+            <div class="row">
+
+                {% for listing in listings %}
+
+                <div class="col-md-4 mb-4">
+
+                    <div class="card h-100 shadow-sm">
+
+                        <div class="card-body">
+
+                            <h5 class="fw-bold">
+                                {{ listing.product_name }}
+                            </h5>
+
+                            <span class="badge bg-success mb-2">
+                                {{ listing.category }}
+                            </span>
+
+                            <p>
+                                <strong>Quantity:</strong>
+                                {{ listing.quantity }}
+                                {{ listing.unit }}
+                            </p>
+
+                            <p>
+                                <strong>Price:</strong>
+                                UGX {{ listing.price_per_unit }}
+                                / {{ listing.unit }}
+                            </p>
+
+                            <p>
+                                <strong>District:</strong>
+                                {{ listing.district }}
+                            </p>
+
+                            <p class="text-muted">
+                                {{ listing.description }}
+                            </p>
+
+                            <hr>
+
+                            <p class="mb-1">
+                                <strong>Farmer:</strong>
+                                {{ listing.farmer.farmer_name }}
+                            </p>
+
+                            <p>
+                                <strong>Contact:</strong>
+                                {{ listing.farmer.phone_number }}
+                            </p>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+                {% endfor %}
+
+            </div>
+
+            {% else %}
+
+            <div class="alert alert-info">
+                No agricultural products are currently available.
+            </div>
+
+            {% endif %}
+
+        </div>
+
+    </div>
+
+
+    <!-- BUYER REQUESTS -->
+
+    <div class="card shadow-sm">
+
+        <div class="card-header bg-primary text-white">
+            <h4 class="mb-0">
+                <i class="bi bi-person-search"></i>
+                Buyer Requests
+            </h4>
+        </div>
+
+        <div class="card-body">
+
+            {% if buyer_requests %}
+
+            <div class="row">
+
+                {% for request in buyer_requests %}
+
+                <div class="col-md-4 mb-4">
+
+                    <div class="card h-100 shadow-sm">
+
+                        <div class="card-body">
+
+                            <h5 class="fw-bold">
+                                {{ request.product_required }}
+                            </h5>
+
+                            <p>
+                                <strong>Buyer:</strong>
+                                {{ request.buyer_name }}
+                            </p>
+
+                            <p>
+                                <strong>Quantity:</strong>
+                                {{ request.quantity_required }}
+                                {{ request.unit }}
+                            </p>
+
+                            <p>
+                                <strong>District:</strong>
+                                {{ request.district }}
+                            </p>
+
+                            <p>
+                                <strong>Maximum Price:</strong>
+                                UGX {{ request.maximum_price }}
+                            </p>
+
+                            <p class="text-muted">
+                                {{ request.description }}
+                            </p>
+
+                            <hr>
+
+                            <p>
+                                <strong>Contact:</strong>
+                                {{ request.phone_number }}
+                            </p>
+
+                            <span class="badge bg-primary">
+                                Open Request
+                            </span>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+                {% endfor %}
+
+            </div>
+
+            {% else %}
+
+            <div class="alert alert-info">
+                No open buyer requests at the moment.
+            </div>
+
+            {% endif %}
+
+        </div>
+
+    </div>
+
+</div>
+
+{% endblock %}

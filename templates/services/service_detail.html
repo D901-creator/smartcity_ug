@@ -1,0 +1,116 @@
+{% extends "base.html" %}
+
+{% block title %}
+{{ service.name }} | Smart City Uganda
+{% endblock %}
+
+{% block content %}
+
+<div class="service-detail-page">
+
+    <a
+        href="{% url 'services:list' %}"
+        class="back-service-link"
+    >
+        <i class="bi bi-arrow-left"></i>
+        Back to services
+    </a>
+
+
+    <div class="service-detail-card">
+
+        <div class="service-detail-icon service-green">
+
+            <i class="bi {{ service.icon }}"></i>
+
+        </div>
+
+
+        <span class="service-category">
+            {{ service.get_category_display }}
+        </span>
+
+
+        <h1>
+            {{ service.name }}
+        </h1>
+
+
+        <p class="service-detail-description">
+            {{ service.description }}
+        </p>
+
+
+        <div class="service-detail-information">
+
+            <div>
+                <i class="bi bi-clock"></i>
+
+                <span>
+                    Estimated processing time
+                </span>
+
+                <strong>
+                    {{ service.estimated_days }} days
+                </strong>
+            </div>
+
+
+            <div>
+                <i class="bi bi-check-circle"></i>
+
+                <span>
+                    Service status
+                </span>
+
+                <strong>
+                    Available
+                </strong>
+            </div>
+
+        </div>
+
+
+        {% if required_information %}
+
+            <div class="required-information">
+
+                <h2>
+                    Information you may need
+                </h2>
+
+                <ul>
+
+                    {% for item in required_information %}
+
+                        <li>
+                            <i class="bi bi-check2"></i>
+                            {{ item }}
+                        </li>
+
+                    {% endfor %}
+
+                </ul>
+
+            </div>
+
+        {% endif %}
+
+
+        <div class="service-detail-action">
+
+            <a
+                href="{% url 'services:request' service.id %}"
+                class="start-service-button"
+            >
+                Start Service Request
+                <i class="bi bi-arrow-right"></i>
+            </a>
+
+        </div>
+
+    </div>
+
+</div>
+
+{% endblock %}

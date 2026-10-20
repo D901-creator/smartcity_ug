@@ -1,0 +1,106 @@
+{% extends "base.html" %}
+
+{% block title %}
+    Electricity Report Submitted | Smart City Uganda
+{% endblock %}
+
+{% block content %}
+
+<div class="container-fluid py-3">
+
+    <div class="row justify-content-center">
+
+        <div class="col-12 col-md-8 col-lg-6">
+
+            <div class="card border-0 shadow-sm text-center">
+
+                <div class="card-body p-4">
+
+                    <div class="mb-3">
+
+                        <i class="bi bi-check-circle-fill text-success"
+                           style="font-size: 3rem;"></i>
+
+                    </div>
+
+
+                    <h4 class="mb-2">
+                        Electricity Problem Reported
+                    </h4>
+
+
+                    <p class="text-muted">
+
+                        Your electricity problem has been successfully
+                        submitted to Smart City Uganda.
+
+                    </p>
+
+
+                    <div class="alert alert-light border">
+
+                        <div class="small text-muted">
+                            Reference Number
+                        </div>
+
+                        <strong class="fs-5">
+                            {{ report.reference_number }}
+                        </strong>
+
+                    </div>
+
+
+                    <div class="text-start small mb-3">
+
+                        <div class="mb-2">
+                            <strong>Problem:</strong>
+                            {{ report.get_problem_type_display }}
+                        </div>
+
+                        <div class="mb-2">
+                            <strong>District:</strong>
+                            {{ report.district }}
+                        </div>
+
+                        <div>
+                            <strong>Status:</strong>
+                            <span class="badge bg-warning text-dark">
+                                {{ report.get_status_display }}
+                            </span>
+                        </div>
+
+                    </div>
+
+
+                    <div class="d-flex flex-wrap justify-content-center gap-2">
+
+                        <a href="{% url 'energy:home' %}"
+                           class="btn btn-success">
+
+                            <i class="bi bi-lightning-charge"></i>
+                            Energy Services
+
+                        </a>
+
+
+                        <a href="{% url 'dashboard:home' %}"
+                           class="btn btn-outline-secondary">
+
+                            <i class="bi bi-grid"></i>
+                            Dashboard
+
+                        </a>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+{% endblock %}

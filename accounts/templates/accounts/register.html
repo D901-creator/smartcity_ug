@@ -1,0 +1,808 @@
+
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Create Account | Smart City Uganda</title>
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
+
+    <style>
+        :root {
+            --brand: #137547;
+            --brand-dark: #0b5332;
+            --brand-light: #eaf6ef;
+            --text: #1c2d25;
+            --muted: #728078;
+            --border: #dfe8e2;
+        }
+
+        * { box-sizing: border-box; }
+
+        body {
+            margin: 0;
+            background: #f4f7f5;
+            color: var(--text);
+            font-family: Inter, "Segoe UI", Arial, sans-serif;
+        }
+
+        .topbar {
+            min-height: 76px;
+            background: #fff;
+            border-bottom: 1px solid #e7eee9;
+            display: flex;
+            align-items: center;
+        }
+
+        .brand-mark {
+            width: 44px;
+            height: 44px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            background: var(--brand-light);
+            color: var(--brand);
+            border-radius: 13px;
+            font-size: 25px;
+        }
+
+        .brand-title {
+            font-size: 17px;
+            font-weight: 800;
+            letter-spacing: .2px;
+        }
+
+        .brand-subtitle {
+            color: var(--muted);
+            font-size: 11px;
+            letter-spacing: 1.3px;
+            text-transform: uppercase;
+        }
+
+        .top-login {
+            color: var(--brand);
+            font-weight: 700;
+            text-decoration: none;
+        }
+
+        .page-wrap {
+            max-width: 1400px;
+            width: 96%;
+            margin: 30px auto;
+            padding: 0 10px;
+        }
+
+        .registration-shell {
+            display: grid;
+            grid-template-columns: 350px minmax(0, 1fr);
+            width: 100%;
+            background: #fff;
+            border: 1px solid #e3ebe5;
+            border-radius: 22px;
+            overflow: hidden;
+            box-shadow: 0 18px 55px rgba(22, 58, 37, .07);
+        }
+
+        .intro-panel {
+            position: relative;
+            overflow: hidden;
+            padding: 38px 30px;
+            background: linear-gradient(155deg, #0b5332, #137547 68%, #218b58);
+            color: #fff;
+        }
+
+        .intro-panel::after {
+            content: "";
+            position: absolute;
+            width: 240px;
+            height: 240px;
+            border: 1px solid rgba(255,255,255,.13);
+            border-radius: 50%;
+            right: -110px;
+            bottom: -70px;
+            box-shadow: 0 0 0 30px rgba(255,255,255,.035),
+                        0 0 0 60px rgba(255,255,255,.025);
+            pointer-events: none;
+        }
+
+        .uganda-emblem {
+            position: relative;
+            z-index: 1;
+            display: flex;
+            justify-content: center;
+            width: 100%;
+            margin: 0 auto 24px;
+        }
+
+        .uganda-emblem img {
+            width: 80px;
+            height: 100px;
+            object-fit: contain;
+            display: block;
+            background: #fff;
+            border-radius: 65px;
+            padding: 8px;
+            box-shadow: 0 8px 24px rgba(0, 0, 0, .12);
+        }
+
+        .intro-badge {
+            position: relative;
+            z-index: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            width: fit-content;
+            margin: 0 auto;
+            padding: 8px 12px;
+            background: rgba(255,255,255,.12);
+            border: 1px solid rgba(255,255,255,.16);
+            border-radius: 30px;
+            font-size: 12px;
+            text-align: center;
+        }
+
+        .intro-panel h1 {
+            position: relative;
+            z-index: 1;
+            margin-top: 35px;
+            font-size: 31px;
+            font-weight: 800;
+            line-height: 1.25;
+        }
+
+        .intro-panel > p {
+            position: relative;
+            z-index: 1;
+            color: rgba(255,255,255,.8);
+            line-height: 1.8;
+            font-size: 14px;
+        }
+
+        .benefit-list { position: relative; z-index: 1; }
+
+        .benefit {
+            display: flex;
+            gap: 13px;
+            margin-top: 26px;
+            align-items: flex-start;
+        }
+
+        .benefit-icon {
+            width: 42px;
+            height: 42px;
+            flex-shrink: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 12px;
+            background: rgba(255,255,255,.14);
+            color: #d9ffe7;
+            font-size: 19px;
+        }
+
+        .benefit strong {
+            display: block;
+            font-size: 13px;
+            margin-bottom: 4px;
+        }
+
+        .benefit small {
+            color: rgba(255,255,255,.8);
+            line-height: 1.6;
+            display: block;
+            font-size: 12px;
+        }
+
+        .form-panel {
+            padding: 38px 42px;
+            min-width: 0;
+        }
+
+        .eyebrow {
+            color: var(--brand);
+            font-size: 11px;
+            font-weight: 800;
+            letter-spacing: 1.4px;
+            text-transform: uppercase;
+        }
+
+        .form-title {
+            font-size: 27px;
+            font-weight: 800;
+            margin: 8px 0;
+        }
+
+        .form-description {
+            color: var(--muted);
+            font-size: 14px;
+            margin-bottom: 28px;
+        }
+
+        .section-heading {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-weight: 750;
+            font-size: 14px;
+            margin: 26px 0 17px;
+        }
+
+        .section-heading .section-icon {
+            width: 36px;
+            height: 36px;
+            border-radius: 11px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            background: #eaf6ef;
+            color: #137547;
+            font-size: 18px;
+        }
+
+        .form-label {
+            font-size: 12px;
+            font-weight: 700;
+            color: #35463c;
+            margin-bottom: 7px;
+        }
+
+        .input-wrap { position: relative; }
+
+        .input-wrap > .bi {
+            position: absolute;
+            z-index: 2;
+            left: 14px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #198754;
+            font-size: 16px;
+            pointer-events: none;
+        }
+
+        .input-wrap .form-control,
+        .input-wrap .form-select {
+            min-height: 47px;
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            padding: 11px 13px 11px 41px;
+            font-size: 13px;
+            background-color: #fff;
+        }
+
+        .input-wrap .form-select { padding-right: 32px; }
+
+        .input-wrap .form-control:focus,
+        .input-wrap .form-select:focus {
+            border-color: #48a879;
+            box-shadow: 0 0 0 3px rgba(25,135,84,.10);
+        }
+
+        .profile-photo-section {
+            padding: 17px;
+            border: 1px solid var(--border);
+            border-radius: 13px;
+            background: #fbfdfb;
+        }
+
+        .profile-photo-input {
+            min-height: 46px;
+            padding: 9px 12px !important;
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            background: #fff;
+            font-size: 13px;
+            width: 100%;
+        }
+
+        .profile-photo-preview-row {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-top: 15px;
+        }
+
+        .profile-photo-preview,
+        .profile-photo-placeholder {
+            width: 82px;
+            height: 82px;
+            border-radius: 50%;
+            flex-shrink: 0;
+        }
+
+        .profile-photo-preview {
+            object-fit: cover;
+            border: 3px solid #dceee3;
+            background: #eaf6ef;
+            display: none;
+        }
+
+        .profile-photo-placeholder {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 2px dashed #b9d8c5;
+            background: #eaf6ef;
+            color: #137547;
+            font-size: 31px;
+        }
+
+        .profile-photo-help {
+            color: var(--muted);
+            font-size: 12px;
+            line-height: 1.6;
+            margin-top: 7px;
+        }
+
+        .profile-photo-filename {
+            font-size: 12px;
+            color: var(--muted);
+            overflow-wrap: anywhere;
+        }
+
+        .field-errors, .errorlist {
+            color: #c0392b;
+            font-size: 12px;
+            padding-left: 0;
+            list-style: none;
+            margin: 6px 0 0;
+        }
+
+        .security-note {
+            display: flex;
+            gap: 10px;
+            align-items: flex-start;
+            padding: 13px 15px;
+            border-radius: 11px;
+            background: #f0f8f3;
+            color: #365c46;
+            font-size: 12px;
+            line-height: 1.6;
+            margin: 22px 0;
+        }
+
+        .security-note .bi {
+            font-size: 18px;
+            color: #198754;
+        }
+
+        .btn-register {
+            min-height: 49px;
+            border: 0;
+            border-radius: 10px;
+            background: var(--brand);
+            color: #fff;
+            font-size: 14px;
+            font-weight: 750;
+            transition: .2s ease;
+        }
+
+        .btn-register:hover {
+            background: var(--brand-dark);
+            color: #fff;
+            transform: translateY(-1px);
+        }
+
+        .bottom-note {
+            text-align: center;
+            color: var(--muted);
+            font-size: 12px;
+            line-height: 1.8;
+            margin-top: 22px;
+        }
+
+        .bottom-note a {
+            color: var(--brand);
+            font-weight: 750;
+            text-decoration: none;
+        }
+
+        .footer {
+            text-align: center;
+            color: #89958e;
+            font-size: 11px;
+            padding: 22px 10px;
+        }
+
+        @media (max-width: 850px) {
+            .registration-shell { grid-template-columns: 1fr; }
+            .intro-panel { padding: 27px; }
+            .intro-panel h1 { margin-top: 20px; font-size: 26px; }
+            .benefit-list {
+                display: grid;
+                grid-template-columns: repeat(2, minmax(0, 1fr));
+                gap: 12px;
+            }
+            .benefit { margin-top: 12px; }
+            .form-panel { padding: 30px 26px; }
+        }
+
+        @media (max-width: 520px) {
+            .topbar { min-height: 66px; }
+            .brand-title { font-size: 14px; }
+            .brand-subtitle { font-size: 9px; }
+            .brand-mark { width: 38px; height: 38px; }
+            .page-wrap { margin: 18px auto; padding: 0 10px; }
+            .registration-shell { border-radius: 16px; }
+            .intro-panel { padding: 24px 21px; }
+            .benefit-list { grid-template-columns: 1fr; }
+            .form-panel { padding: 27px 19px; }
+            .form-title { font-size: 24px; }
+            .profile-photo-section { padding: 13px; }
+        }
+    </style>
+</head>
+
+<body>
+<header class="topbar">
+    <div class="container d-flex align-items-center justify-content-between">
+        <a href="/" class="d-flex align-items-center gap-3 text-decoration-none text-dark">
+            <span class="brand-mark"><i class="bi bi-buildings-fill"></i></span>
+            <span>
+                <span class="brand-title d-block">SMART CITY UGANDA</span>
+                <span class="brand-subtitle">Digital citizen services</span>
+            </span>
+        </a>
+
+        <div class="small">
+            <span class="text-secondary d-none d-sm-inline me-2">Already registered?</span>
+            <a href="{% url 'accounts:login' %}" class="top-login">
+                Sign in <i class="bi bi-arrow-right"></i>
+            </a>
+        </div>
+    </div>
+</header>
+
+<main class="page-wrap">
+    <div class="registration-shell">
+        <aside class="intro-panel">
+            <div class="uganda-emblem">
+                <img src="{% static 'images/img.jpg' %}"
+                     alt="Coat of arms of Uganda">
+            </div>
+
+            <span class="intro-badge">
+                <i class="bi bi-shield-check"></i>
+                Secure public service portal
+            </span>
+
+            <h1>One account.<br>Services for everyone.</h1>
+
+            <p>
+                Create your Smart City Uganda account to connect with
+                public services and follow your applications online.
+            </p>
+
+            <div class="benefit-list">
+                <div class="benefit">
+                    <span class="benefit-icon"><i class="bi bi-person-check-fill"></i></span>
+                    <div>
+                        <strong>Your own account</strong>
+                        <small>Manage your profile and requests securely.</small>
+                    </div>
+                </div>
+
+                <div class="benefit">
+                    <span class="benefit-icon"><i class="bi bi-clipboard2-check-fill"></i></span>
+                    <div>
+                        <strong>Track applications</strong>
+                        <small>Follow service requests from one place.</small>
+                    </div>
+                </div>
+
+                <div class="benefit">
+                    <span class="benefit-icon"><i class="bi bi-bell-fill"></i></span>
+                    <div>
+                        <strong>Stay informed</strong>
+                        <small>Receive updates about your submissions.</small>
+                    </div>
+                </div>
+            </div>
+        </aside>
+
+        <section class="form-panel">
+            <div class="eyebrow">Get started</div>
+            <h2 class="form-title">Create your account</h2>
+            <p class="form-description">
+                Enter your details below. Fields marked with * are required.
+            </p>
+
+            {% if messages %}
+                {% for message in messages %}
+                    <div class="alert alert-info alert-dismissible fade show small" role="alert">
+                        {{ message }}
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    </div>
+                {% endfor %}
+            {% endif %}
+
+            {% if form.non_field_errors %}
+                <div class="alert alert-danger small">
+                    {{ form.non_field_errors }}
+                </div>
+            {% endif %}
+
+            <form method="post"
+                  action="{% url 'accounts:register' %}"
+                  id="registrationForm"
+                  enctype="multipart/form-data">
+                {% csrf_token %}
+
+                <div class="section-heading">
+                    <span class="section-icon"><i class="bi bi-person-vcard-fill"></i></span>
+                    Personal information
+                </div>
+
+                <div class="row g-3">
+                    {% for field in form %}
+                        {% if field.name == "full_name" or field.name == "username" or field.name == "email" or field.name == "phone_number" or field.name == "district" or field.name == "city" %}
+                            <div class="col-md-6">
+                                <label for="{{ field.id_for_label }}" class="form-label">
+                                    {{ field.label }}{% if field.field.required %} *{% endif %}
+                                </label>
+
+                                <div class="input-wrap">
+                                    {% if field.name == "full_name" %}
+                                        <i class="bi bi-person-fill"></i>
+                                    {% elif field.name == "username" %}
+                                        <i class="bi bi-at"></i>
+                                    {% elif field.name == "email" %}
+                                        <i class="bi bi-envelope-fill"></i>
+                                    {% elif field.name == "phone_number" %}
+                                        <i class="bi bi-telephone-fill"></i>
+                                    {% elif field.name == "district" %}
+                                        <i class="bi bi-geo-alt-fill"></i>
+                                    {% elif field.name == "city" %}
+                                        <i class="bi bi-buildings"></i>
+                                    {% endif %}
+                                    {{ field }}
+                                </div>
+
+                                {% for error in field.errors %}
+                                    <div class="field-errors">{{ error }}</div>
+                                {% endfor %}
+                            </div>
+                        {% endif %}
+                    {% endfor %}
+                </div>
+
+                <div class="section-heading">
+                    <span class="section-icon"><i class="bi bi-camera-fill"></i></span>
+                    Profile picture
+                </div>
+
+                <div class="profile-photo-section">
+                    <label for="{{ form.profile_picture.id_for_label }}" class="form-label">
+                        Profile picture
+                        {% if form.profile_picture.field.required %}
+                            <span class="text-danger">*</span>
+                        {% else %}
+                            <span class="text-secondary fw-normal">(Optional)</span>
+                        {% endif %}
+                    </label>
+
+                    {{ form.profile_picture }}
+
+                    {% for error in form.profile_picture.errors %}
+                        <div class="field-errors">{{ error }}</div>
+                    {% endfor %}
+
+                    <div class="profile-photo-help">
+                        Upload a clear photo of yourself. The picture will be associated with your account.
+                    </div>
+
+                    <div class="profile-photo-preview-row">
+                        <div class="profile-photo-placeholder" id="profilePhotoPlaceholder">
+                            <i class="bi bi-person-fill"></i>
+                        </div>
+
+                        <img id="profilePhotoPreview"
+                             class="profile-photo-preview"
+                             alt="Preview of your selected profile picture">
+
+                        <div>
+                            <div class="fw-semibold small">Photo preview</div>
+                            <div class="profile-photo-filename mt-1" id="profilePhotoFilename">
+                                No photo selected
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="section-heading">
+                    <span class="section-icon"><i class="bi bi-shield-lock-fill"></i></span>
+                    Account security
+                </div>
+
+                <div class="row g-3">
+                    {% for field in form %}
+                        {% if field.name == "password1" or field.name == "password2" %}
+                            <div class="col-md-6">
+                                <label for="{{ field.id_for_label }}" class="form-label">
+                                    {% if field.name == "password1" %}
+                                        Create password *
+                                    {% else %}
+                                        Confirm password *
+                                    {% endif %}
+                                </label>
+
+                                <div class="input-wrap">
+                                    {% if field.name == "password1" %}
+                                        <i class="bi bi-lock-fill"></i>
+                                    {% else %}
+                                        <i class="bi bi-lock"></i>
+                                    {% endif %}
+                                    {{ field }}
+                                </div>
+
+                                {% for error in field.errors %}
+                                    <div class="field-errors">{{ error }}</div>
+                                {% endfor %}
+                            </div>
+                        {% endif %}
+                    {% endfor %}
+                </div>
+
+                <div class="section-heading">
+                    <span class="section-icon"><i class="bi bi-person-badge-fill"></i></span>
+                    Account type
+                </div>
+
+                {% for field in form %}
+                    {% if field.name == "role" %}
+                        <label for="{{ field.id_for_label }}" class="form-label">
+                            {{ field.label }} *
+                        </label>
+
+                        <div class="input-wrap">
+                            <i class="bi bi-people-fill"></i>
+                            {{ field }}
+                        </div>
+
+                        {% for error in field.errors %}
+                            <div class="field-errors">{{ error }}</div>
+                        {% endfor %}
+                    {% endif %}
+                {% endfor %}
+
+                <div class="security-note">
+                    <i class="bi bi-info-circle-fill"></i>
+                    <div>
+                        <strong>Verification may be required.</strong><br>
+                        Government officers and department heads must complete
+                        the appropriate employment and authorization checks
+                        before receiving privileged access.
+                    </div>
+                </div>
+
+                <button type="submit" class="btn btn-register w-100">
+                    Create account <i class="bi bi-arrow-right ms-2"></i>
+                </button>
+
+                <div class="bottom-note">
+                    By creating an account, you agree to use this portal responsibly.
+                    <br>
+                    Already have an account?
+                    <a href="{% url 'accounts:login' %}">Sign in here</a>
+                </div>
+            </form>
+        </section>
+    </div>
+
+    <div class="footer">
+        &copy; {% now "Y" %} Smart City Uganda · Digital public services
+    </div>
+</main>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+
+<script>
+(function () {
+    const form = document.getElementById("registrationForm");
+    const districtField = document.getElementById("id_district");
+    const cityField = document.getElementById("id_city");
+
+    if (!form) return;
+
+    // Apply Bootstrap styles to Django form controls.
+    form.querySelectorAll(
+        'input:not([type="checkbox"]):not([type="radio"]), select, textarea'
+    ).forEach(function (field) {
+        if (field.type === "file") {
+            field.classList.add("form-control", "profile-photo-input");
+        } else if (field.tagName === "SELECT") {
+            field.classList.add("form-select");
+        } else {
+            field.classList.add("form-control");
+        }
+    });
+
+    // Load cities after the district changes.
+    async function loadCities() {
+        if (!districtField || !cityField) return;
+
+        const districtId = districtField.value;
+        const previouslySelectedCity = cityField.value;
+
+        cityField.replaceChildren(new Option("Select city", ""));
+
+        if (!districtId) return;
+
+        try {
+            const url = "{% url 'accounts:cities_by_district' %}"
+                + "?district_id=" + encodeURIComponent(districtId);
+
+            const response = await fetch(url, {
+                method: "GET",
+                credentials: "same-origin",
+                headers: {"X-Requested-With": "XMLHttpRequest"}
+            });
+
+            if (!response.ok) throw new Error("Could not load cities.");
+
+            const data = await response.json();
+
+            (data.cities || []).forEach(function (city) {
+                cityField.add(new Option(city.name, city.id));
+            });
+
+            if (previouslySelectedCity) {
+                cityField.value = previouslySelectedCity;
+            }
+        } catch (error) {
+            console.error("City loading error:", error);
+        }
+    }
+
+    if (districtField && cityField) {
+        districtField.addEventListener("change", loadCities);
+    }
+
+    // Profile picture preview.
+    const photoInput = document.getElementById("id_profile_picture");
+    const photoPreview = document.getElementById("profilePhotoPreview");
+    const photoPlaceholder = document.getElementById("profilePhotoPlaceholder");
+    const photoFilename = document.getElementById("profilePhotoFilename");
+
+    if (photoInput && photoPreview && photoPlaceholder && photoFilename) {
+        photoInput.setAttribute("accept", "image/*");
+
+        photoInput.addEventListener("change", function () {
+            const file = this.files && this.files[0];
+
+            if (!file) {
+                photoPreview.removeAttribute("src");
+                photoPreview.style.display = "none";
+                photoPlaceholder.style.display = "flex";
+                photoFilename.textContent = "No photo selected";
+                return;
+            }
+
+            if (!file.type.startsWith("image/")) {
+                this.value = "";
+                photoPreview.removeAttribute("src");
+                photoPreview.style.display = "none";
+                photoPlaceholder.style.display = "flex";
+                photoFilename.textContent = "Please select an image file.";
+                return;
+            }
+
+            const reader = new FileReader();
+
+            reader.onload = function (event) {
+                photoPreview.src = event.target.result;
+                photoPreview.style.display = "block";
+                photoPlaceholder.style.display = "none";
+            };
+
+            reader.readAsDataURL(file);
+            photoFilename.textContent = file.name;
+        });
+    }
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,49 @@
+{% extends "base.html" %}
+
+{% block title %}
+Education Registration & Application | Smart City Uganda
+{% endblock %}
+
+{% block content %}
+
+<div class="container education-module">
+
+    <div class="education-module-header">
+
+        <div class="education-module-icon">
+            <i class="bi bi-file-earmark-plus"></i>
+        </div>
+
+        <h1>Education Registration & Applications</h1>
+
+        <p>
+            Submit an education-related application or inquiry.
+            Requirements depend on the selected service or institution.
+        </p>
+
+    </div>
+
+
+    <div class="education-form-card">
+
+        <form method="post">
+
+            {% csrf_token %}
+
+            {{ form.as_p }}
+
+            <button
+                type="submit"
+                class="education-button"
+            >
+                <i class="bi bi-send"></i>
+                Submit Application
+            </button>
+
+        </form>
+
+    </div>
+
+</div>
+
+{% endblock %}

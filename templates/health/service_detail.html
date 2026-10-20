@@ -1,0 +1,97 @@
+{% extends "base.html" %}
+
+{% block title %}{{ service.title }} | Smart City Uganda{% endblock %}
+
+{% block content %}
+
+<div class="container-fluid py-3">
+
+    <a href="{% url 'health:services' %}"
+       class="small text-decoration-none">
+        <i class="bi bi-arrow-left"></i>
+        Back to health services
+    </a>
+
+    <div class="card border-0 shadow-sm mt-3">
+
+        {% if service.image %}
+        <img src="{{ service.image.url }}"
+             class="card-img-top"
+             style="max-height:350px;object-fit:cover;"
+             alt="{{ service.title }}">
+        {% endif %}
+
+        <div class="card-body p-4">
+
+            <span class="badge text-bg-success mb-2">
+                {{ service.get_service_type_display }}
+            </span>
+
+            <h3 class="fw-bold">
+                {{ service.title }}
+            </h3>
+
+            <p class="lead small">
+                {{ service.summary }}
+            </p>
+
+            <hr>
+
+            <h6 class="fw-bold">Description</h6>
+
+            <div class="small text-muted mb-4">
+                {{ service.description|linebreaks }}
+            </div>
+
+            <div class="row g-4">
+
+                <div class="col-md-6">
+                    <h6 class="fw-bold">Eligibility</h6>
+                    <div class="small text-muted">
+                        {{ service.eligibility|default:"Information not provided."|linebreaks }}
+                    </div>
+                </div>
+
+                <div class="col-md-6">
+                    <h6 class="fw-bold">Requirements</h6>
+                    <div class="small text-muted">
+                        {{ service.requirements|default:"Information not provided."|linebreaks }}
+                    </div>
+                </div>
+
+                <div class="col-md-6">
+                    <h6 class="fw-bold">Availability</h6>
+                    <div class="small text-muted">
+                        {{ service.availability_information|default:"Information not provided."|linebreaks }}
+                    </div>
+                </div>
+
+                <div class="col-md-6">
+                    <h6 class="fw-bold">Contact</h6>
+                    <div class="small text-muted">
+                        {{ service.contact_information|default:"Information not provided."|linebreaks }}
+                    </div>
+                </div>
+
+            </div>
+
+            <div class="mt-4 d-flex gap-2 flex-wrap">
+
+                <a href="{% url 'health:request_create' %}"
+                   class="btn btn-success">
+                    Request Health Service
+                </a>
+
+                <a href="{% url 'health:facilities' %}"
+                   class="btn btn-outline-primary">
+                    Find a Facility
+                </a>
+
+            </div>
+
+        </div>
+    </div>
+
+</div>
+
+{% endblock %}

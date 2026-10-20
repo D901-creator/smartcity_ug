@@ -1,0 +1,81 @@
+
+{% extends "officer/base.html" %}
+
+{% block title %}{{ event.title }} | Smart City Uganda{% endblock %}
+
+{% block content %}
+<div class="container-fluid py-3">
+    <div class="d-flex flex-wrap justify-content-between align-items-center gap-2 mb-3">
+        <div>
+            <h4 class="mb-1">{{ event.title }}</h4>
+            <span class="badge text-bg-success">
+                {{ event.get_status_display }}
+            </span>
+            <span class="badge text-bg-light">
+                {{ event.get_category_display }}
+            </span>
+        </div>
+
+        <div class="d-flex gap-2">
+            <a href="{% url 'calendar_app:edit_event' event.id %}"
+               class="btn btn-success btn-sm">Edit</a>
+            <a href="{% url 'calendar_app:calendar' %}"
+               class="btn btn-outline-secondary btn-sm">Calendar</a>
+        </div>
+    </div>
+
+    <div class="card border-0 shadow-sm">
+        <div class="card-body p-3 p-md-4">
+            <div class="row g-3">
+                <div class="col-12 col-md-6">
+                    <div class="small text-muted">Starts</div>
+                    <div class="fw-semibold">
+                        {{ event.start_time|date:"D, d M Y · H:i" }}
+                    </div>
+                </div>
+
+                <div class="col-12 col-md-6">
+                    <div class="small text-muted">Ends</div>
+                    <div class="fw-semibold">
+                        {{ event.end_time|date:"D, d M Y · H:i" }}
+                    </div>
+                </div>
+
+                <div class="col-12">
+                    <div class="small text-muted">Location</div>
+                    <div>{{ event.location|default:"No location specified" }}</div>
+                </div>
+
+                <div class="col-12">
+                    <div class="small text-muted">Description</div>
+                    <div>{{ event.description|default:"No description provided."|linebreaksbr }}</div>
+                </div>
+
+                <div class="col-12">
+                    <div class="small text-muted">Reminder</div>
+                    <div>{{ event.reminder_minutes }} minutes before the event</div>
+                </div>
+
+                {% if event.is_overdue %}
+                    <div class="col-12">
+                        <div class="alert alert-warning small mb-0">
+                            This event has passed and is not marked completed.
+                        </div>
+                    </div>
+                {% endif %}
+            </div>
+
+            <hr>
+
+            <form method="post"
+                  action="{% url 'calendar_app:delete_event' event.id %}"
+                  onsubmit="return confirm('Delete this calendar event?');">
+                {% csrf_token %}
+                <button type="submit" class="btn btn-outline-danger btn-sm">
+                    Delete Event
+                </button>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}

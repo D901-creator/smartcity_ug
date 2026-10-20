@@ -1,0 +1,624 @@
+{% extends "base.html" %}
+
+{% block title %}
+Security & Community Safety Statistics
+{% endblock %}
+
+{% block content %}
+
+<div class="container-fluid py-3">
+
+    <!-- HEADER -->
+    <div class="d-flex flex-column flex-md-row
+                justify-content-between align-items-md-center
+                mb-4">
+
+        <div>
+            <h4 class="fw-bold mb-1">
+                <i class="bi bi-bar-chart-line me-2"></i>
+                Security & Community Safety Statistics
+            </h4>
+
+            <p class="text-muted mb-0">
+                Citizen-facing statistics about security services,
+                reports and community safety information.
+            </p>
+        </div>
+
+        <a href="{% url 'security:home' %}"
+           class="btn btn-outline-secondary mt-3 mt-md-0">
+
+            <i class="bi bi-arrow-left me-1"></i>
+            Back to Security
+        </a>
+
+    </div>
+
+
+    <!-- MAIN STATISTICS -->
+    <div class="row g-3 mb-4">
+
+        <!-- INCIDENTS -->
+        <div class="col-6 col-md-4 col-xl-3">
+
+            <div class="card border-0 shadow-sm h-100">
+
+                <div class="card-body">
+
+                    <div class="d-flex justify-content-between">
+
+                        <div>
+                            <small class="text-muted">
+                                Security Incidents
+                            </small>
+
+                            <h3 class="fw-bold mb-0">
+                                {{ incident_count }}
+                            </h3>
+                        </div>
+
+                        <div class="text-danger fs-3">
+                            <i class="bi bi-exclamation-triangle"></i>
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <!-- EMERGENCY INFORMATION -->
+        <div class="col-6 col-md-4 col-xl-3">
+
+            <div class="card border-0 shadow-sm h-100">
+
+                <div class="card-body">
+
+                    <div class="d-flex justify-content-between">
+
+                        <div>
+                            <small class="text-muted">
+                                Safety Information
+                            </small>
+
+                            <h3 class="fw-bold mb-0">
+                                {{ emergency_information_count }}
+                            </h3>
+                        </div>
+
+                        <div class="text-warning fs-3">
+                            <i class="bi bi-life-preserver"></i>
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <!-- PROGRAMMES -->
+        <div class="col-6 col-md-4 col-xl-3">
+
+            <div class="card border-0 shadow-sm h-100">
+
+                <div class="card-body">
+
+                    <div class="d-flex justify-content-between">
+
+                        <div>
+                            <small class="text-muted">
+                                Safety Programmes
+                            </small>
+
+                            <h3 class="fw-bold mb-0">
+                                {{ programme_count }}
+                            </h3>
+                        </div>
+
+                        <div class="text-success fs-3">
+                            <i class="bi bi-people"></i>
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <!-- ADVISORIES -->
+        <div class="col-6 col-md-4 col-xl-3">
+
+            <div class="card border-0 shadow-sm h-100">
+
+                <div class="card-body">
+
+                    <div class="d-flex justify-content-between">
+
+                        <div>
+                            <small class="text-muted">
+                                Security Advisories
+                            </small>
+
+                            <h3 class="fw-bold mb-0">
+                                {{ advisory_count }}
+                            </h3>
+                        </div>
+
+                        <div class="text-danger fs-3">
+                            <i class="bi bi-bell"></i>
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <!-- NOTICES -->
+        <div class="col-6 col-md-4 col-xl-3">
+
+            <div class="card border-0 shadow-sm h-100">
+
+                <div class="card-body">
+
+                    <div class="d-flex justify-content-between">
+
+                        <div>
+                            <small class="text-muted">
+                                Community Notices
+                            </small>
+
+                            <h3 class="fw-bold mb-0">
+                                {{ notice_count }}
+                            </h3>
+                        </div>
+
+                        <div class="text-info fs-3">
+                            <i class="bi bi-megaphone"></i>
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <!-- FACILITIES -->
+        <div class="col-6 col-md-4 col-xl-3">
+
+            <div class="card border-0 shadow-sm h-100">
+
+                <div class="card-body">
+
+                    <div class="d-flex justify-content-between">
+
+                        <div>
+                            <small class="text-muted">
+                                Security Facilities
+                            </small>
+
+                            <h3 class="fw-bold mb-0">
+                                {{ facility_count }}
+                            </h3>
+                        </div>
+
+                        <div class="text-secondary fs-3">
+                            <i class="bi bi-building"></i>
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <!-- REQUESTS -->
+        <div class="col-6 col-md-4 col-xl-3">
+
+            <div class="card border-0 shadow-sm h-100">
+
+                <div class="card-body">
+
+                    <div class="d-flex justify-content-between">
+
+                        <div>
+                            <small class="text-muted">
+                                Reports & Requests
+                            </small>
+
+                            <h3 class="fw-bold mb-0">
+                                {{ security_request_count }}
+                            </h3>
+                        </div>
+
+                        <div class="text-primary fs-3">
+                            <i class="bi bi-clipboard-check"></i>
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- STATUS SECTIONS -->
+    <div class="row g-4">
+
+
+        <!-- INCIDENT STATUS -->
+        <div class="col-12 col-lg-6">
+
+            <div class="card border-0 shadow-sm h-100">
+
+                <div class="card-header bg-white">
+                    <h6 class="fw-bold mb-0">
+                        <i class="bi bi-activity me-2"></i>
+                        Security Incident Status
+                    </h6>
+                </div>
+
+                <div class="card-body">
+
+                    {% if incident_status_counts %}
+
+                        <div class="table-responsive">
+
+                            <table class="table table-sm align-middle mb-0">
+
+                                <thead>
+                                    <tr>
+                                        <th>Status</th>
+                                        <th class="text-end">Total</th>
+                                    </tr>
+                                </thead>
+
+                                <tbody>
+
+                                    {% for item in incident_status_counts %}
+
+                                        <tr>
+
+                                            <td>
+                                                {{ item.status|title }}
+                                            </td>
+
+                                            <td class="text-end">
+                                                <span class="badge bg-primary">
+                                                    {{ item.total }}
+                                                </span>
+                                            </td>
+
+                                        </tr>
+
+                                    {% endfor %}
+
+                                </tbody>
+
+                            </table>
+
+                        </div>
+
+                    {% else %}
+
+                        <p class="text-muted mb-0">
+                            No incident statistics are available yet.
+                        </p>
+
+                    {% endif %}
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <!-- REQUEST STATUS -->
+        <div class="col-12 col-lg-6">
+
+            <div class="card border-0 shadow-sm h-100">
+
+                <div class="card-header bg-white">
+                    <h6 class="fw-bold mb-0">
+                        <i class="bi bi-clipboard-data me-2"></i>
+                        Security Report / Request Status
+                    </h6>
+                </div>
+
+                <div class="card-body">
+
+                    {% if request_status_counts %}
+
+                        <div class="table-responsive">
+
+                            <table class="table table-sm align-middle mb-0">
+
+                                <thead>
+                                    <tr>
+                                        <th>Status</th>
+                                        <th class="text-end">Total</th>
+                                    </tr>
+                                </thead>
+
+                                <tbody>
+
+                                    {% for item in request_status_counts %}
+
+                                        <tr>
+
+                                            <td>
+                                                {{ item.status|title }}
+                                            </td>
+
+                                            <td class="text-end">
+                                                <span class="badge bg-success">
+                                                    {{ item.total }}
+                                                </span>
+                                            </td>
+
+                                        </tr>
+
+                                    {% endfor %}
+
+                                </tbody>
+
+                            </table>
+
+                        </div>
+
+                    {% else %}
+
+                        <p class="text-muted mb-0">
+                            No security request statistics are available yet.
+                        </p>
+
+                    {% endif %}
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <!-- PROGRAMME STATUS -->
+        <div class="col-12 col-lg-6">
+
+            <div class="card border-0 shadow-sm h-100">
+
+                <div class="card-header bg-white">
+                    <h6 class="fw-bold mb-0">
+                        <i class="bi bi-people me-2"></i>
+                        Community Safety Programme Status
+                    </h6>
+                </div>
+
+                <div class="card-body">
+
+                    {% if programme_status_counts %}
+
+                        {% for item in programme_status_counts %}
+
+                            <div class="d-flex justify-content-between
+                                        align-items-center border-bottom py-2">
+
+                                <span>
+                                    {{ item.status|title }}
+                                </span>
+
+                                <span class="badge bg-success">
+                                    {{ item.total }}
+                                </span>
+
+                            </div>
+
+                        {% endfor %}
+
+                    {% else %}
+
+                        <p class="text-muted mb-0">
+                            No programme statistics are available yet.
+                        </p>
+
+                    {% endif %}
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <!-- ADVISORY PRIORITY -->
+        <div class="col-12 col-lg-6">
+
+            <div class="card border-0 shadow-sm h-100">
+
+                <div class="card-header bg-white">
+                    <h6 class="fw-bold mb-0">
+                        <i class="bi bi-bell me-2"></i>
+                        Advisory Priority
+                    </h6>
+                </div>
+
+                <div class="card-body">
+
+                    {% if advisory_priority_counts %}
+
+                        {% for item in advisory_priority_counts %}
+
+                            <div class="d-flex justify-content-between
+                                        align-items-center border-bottom py-2">
+
+                                <span>
+                                    {{ item.priority|title }}
+                                </span>
+
+                                <span class="badge bg-warning text-dark">
+                                    {{ item.total }}
+                                </span>
+
+                            </div>
+
+                        {% endfor %}
+
+                    {% else %}
+
+                        <p class="text-muted mb-0">
+                            No advisory statistics are available yet.
+                        </p>
+
+                    {% endif %}
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <!-- COMMUNITY NOTICE STATUS -->
+        <div class="col-12 col-lg-6">
+
+            <div class="card border-0 shadow-sm h-100">
+
+                <div class="card-header bg-white">
+                    <h6 class="fw-bold mb-0">
+                        <i class="bi bi-megaphone me-2"></i>
+                        Community Notice Status
+                    </h6>
+                </div>
+
+                <div class="card-body">
+
+                    {% if notice_status_counts %}
+
+                        {% for item in notice_status_counts %}
+
+                            <div class="d-flex justify-content-between
+                                        align-items-center border-bottom py-2">
+
+                                <span>
+                                    {{ item.status|title }}
+                                </span>
+
+                                <span class="badge bg-info">
+                                    {{ item.total }}
+                                </span>
+
+                            </div>
+
+                        {% endfor %}
+
+                    {% else %}
+
+                        <p class="text-muted mb-0">
+                            No community notice statistics are available yet.
+                        </p>
+
+                    {% endif %}
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <!-- FACILITY TYPES -->
+        <div class="col-12 col-lg-6">
+
+            <div class="card border-0 shadow-sm h-100">
+
+                <div class="card-header bg-white">
+                    <h6 class="fw-bold mb-0">
+                        <i class="bi bi-building me-2"></i>
+                        Security Facilities by Type
+                    </h6>
+                </div>
+
+                <div class="card-body">
+
+                    {% if facility_type_counts %}
+
+                        {% for item in facility_type_counts %}
+
+                            <div class="d-flex justify-content-between
+                                        align-items-center border-bottom py-2">
+
+                                <span>
+                                    {{ item.facility_type|title }}
+                                </span>
+
+                                <span class="badge bg-secondary">
+                                    {{ item.total }}
+                                </span>
+
+                            </div>
+
+                        {% endfor %}
+
+                    {% else %}
+
+                        <p class="text-muted mb-0">
+                            No facility statistics are available yet.
+                        </p>
+
+                    {% endif %}
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- INFORMATION NOTICE -->
+    <div class="alert alert-light border mt-4">
+
+        <div class="d-flex">
+
+            <i class="bi bi-info-circle text-primary fs-5 me-2"></i>
+
+            <div>
+                <strong>About these statistics</strong>
+
+                <p class="mb-0 small text-muted">
+                    These figures are generated from information currently
+                    published or recorded in the Smart City Uganda
+                    Security & Community Safety module.
+                </p>
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+{% endblock %}

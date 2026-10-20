@@ -1,0 +1,90 @@
+{% extends "base.html" %}
+
+{% block title %}
+School Administrators' Services | Smart City Uganda
+{% endblock %}
+
+{% block content %}
+
+<div class="container-fluid education-module">
+
+    <div class="education-module-header">
+
+        <div class="education-module-icon">
+            <i class="bi bi-person-badge"></i>
+        </div>
+
+        <h1>School Administrators' Services</h1>
+
+        <p>
+            Information about services available to school administrators,
+            including requirements and access procedures.
+        </p>
+
+    </div>
+
+
+    {% if administrator_services %}
+
+    <div class="education-card-grid">
+
+        {% for service in administrator_services %}
+
+        <div class="education-card">
+
+            <span class="education-badge">
+                {{ service.get_service_type_display }}
+            </span>
+
+            <h3 class="mt-2">
+                {{ service.title }}
+            </h3>
+
+            <p>
+                {{ service.description|truncatewords:35 }}
+            </p>
+
+            {% if service.requirements %}
+            <p>
+                <strong>Requirements:</strong>
+                {{ service.requirements|truncatewords:20 }}
+            </p>
+            {% endif %}
+
+            {% if service.access_information %}
+            <p>
+                <strong>How to access:</strong>
+                {{ service.access_information|truncatewords:25 }}
+            </p>
+            {% endif %}
+
+            {% if service.application_url %}
+            <a
+                href="{{ service.application_url }}"
+                target="_blank"
+                class="education-button"
+            >
+                Access Information
+                <i class="bi bi-arrow-right"></i>
+            </a>
+            {% endif %}
+
+        </div>
+
+        {% endfor %}
+
+    </div>
+
+    {% else %}
+
+    <div class="education-empty">
+        <i class="bi bi-person-badge"></i>
+        <h3>No administrator services available</h3>
+        <p>Published services will appear here.</p>
+    </div>
+
+    {% endif %}
+
+</div>
+
+{% endblock %}

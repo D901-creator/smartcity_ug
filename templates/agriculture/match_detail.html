@@ -1,0 +1,411 @@
+{% extends "base.html" %}
+
+{% block title %}Match Details{% endblock %}
+
+{% block content %}
+
+<div class="container-fluid">
+
+    <div class="d-flex justify-content-between align-items-center mb-4">
+
+        <div>
+            <h1 class="fw-bold">
+                <i class="bi bi-link-45deg"></i>
+                Farmer–Buyer Match
+            </h1>
+
+            <p class="text-muted">
+                Detailed information about this agricultural match.
+            </p>
+        </div>
+
+        <span class="badge bg-success fs-6">
+            {{ match.match_score }}% Match
+        </span>
+
+    </div>
+
+
+    <!-- STATUS -->
+
+    <div class="alert
+        {% if match.status == 'new' %}
+            alert-info
+        {% elif match.status == 'contacted' %}
+            alert-warning
+        {% elif match.status == 'accepted' %}
+            alert-success
+        {% elif match.status == 'completed' %}
+            alert-success
+        {% else %}
+            alert-danger
+        {% endif %}
+    ">
+
+        <strong>Status:</strong>
+
+        {{ match.get_status_display }}
+
+    </div>
+
+
+    <div class="row">
+
+        <!-- BUYER -->
+
+        <div class="col-lg-6 mb-4">
+
+            <div class="card shadow-sm h-100">
+
+                <div class="card-header bg-primary text-white">
+
+                    <h4 class="mb-0">
+                        <i class="bi bi-person"></i>
+                        Buyer Information
+                    </h4>
+
+                </div>
+
+                <div class="card-body">
+
+                    <p>
+                        <strong>Name:</strong>
+                        {{ match.buyer_request.buyer_name }}
+                    </p>
+
+                    <p>
+                        <strong>Phone:</strong>
+                        {{ match.buyer_request.phone_number }}
+                    </p>
+
+                    <p>
+                        <strong>Product:</strong>
+                        {{ match.buyer_request.product_required }}
+                    </p>
+
+                    <p>
+                        <strong>Quantity:</strong>
+                        {{ match.buyer_request.quantity_required }}
+                        {{ match.buyer_request.unit }}
+                    </p>
+
+                    <p>
+                        <strong>Maximum Price:</strong>
+                        UGX {{ match.buyer_request.maximum_price }}
+                    </p>
+
+                    <p>
+                        <strong>District:</strong>
+                        {{ match.buyer_request.district }}
+                    </p>
+
+                    {% if match.buyer_request.description %}
+
+                    <hr>
+
+                    <strong>Buyer Description</strong>
+
+                    <p class="text-muted mt-2">
+                        {{ match.buyer_request.description }}
+                    </p>
+
+                    {% endif %}
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <!-- FARMER -->
+
+        <div class="col-lg-6 mb-4">
+
+            <div class="card shadow-sm h-100">
+
+                <div class="card-header bg-success text-white">
+
+                    <h4 class="mb-0">
+                        <i class="bi bi-person-badge"></i>
+                        Farmer Information
+                    </h4>
+
+                </div>
+
+                <div class="card-body">
+
+                    <p>
+                        <strong>Farmer:</strong>
+                        {{ match.market_listing.farmer.farmer_name }}
+                    </p>
+
+                    <p>
+                        <strong>Phone:</strong>
+                        {{ match.market_listing.farmer.phone_number }}
+                    </p>
+
+                    <p>
+                        <strong>Product:</strong>
+                        {{ match.market_listing.product_name }}
+                    </p>
+
+                    <p>
+                        <strong>Available:</strong>
+                        {{ match.market_listing.quantity }}
+                        {{ match.market_listing.unit }}
+                    </p>
+
+                    <p>
+                        <strong>Price:</strong>
+                        UGX {{ match.market_listing.price_per_unit }}
+                        / {{ match.market_listing.unit }}
+                    </p>
+
+                    <p>
+                        <strong>District:</strong>
+                        {{ match.market_listing.district }}
+                    </p>
+
+                    {% if match.market_listing.description %}
+
+                    <hr>
+
+                    <strong>Product Description</strong>
+
+                    <p class="text-muted mt-2">
+                        {{ match.market_listing.description }}
+                    </p>
+
+                    {% endif %}
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- MATCH CRITERIA -->
+
+    <div class="card shadow-sm mb-4">
+
+        <div class="card-header">
+
+            <h4 class="mb-0">
+                Match Criteria
+            </h4>
+
+        </div>
+
+        <div class="card-body">
+
+            <div class="row">
+
+                <div class="col-md-3 mb-2">
+
+                    {% if match.matched_product %}
+
+                        <span class="badge bg-success p-2">
+                            ✓ Product Match
+                        </span>
+
+                    {% else %}
+
+                        <span class="badge bg-secondary p-2">
+                            Product Not Matched
+                        </span>
+
+                    {% endif %}
+
+                </div>
+
+
+                <div class="col-md-3 mb-2">
+
+                    {% if match.matched_quantity %}
+
+                        <span class="badge bg-success p-2">
+                            ✓ Quantity Match
+                        </span>
+
+                    {% else %}
+
+                        <span class="badge bg-secondary p-2">
+                            Quantity Not Matched
+                        </span>
+
+                    {% endif %}
+
+                </div>
+
+
+                <div class="col-md-3 mb-2">
+
+                    {% if match.matched_district %}
+
+                        <span class="badge bg-success p-2">
+                            ✓ District Match
+                        </span>
+
+                    {% else %}
+
+                        <span class="badge bg-secondary p-2">
+                            District Not Matched
+                        </span>
+
+                    {% endif %}
+
+                </div>
+
+
+                <div class="col-md-3 mb-2">
+
+                    {% if match.matched_price %}
+
+                        <span class="badge bg-success p-2">
+                            ✓ Price Match
+                        </span>
+
+                    {% else %}
+
+                        <span class="badge bg-secondary p-2">
+                            Price Not Matched
+                        </span>
+
+                    {% endif %}
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- NEGOTIATION INFORMATION -->
+
+    {% if match.buyer_message or match.farmer_message or match.agreed_quantity or match.agreed_price %}
+
+    <div class="card shadow-sm mb-4">
+
+        <div class="card-header">
+
+            <h4 class="mb-0">
+                Negotiation / Transaction
+            </h4>
+
+        </div>
+
+        <div class="card-body">
+
+            {% if match.buyer_message %}
+
+            <div class="alert alert-primary">
+
+                <strong>Buyer Message</strong>
+
+                <p class="mb-0 mt-2">
+                    {{ match.buyer_message }}
+                </p>
+
+            </div>
+
+            {% endif %}
+
+
+            {% if match.farmer_message %}
+
+            <div class="alert alert-success">
+
+                <strong>Farmer Message</strong>
+
+                <p class="mb-0 mt-2">
+                    {{ match.farmer_message }}
+                </p>
+
+            </div>
+
+            {% endif %}
+
+
+            <div class="row">
+
+                {% if match.agreed_quantity %}
+
+                <div class="col-md-6">
+
+                    <strong>Agreed Quantity</strong>
+
+                    <p>
+                        {{ match.agreed_quantity }}
+                        {{ match.market_listing.unit }}
+                    </p>
+
+                </div>
+
+                {% endif %}
+
+
+                {% if match.agreed_price %}
+
+                <div class="col-md-6">
+
+                    <strong>Agreed Price</strong>
+
+                    <p>
+                        UGX {{ match.agreed_price }}
+                        / {{ match.market_listing.unit }}
+                    </p>
+
+                </div>
+
+                {% endif %}
+
+            </div>
+
+
+            {% if match.transaction_notes %}
+
+            <hr>
+
+            <strong>Transaction Notes</strong>
+
+            <p class="text-muted mt-2">
+                {{ match.transaction_notes }}
+            </p>
+
+            {% endif %}
+
+        </div>
+
+    </div>
+
+    {% endif %}
+
+
+    <div class="d-flex gap-2">
+
+        <a href="{% url 'agriculture:respond_to_match' match.id %}"
+           class="btn btn-primary">
+
+            <i class="bi bi-chat-dots"></i>
+            Respond / Update Match
+
+        </a>
+
+        <a href="{% url 'agriculture:matches' %}"
+           class="btn btn-secondary">
+
+            Back to Matches
+
+        </a>
+
+    </div>
+
+</div>
+
+{% endblock %}

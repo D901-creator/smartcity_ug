@@ -1,0 +1,240 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Locations & Maps | Smart City Uganda</title>
+
+    <link
+        rel="stylesheet"
+        href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+    >
+
+    <style>
+        body {
+            margin: 0;
+            padding: 20px;
+            background: #f5f7fa;
+            color: #243247;
+            font-family: Arial, sans-serif;
+        }
+
+        .page {
+            max-width: 1200px;
+            margin: auto;
+        }
+
+        .panel {
+            background: white;
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 18px;
+            box-shadow: 0 2px 10px #0000000d;
+        }
+
+        .muted {
+            color: #65748b;
+        }
+
+        .stats {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+            margin: 15px 0;
+        }
+
+        .stat {
+            padding: 12px 16px;
+            border-radius: 8px;
+            background: #edf5ff;
+        }
+
+        #issue-map {
+            width: 100%;
+            height: 520px;
+            border-radius: 10px;
+            z-index: 1;
+        }
+
+        .issue {
+            border-bottom: 1px solid #e7ebf0;
+            padding: 12px 0;
+        }
+
+        .issue:last-child {
+            border-bottom: 0;
+        }
+
+        .back {
+            display: inline-block;
+            margin-bottom: 15px;
+            color: #176b45;
+            text-decoration: none;
+            font-weight: bold;
+        }
+
+        @media (max-width: 600px) {
+            body { padding: 10px; }
+            .panel { padding: 14px; }
+            #issue-map { height: 400px; }
+        }
+    </style>
+</head>
+<body>
+<div class="page">
+    <a class="back" href="/">← Back to Smart City Uganda</a>
+
+    <div class="panel">
+        <h1>Locations &amp; Maps</h1>
+        <p>
+            Welcome, {{ profile.full_name }}.
+            Your registered role is {{ profile.get_role_display }}.
+        </p>
+        <p>
+            <strong>Registered district:</strong>
+            {{ district.name }}, {{ district.region.name }}
+        </p>
+
+        <div class="stats">
+            <div class="stat">
+                <strong>{{ mapped_count }}</strong>
+                issues mapped
+            </div>
+            <div class="stat">
+                <strong>{{ unmapped_count }}</strong>
+                issues without coordinates
+            </div>
+        </div>
+
+        {% if not district.latitude or not district.longitude %}
+            <p class="muted">
+                This district does not yet have map coordinates configured.
+                The map will initially show Uganda until coordinates are added.
+            </p>
+        {% endif %}
+    </div>
+
+    <div class="panel">
+        <h2>Interactive district and issue map</h2>
+        <p class="muted">
+            Zoom and move the map. Select an issue marker to view its
+            recorded title, reference and status.
+        </p>
+        <div id="issue-map"></div>
+        <p class="muted">
+            Map data © OpenStreetMap contributors.
+        </p>
+    </div>
+
+    <div class="panel">
+        <h2>Issues in {{ district.name }}</h2>
+
+        {% if mapped_count %}
+            <div id="issue-list"></div>
+        {% else %}
+            <p>No issues with recorded coordinates are available for this district yet.</p>
+        {% endif %}
+
+        {% if unmapped_count %}
+            <p class="muted">
+                {{ unmapped_count }} issue(s) are not pinned because
+                their coordinates have not been recorded.
+            </p>
+        {% endif %}
+    </div>
+</div>
+
+{{ issues_json|json_script:"issue-data" }}
+
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<script>
+    const districtLat = Number("{{ center.latitude }}");
+    const districtLon = Number("{{ center.longitude }}");
+
+    const map = L.map("issue-map").setView(
+        [districtLat, districtLon],
+        {% if district.latitude and district.longitude %}10{% else %}7{% endif %}
+    );
+
+    L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
+        maxZoom: 19,
+        attribution: '&copy; OpenStreetMap contributors'
+    }).addTo(map);
+
+    
+    const districtPopup = document.createElement("div");
+    const districtHeading = document.createElement("strong");
+    districtHeading.textContent = "Registered district";
+    const districtText = document.createElement("p");
+    districtText.textContent = "{{ district.name|escapejs }}";
+
+    districtPopup.appendChild(districtHeading);
+    districtPopup.appendChild(districtText);
+
+    L.marker([districtLat, districtLon])
+        .addTo(map)
+        .bindPopup(districtPopup);
+
+
+    const issues = JSON.parse(
+        document.getElementById("issue-data").textContent
+    );
+
+    const list = document.getElementById("issue-list");
+    const bounds = [[districtLat, districtLon]];
+
+    issues.forEach(function(issue) {
+        const marker = L.marker([
+            issue.latitude,
+            issue.longitude
+        ]).addTo(map);
+
+        const popup = document.createElement("div");
+        const title = document.createElement("strong");
+        title.textContent = issue.title;
+
+        const details = document.createElement("p");
+        details.textContent =
+            issue.kind + " · " + issue.reference + " · " + issue.status;
+
+        popup.appendChild(title);
+        popup.appendChild(details);
+        marker.bindPopup(popup);
+
+        bounds.push([issue.latitude, issue.longitude]);
+
+        if (list) {
+            const item = document.createElement("div");
+            item.className = "issue";
+
+            const heading = document.createElement("strong");
+            heading.textContent = issue.title;
+
+            const detail = document.createElement("p");
+            detail.className = "muted";
+            detail.textContent =
+                issue.kind + " · " + issue.reference + " · " + issue.status;
+
+            item.appendChild(heading);
+            item.appendChild(detail);
+
+            item.style.cursor = "pointer";
+            item.addEventListener("click", function() {
+                map.setView(
+                    [issue.latitude, issue.longitude],
+                    15
+                );
+                marker.openPopup();
+            });
+
+            list.appendChild(item);
+        }
+    });
+
+    if (issues.length > 0) {
+        map.fitBounds(bounds, { padding: [30, 30], maxZoom: 13 });
+    }
+</script>
+</body>
+</html>

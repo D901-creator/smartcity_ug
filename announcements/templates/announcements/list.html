@@ -1,0 +1,85 @@
+{% extends "department_head/base.html" %}
+
+{% block content %}
+<div class="container-fluid py-3">
+    <div class="d-flex justify-content-between align-items-center mb-4 flex-wrap gap-2">
+        <div>
+            <h2>Department Announcements</h2>
+            <p class="text-muted">Manage announcements for your department.</p>
+        </div>
+        <a href="{% url 'announcements:create' %}" class="btn btn-success">
+            <i class="bi bi-plus-circle"></i> Create Announcement
+        </a>
+    </div>
+
+    {% if messages %}
+        {% for message in messages %}
+            <div class="alert alert-{{ message.tags|default:'info' }} alert-dismissible fade show">
+                {{ message }}
+                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+            </div>
+        {% endfor %}
+    {% endif %}
+
+    <div class="card border-0 shadow-sm">
+        <div class="card-body">
+            <div class="table-responsive">
+                <table class="table table-hover align-middle">
+                    <thead>
+                        <tr>
+                            <th>Title</th>
+                            <th>Status</th>
+                            <th>Created</th>
+                            <th>Expires</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    {% for item in announcements %}
+                        <tr>
+                            <td>
+                                <strong>{{ item.title }}</strong>
+                                <div class="text-muted small">
+                                    {{ item.message|truncatechars:100 }}
+                                </div>
+                            </td>
+                            <td>
+                                {% if item.status == "published" %}
+                                    <span class="badge bg-success">Published</span>
+                                {% elif item.status == "draft" %}
+                                    <span class="badge bg-secondary">Draft</span>
+                                {% else %}
+                                    <span class="badge bg-dark">Archived</span>
+                                {% endif %}
+                            </td>
+                            <td>{{ item.created_at|date:"d M Y, H:i" }}</td>
+                            <td>
+                                {{ item.expires_at|date:"d M Y, H:i"|default:"No expiry" }}
+                            </td>
+                            <td>
+                                {% if item.status != "archived" %}
+                                <form method="post"
+                                      action="{% url 'announcements:archive' item.id %}"
+                                      onsubmit="return confirm('Archive this announcement?');">
+                                    {% csrf_token %}
+                                    <button class="btn btn-sm btn-outline-secondary" type="submit">
+                                        Archive
+                                    </button>
+                                </form>
+                                {% endif %}
+                            </td>
+                        </tr>
+                    {% empty %}
+                        <tr>
+                            <td colspan="5" class="text-center text-muted py-4">
+                                No announcements have been created yet.
+                            </td>
+                        </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

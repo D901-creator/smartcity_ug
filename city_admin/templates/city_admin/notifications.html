@@ -1,0 +1,326 @@
+
+{% extends "city_admin/base.html" %}
+
+{% block title %}Notifications{% endblock %}
+{% block page_heading %}Notifications{% endblock %}
+
+{% block content %}
+<div class="notification-page">
+
+    <div class="notification-page-heading">
+        <div>
+            <h2>Notifications Centre</h2>
+            <p>Review important updates from Smart City Uganda.</p>
+        </div>
+
+        {% if unread_notification_count > 0 %}
+        <form method="post"
+              action="{% url 'city_admin:notifications_mark_all_read' %}">
+            {% csrf_token %}
+            <button type="submit" class="btn btn-success">
+                <i class="bi bi-check2-all me-1"></i>
+                Mark all as read
+            </button>
+        </form>
+        {% endif %}
+    </div>
+
+    {% if messages %}
+        {% for message in messages %}
+            <div class="alert alert-success alert-dismissible fade show">
+                {{ message }}
+                <button type="button"
+                        class="btn-close"
+                        data-bs-dismiss="alert"
+                        aria-label="Close"></button>
+            </div>
+        {% endfor %}
+    {% endif %}
+
+    <div class="notification-summary">
+        <div>
+            <span class="notification-summary-icon">
+                <i class="bi bi-bell"></i>
+            </span>
+            <div>
+                <small>Total notifications</small>
+                <h3>{{ notifications|length }}</h3>
+            </div>
+        </div>
+
+        <div>
+            <span class="notification-summary-icon unread-summary-icon">
+                <i class="bi bi-envelope-exclamation"></i>
+            </span>
+            <div>
+                <small>Unread notifications</small>
+                <h3>{{ unread_notification_count }}</h3>
+            </div>
+        </div>
+    </div>
+
+    <div class="notification-list">
+        {% for notification in notifications %}
+        <div class="notification-card {% if not notification.is_read %}notification-unread{% endif %}">
+
+            <div class="notification-card-icon">
+                {% if notification.notification_type == "request" %}
+                    <i class="bi bi-file-earmark-text"></i>
+                {% elif notification.notification_type == "report" %}
+                    <i class="bi bi-flag"></i>
+                {% elif notification.notification_type == "announcement" %}
+                    <i class="bi bi-megaphone"></i>
+                {% elif notification.notification_type == "message" %}
+                    <i class="bi bi-chat-dots"></i>
+                {% elif notification.notification_type == "payment" %}
+                    <i class="bi bi-credit-card"></i>
+                {% else %}
+                    <i class="bi bi-bell"></i>
+                {% endif %}
+            </div>
+
+            <div class="notification-card-content">
+                <div class="notification-card-heading">
+                    <h5>{{ notification.title }}</h5>
+
+                    {% if not notification.is_read %}
+                        <span class="notification-unread-label">Unread</span>
+                    {% else %}
+                        <span class="notification-read-label">Read</span>
+                    {% endif %}
+                </div>
+
+                <p>{{ notification.message }}</p>
+
+                <div class="notification-card-meta">
+                    <span>
+                        <i class="bi bi-tag me-1"></i>
+                        {{ notification.get_notification_type_display }}
+                    </span>
+                    <span>
+                        <i class="bi bi-clock me-1"></i>
+                        {{ notification.created_at|date:"d M Y, H:i" }}
+                    </span>
+                </div>
+            </div>
+
+            {% if not notification.is_read %}
+            <form method="post"
+                  action="{% url 'city_admin:notification_mark_read' notification.id %}">
+                {% csrf_token %}
+                <button type="submit"
+                        class="btn btn-outline-success btn-sm">
+                    Mark as read
+                </button>
+            </form>
+            {% endif %}
+
+        </div>
+        {% empty %}
+        <div class="notification-empty-page">
+            <i class="bi bi-bell-slash"></i>
+            <h4>No notifications yet</h4>
+            <p>New notifications addressed to your account will appear here.</p>
+        </div>
+        {% endfor %}
+    </div>
+
+</div>
+{% endblock %}
+
+{% block extra_css %}
+{{ block.super }}
+<style>
+.notification-page {
+    color: #263445;
+}
+
+.notification-page-heading,
+.notification-card-heading,
+.notification-card-meta,
+.notification-dropdown-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+}
+
+.notification-page-heading {
+    margin-bottom: 24px;
+    flex-wrap: wrap;
+}
+
+.notification-page-heading h2 {
+    font-size: 24px;
+    font-weight: 700;
+    margin-bottom: 6px;
+}
+
+.notification-page-heading p {
+    color: #718096;
+    margin: 0;
+}
+
+.notification-summary {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 16px;
+    margin-bottom: 22px;
+}
+
+.notification-summary > div {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    padding: 20px;
+    background: #fff;
+    border: 1px solid #e5eaf0;
+    border-radius: 12px;
+}
+
+.notification-summary-icon {
+    display: grid;
+    place-items: center;
+    width: 46px;
+    height: 46px;
+    border-radius: 10px;
+    background: #e8f5ed;
+    color: #198754;
+    font-size: 21px;
+}
+
+.unread-summary-icon {
+    background: #fff0f0;
+    color: #dc3545;
+}
+
+.notification-summary small {
+    color: #718096;
+}
+
+.notification-summary h3 {
+    font-size: 23px;
+    font-weight: 700;
+    margin: 3px 0 0;
+}
+
+.notification-list {
+    display: grid;
+    gap: 12px;
+}
+
+.notification-card {
+    display: flex;
+    align-items: flex-start;
+    gap: 15px;
+    padding: 18px;
+    background: #fff;
+    border: 1px solid #e5eaf0;
+    border-radius: 12px;
+}
+
+.notification-card.notification-unread {
+    border-left: 4px solid #198754;
+    background: #fbfefc;
+}
+
+.notification-card-icon {
+    display: grid;
+    place-items: center;
+    flex: 0 0 42px;
+    height: 42px;
+    border-radius: 10px;
+    background: #e8f5ed;
+    color: #198754;
+    font-size: 20px;
+}
+
+.notification-card-content {
+    flex: 1;
+    min-width: 0;
+}
+
+.notification-card-heading {
+    justify-content: flex-start;
+    flex-wrap: wrap;
+}
+
+.notification-card-heading h5 {
+    font-size: 15px;
+    font-weight: 700;
+    margin: 0;
+}
+
+.notification-card-content > p {
+    color: #596779;
+    margin: 8px 0;
+    overflow-wrap: anywhere;
+}
+
+.notification-unread-label,
+.notification-read-label {
+    font-size: 11px;
+    padding: 4px 8px;
+    border-radius: 20px;
+}
+
+.notification-unread-label {
+    color: #b42318;
+    background: #fee4e2;
+}
+
+.notification-read-label {
+    color: #596779;
+    background: #edf0f4;
+}
+
+.notification-card-meta {
+    justify-content: flex-start;
+    flex-wrap: wrap;
+    gap: 8px 18px;
+    color: #718096;
+    font-size: 12px;
+}
+
+.notification-empty-page {
+    text-align: center;
+    padding: 55px 20px;
+    background: #fff;
+    border: 1px dashed #d7dee7;
+    border-radius: 12px;
+}
+
+.notification-empty-page > i {
+    font-size: 38px;
+    color: #8a96a6;
+}
+
+.notification-empty-page h4 {
+    margin-top: 12px;
+    font-size: 18px;
+}
+
+.notification-empty-page p {
+    color: #718096;
+    margin-bottom: 0;
+}
+
+@media (max-width: 600px) {
+    .notification-summary {
+        grid-template-columns: 1fr;
+    }
+
+    .notification-card {
+        flex-wrap: wrap;
+    }
+
+    .notification-card form {
+        width: 100%;
+    }
+
+    .notification-card form button {
+        width: 100%;
+    }
+}
+</style>
+{% endblock %}

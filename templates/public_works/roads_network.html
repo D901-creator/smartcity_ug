@@ -1,0 +1,477 @@
+{% extends "base.html" %}
+
+{% block title %}
+    Roads & Road Network | Smart City Uganda
+{% endblock %}
+
+{% block content %}
+
+<div class="container-fluid py-3">
+
+    <!-- Header -->
+    <div class="d-flex flex-column flex-md-row
+                justify-content-between align-items-md-center mb-3">
+
+        <div>
+
+            <h4 class="fw-bold mb-1">
+
+                <i class="bi bi-signpost-2 text-success me-2"></i>
+
+                Roads & Road Network
+
+            </h4>
+
+            <p class="text-muted small mb-0">
+
+                View road information across districts and cities
+                in Uganda.
+
+            </p>
+
+        </div>
+
+        <div class="mt-2 mt-md-0">
+
+            <a
+                href="{% url 'public_works:road_problem_report' %}"
+                class="btn btn-danger btn-sm">
+
+                <i class="bi bi-exclamation-triangle me-1"></i>
+
+                Report Road Problem
+
+            </a>
+
+        </div>
+
+    </div>
+
+
+    <!-- Filter -->
+    <div class="card border-0 shadow-sm mb-3">
+
+        <div class="card-body p-3">
+
+            <div class="d-flex
+                        justify-content-between
+                        align-items-center mb-3">
+
+                <h6 class="fw-bold mb-0">
+
+                    <i class="bi bi-funnel me-1"></i>
+
+                    Search & Filter Roads
+
+                </h6>
+
+                <span class="badge bg-light
+                             text-dark border">
+
+                    {{ total_roads }} Road{{ total_roads|pluralize }}
+
+                </span>
+
+            </div>
+
+
+            <form method="get">
+
+                <div class="row g-2">
+
+                    <!-- District -->
+
+                    <div class="col-12 col-md-3">
+
+                        <label class="form-label small fw-semibold">
+
+                            District / City
+
+                        </label>
+
+                        <input
+                            type="text"
+                            name="district"
+                            value="{{ district }}"
+                            class="form-control form-control-sm"
+                            placeholder="e.g. Kampala">
+
+                    </div>
+
+
+                    <!-- Road class -->
+
+                    <div class="col-12 col-md-3">
+
+                        <label class="form-label small fw-semibold">
+
+                            Road Classification
+
+                        </label>
+
+                        <select
+                            name="road_class"
+                            class="form-select form-select-sm">
+
+                            <option value="">
+                                All Road Classes
+                            </option>
+
+                            {% for value, label in road_classes %}
+
+                                <option
+                                    value="{{ value }}"
+                                    {% if road_class == value %}
+                                        selected
+                                    {% endif %}>
+
+                                    {{ label }}
+
+                                </option>
+
+                            {% endfor %}
+
+                        </select>
+
+                    </div>
+
+
+                    <!-- Condition -->
+
+                    <div class="col-12 col-md-3">
+
+                        <label class="form-label small fw-semibold">
+
+                            Road Condition
+
+                        </label>
+
+                        <select
+                            name="condition"
+                            class="form-select form-select-sm">
+
+                            <option value="">
+                                All Conditions
+                            </option>
+
+                            {% for value, label in conditions %}
+
+                                <option
+                                    value="{{ value }}"
+                                    {% if condition == value %}
+                                        selected
+                                    {% endif %}>
+
+                                    {{ label }}
+
+                                </option>
+
+                            {% endfor %}
+
+                        </select>
+
+                    </div>
+
+
+                    <!-- Surface -->
+
+                    <div class="col-12 col-md-3">
+
+                        <label class="form-label small fw-semibold">
+
+                            Surface
+
+                        </label>
+
+                        <select
+                            name="surface_type"
+                            class="form-select form-select-sm">
+
+                            <option value="">
+                                All Surfaces
+                            </option>
+
+                            {% for value, label in surface_types %}
+
+                                <option
+                                    value="{{ value }}"
+                                    {% if surface_type == value %}
+                                        selected
+                                    {% endif %}>
+
+                                    {{ label }}
+
+                                </option>
+
+                            {% endfor %}
+
+                        </select>
+
+                    </div>
+
+
+                    <div class="col-12 d-flex gap-2 mt-2">
+
+                        <button
+                            type="submit"
+                            class="btn btn-success btn-sm">
+
+                            <i class="bi bi-search me-1"></i>
+
+                            Search Roads
+
+                        </button>
+
+
+                        <a
+                            href="{% url 'public_works:roads_network' %}"
+                            class="btn btn-outline-secondary btn-sm">
+
+                            <i class="bi bi-arrow-counterclockwise me-1"></i>
+
+                            Clear
+
+                        </a>
+
+                    </div>
+
+                </div>
+
+            </form>
+
+        </div>
+
+    </div>
+
+
+    <!-- Road cards -->
+
+    {% if roads %}
+
+        <div class="row g-3">
+
+            {% for road in roads %}
+
+                <div class="col-12 col-md-6 col-xl-4">
+
+                    <div class="card h-100 border-0 shadow-sm">
+
+                        <div class="card-body p-3">
+
+                            <div class="d-flex
+                                        justify-content-between
+                                        align-items-start mb-2">
+
+                                <div>
+
+                                    <h6 class="fw-bold mb-1">
+
+                                        {{ road.name }}
+
+                                    </h6>
+
+                                    {% if road.road_code %}
+
+                                        <small class="text-muted">
+
+                                            Code:
+                                            {{ road.road_code }}
+
+                                        </small>
+
+                                    {% endif %}
+
+                                </div>
+
+
+                                {% if road.is_operational %}
+
+                                    <span
+                                        class="badge bg-success">
+
+                                        Operational
+
+                                    </span>
+
+                                {% else %}
+
+                                    <span
+                                        class="badge bg-danger">
+
+                                        Not Operational
+
+                                    </span>
+
+                                {% endif %}
+
+                            </div>
+
+
+                            <div class="small mb-2">
+
+                                <i class="bi bi-geo-alt
+                                          text-success me-1"></i>
+
+                                <strong>
+                                    {{ road.district }}
+                                </strong>
+
+                            </div>
+
+
+                            <div class="small text-muted mb-2">
+
+                                <i class="bi bi-signpost
+                                          me-1"></i>
+
+                                {{ road.start_location }}
+
+                                <i class="bi bi-arrow-right mx-1"></i>
+
+                                {{ road.end_location }}
+
+                            </div>
+
+
+                            <div class="d-flex
+                                        flex-wrap gap-1 mb-3">
+
+                                <span
+                                    class="badge bg-primary-subtle
+                                           text-primary">
+
+                                    {{ road.get_road_class_display }}
+
+                                </span>
+
+                                <span
+                                    class="badge bg-info-subtle
+                                           text-info">
+
+                                    {{ road.get_surface_type_display }}
+
+                                </span>
+
+                                {% if road.condition == "good" %}
+
+                                    <span
+                                        class="badge bg-success-subtle
+                                               text-success">
+
+                                        {{ road.get_condition_display }}
+
+                                    </span>
+
+                                {% elif road.condition == "fair" %}
+
+                                    <span
+                                        class="badge bg-warning-subtle
+                                               text-warning">
+
+                                        {{ road.get_condition_display }}
+
+                                    </span>
+
+                                {% else %}
+
+                                    <span
+                                        class="badge bg-danger-subtle
+                                               text-danger">
+
+                                        {{ road.get_condition_display }}
+
+                                    </span>
+
+                                {% endif %}
+
+                            </div>
+
+
+                            {% if road.length_km %}
+
+                                <p class="small mb-2">
+
+                                    <i class="bi bi-rulers me-1"></i>
+
+                                    <strong>
+                                        Length:
+                                    </strong>
+
+                                    {{ road.length_km }} km
+
+                                </p>
+
+                            {% endif %}
+
+
+                            {% if road.description %}
+
+                                <p class="text-muted small mb-0">
+
+                                    {{ road.description|truncatechars:120 }}
+
+                                </p>
+
+                            {% endif %}
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            {% endfor %}
+
+        </div>
+
+    {% else %}
+
+        <div class="card border-0 shadow-sm">
+
+            <div class="card-body text-center p-5">
+
+                <i class="bi bi-signpost-2
+                          text-muted fs-1 mb-3"></i>
+
+                <h6 class="fw-bold">
+                    No roads found
+                </h6>
+
+                <p class="text-muted small mb-3">
+
+                    No road information matches your current
+                    search criteria.
+
+                </p>
+
+                <a
+                    href="{% url 'public_works:roads_network' %}"
+                    class="btn btn-outline-success btn-sm">
+
+                    Clear Filters
+
+                </a>
+
+            </div>
+
+        </div>
+
+    {% endif %}
+
+
+    <!-- Information notice -->
+
+    <div class="alert alert-info mt-4 small">
+
+        <i class="bi bi-info-circle me-1"></i>
+
+        Road information displayed here is intended for citizen
+        access. Road records and infrastructure information will
+        later be maintained through the appropriate government
+        management portals.
+
+    </div>
+
+</div>
+
+{% endblock %}

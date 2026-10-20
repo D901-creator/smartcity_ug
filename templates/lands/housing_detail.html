@@ -1,0 +1,211 @@
+{% extends "base.html" %}
+
+{% block title %}
+    {{ information.title }} | Smart City Uganda
+{% endblock %}
+
+{% block content %}
+
+<div class="container-fluid">
+
+    <div class="mb-4">
+
+        <a
+            href="{% url 'lands:housing_services' %}"
+            class="btn btn-outline-success"
+        >
+            <i class="bi bi-arrow-left"></i>
+            Back to Housing Services
+        </a>
+
+    </div>
+
+
+    <div class="row g-4">
+
+        <!-- Main information -->
+
+        <div class="col-lg-8">
+
+            <div class="card border-0 shadow-sm">
+
+                <div class="card-body p-4">
+
+                    <div class="d-flex
+                                align-items-start
+                                gap-3 mb-4">
+
+                        <div class="rounded-circle
+                                    bg-success-subtle
+                                    text-success
+                                    p-3">
+
+                            <i class="bi bi-house-door fs-3"></i>
+
+                        </div>
+
+                        <div>
+
+                            <h2 class="fw-bold mb-1">
+                                {{ information.title }}
+                            </h2>
+
+                            <span class="badge text-bg-success">
+
+                                {{ information.get_information_type_display }}
+
+                            </span>
+
+                        </div>
+
+                    </div>
+
+
+                    {% if information.district %}
+
+                        <div class="alert alert-light border">
+
+                            <i class="bi bi-geo-alt text-success"></i>
+
+                            <strong>Location:</strong>
+                            {{ information.district }}
+
+                        </div>
+
+                    {% endif %}
+
+
+                    <h5 class="fw-bold">
+                        Overview
+                    </h5>
+
+                    <p>
+                        {{ information.description|linebreaksbr }}
+                    </p>
+
+
+                    {% if information.requirements %}
+
+                        <hr>
+
+                        <h5 class="fw-bold">
+                            Requirements
+                        </h5>
+
+                        <div class="bg-light rounded p-3">
+
+                            {{ information.requirements|linebreaksbr }}
+
+                        </div>
+
+                    {% endif %}
+
+
+                    {% if information.application_process %}
+
+                        <hr>
+
+                        <h5 class="fw-bold">
+                            How to Access the Service
+                        </h5>
+
+                        <div class="bg-light rounded p-3">
+
+                            {{ information.application_process|linebreaksbr }}
+
+                        </div>
+
+                    {% endif %}
+
+
+                    {% if information.contact_information %}
+
+                        <hr>
+
+                        <h5 class="fw-bold">
+                            Contact Information
+                        </h5>
+
+                        <div class="alert alert-success">
+
+                            {{ information.contact_information|linebreaksbr }}
+
+                        </div>
+
+                    {% endif %}
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <!-- Information panel -->
+
+        <div class="col-lg-4">
+
+            <div class="card border-0 shadow-sm">
+
+                <div class="card-body">
+
+                    <h5 class="fw-bold mb-3">
+                        Housing Services
+                    </h5>
+
+                    <p class="text-muted">
+                        This information is provided through
+                        Smart City Uganda to help citizens understand
+                        available housing services and procedures.
+                    </p>
+
+                    <hr>
+
+                    <a
+                        href="{% url 'lands:housing_services' %}"
+                        class="btn btn-success w-100 mb-2"
+                    >
+
+                        <i class="bi bi-house-door"></i>
+                        Browse Housing Services
+
+                    </a>
+
+
+                    <a
+                        href="{% url 'lands:home' %}"
+                        class="btn btn-outline-secondary w-100"
+                    >
+
+                        <i class="bi bi-buildings"></i>
+                        Lands & Urban Planning
+
+                    </a>
+
+                </div>
+
+            </div>
+
+
+            <div class="alert alert-warning mt-3">
+
+                <strong>Important:</strong>
+
+                <div class="small mt-1">
+
+                    Housing information, requirements and procedures
+                    should be verified with the responsible government
+                    authority before making official decisions or
+                    payments.
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+{% endblock %}

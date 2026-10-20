@@ -1,0 +1,149 @@
+{% extends "base.html" %}
+
+{% block title %}Health Information | Smart City Uganda{% endblock %}
+
+{% block content %}
+
+<div class="container-fluid py-3">
+
+    <h4 class="fw-bold mb-1">
+        Health Information
+    </h4>
+
+    <p class="text-muted small mb-4">
+        Access published health guidance, awareness and public-health
+        information.
+    </p>
+
+
+    <div class="card border-0 shadow-sm mb-4">
+
+        <div class="card-body">
+
+            <form method="get">
+
+                <div class="row g-2">
+
+                    <div class="col-md-5">
+                        <input type="text"
+                               name="search"
+                               value="{{ search }}"
+                               class="form-control"
+                               placeholder="Search health information">
+                    </div>
+
+                    <div class="col-md-4">
+
+                        <select name="information_type"
+                                class="form-select">
+
+                            <option value="">
+                                All information types
+                            </option>
+
+                            {% for value, label in information_types %}
+                            <option value="{{ value }}"
+                                {% if information_type == value %}selected{% endif %}>
+                                {{ label }}
+                            </option>
+                            {% endfor %}
+
+                        </select>
+
+                    </div>
+
+                    <div class="col-md-3">
+
+                        <input type="text"
+                               name="district"
+                               value="{{ district }}"
+                               class="form-control"
+                               placeholder="District">
+
+                    </div>
+
+                </div>
+
+                <div class="mt-3">
+
+                    <button class="btn btn-success">
+                        <i class="bi bi-search me-1"></i>
+                        Search
+                    </button>
+
+                    <a href="{% url 'health:information' %}"
+                       class="btn btn-outline-secondary">
+                        Reset
+                    </a>
+
+                </div>
+
+            </form>
+
+        </div>
+
+    </div>
+
+
+    <div class="row g-3">
+
+        {% for item in information %}
+
+        <div class="col-md-6 col-xl-4">
+
+            <div class="card border-0 shadow-sm h-100">
+
+                {% if item.image %}
+                <img src="{{ item.image.url }}"
+                     class="card-img-top"
+                     style="height:180px;object-fit:cover;"
+                     alt="{{ item.title }}">
+                {% endif %}
+
+                <div class="card-body">
+
+                    <span class="badge text-bg-light border mb-2">
+                        {{ item.get_information_type_display }}
+                    </span>
+
+                    <h6 class="fw-bold">
+                        {{ item.title }}
+                    </h6>
+
+                    <p class="small text-muted">
+                        {{ item.summary|truncatewords:30 }}
+                    </p>
+
+                    {% if item.district %}
+                    <div class="small text-muted mb-2">
+                        <i class="bi bi-geo-alt"></i>
+                        {{ item.district }}
+                    </div>
+                    {% endif %}
+
+                    <a href="{% url 'health:information_detail' item.id %}"
+                       class="btn btn-sm btn-outline-success">
+                        Read Information
+                    </a>
+
+                </div>
+
+            </div>
+
+        </div>
+
+        {% empty %}
+
+        <div class="col-12">
+            <div class="alert alert-light border">
+                No health information found.
+            </div>
+        </div>
+
+        {% endfor %}
+
+    </div>
+
+</div>
+
+{% endblock %}

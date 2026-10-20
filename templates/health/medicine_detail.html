@@ -1,0 +1,100 @@
+{% extends "base.html" %}
+
+{% block title %}{{ medicine.title }} | Smart City Uganda{% endblock %}
+
+{% block content %}
+
+<div class="container-fluid py-3">
+
+    <a href="{% url 'health:medicines' %}"
+       class="small text-decoration-none">
+        <i class="bi bi-arrow-left"></i>
+        Back to medicines
+    </a>
+
+    <div class="card border-0 shadow-sm mt-3">
+
+        <div class="card-body p-4">
+
+            <div class="d-flex flex-column flex-md-row justify-content-between">
+
+                <div>
+                    <h3 class="fw-bold">
+                        {{ medicine.title }}
+                    </h3>
+
+                    {% if medicine.category %}
+                    <span class="badge text-bg-light border">
+                        {{ medicine.category }}
+                    </span>
+                    {% endif %}
+                </div>
+
+                <div class="mt-2 mt-md-0">
+                    <span class="badge
+                        {% if medicine.availability_status == 'available' %}
+                            text-bg-success
+                        {% elif medicine.availability_status == 'limited' %}
+                            text-bg-warning
+                        {% elif medicine.availability_status == 'unavailable' %}
+                            text-bg-danger
+                        {% else %}
+                            text-bg-secondary
+                        {% endif %}">
+                        {{ medicine.get_availability_status_display }}
+                    </span>
+                </div>
+
+            </div>
+
+            <hr>
+
+            <h6 class="fw-bold">Information</h6>
+
+            <div class="small text-muted mb-4">
+                {{ medicine.description|linebreaks }}
+            </div>
+
+            <div class="row g-3">
+
+                <div class="col-md-6">
+                    <strong>Facility</strong>
+                    <div class="small text-muted">
+                        {% if medicine.facility %}
+                            {{ medicine.facility.title }}
+                        {% else %}
+                            Not specified
+                        {% endif %}
+                    </div>
+                </div>
+
+                <div class="col-md-6">
+                    <strong>District</strong>
+                    <div class="small text-muted">
+                        {{ medicine.district|default:"Not specified" }}
+                    </div>
+                </div>
+
+                <div class="col-md-6">
+                    <strong>Last Updated</strong>
+                    <div class="small text-muted">
+                        {{ medicine.last_updated|date:"d M Y H:i" }}
+                    </div>
+                </div>
+
+                <div class="col-md-6">
+                    <strong>Contact</strong>
+                    <div class="small text-muted">
+                        {{ medicine.contact_information|default:"Not provided" }}
+                    </div>
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+{% endblock %}

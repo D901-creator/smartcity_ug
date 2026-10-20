@@ -1,0 +1,155 @@
+
+{% extends "base.html" %}
+
+{% block title %}
+    Career Guidance | Smart City Uganda
+{% endblock %}
+
+{% block content %}
+
+<div class="container-fluid py-4">
+
+    <div class="mb-4">
+
+        <h4 class="fw-bold mb-1">
+            <i class="bi bi-compass me-2 text-success"></i>
+            Career Guidance
+        </h4>
+
+        <p class="text-muted mb-0">
+            Information to help citizens prepare for employment
+            and develop their careers.
+        </p>
+
+    </div>
+
+
+    <div class="card border-0 shadow-sm mb-4">
+
+        <div class="card-body">
+
+            <form method="get">
+
+                <div class="row g-2">
+
+                    <div class="col-12 col-md-8">
+
+                        <input
+                            type="text"
+                            name="search"
+                            value="{{ search }}"
+                            class="form-control"
+                            placeholder="Search career information..."
+                        >
+
+                    </div>
+
+
+                    <div class="col-12 col-md-4">
+
+                        <select
+                            name="information_type"
+                            class="form-select"
+                        >
+
+                            <option value="">
+                                Information Type
+                            </option>
+
+                            {% for value, label in information_types %}
+
+                                <option value="{{ value }}"
+                                    {% if selected_type == value %}
+                                        selected
+                                    {% endif %}
+                                >
+                                    {{ label }}
+                                </option>
+
+                            {% endfor %}
+
+                        </select>
+
+                    </div>
+
+
+                    <div class="col-12">
+
+                        <button class="btn btn-success btn-sm">
+                            <i class="bi bi-search me-1"></i>
+                            Search
+                        </button>
+
+                        <a
+                            href="{% url 'jobs:career_guidance' %}"
+                            class="btn btn-light border btn-sm"
+                        >
+                            Reset
+                        </a>
+
+                    </div>
+
+                </div>
+
+            </form>
+
+        </div>
+
+    </div>
+
+
+    <div class="row g-3">
+
+        {% for item in information %}
+
+            <div class="col-12 col-md-6 col-xl-4">
+
+                <div class="card border-0 shadow-sm h-100">
+
+                    <div class="card-body p-3">
+
+                        <i class="bi bi-compass fs-4 text-success"></i>
+
+                        <h6 class="fw-bold mt-2">
+                            {{ item.title }}
+                        </h6>
+
+                        <span class="badge bg-success-subtle text-success mb-2">
+                            {{ item.get_information_type_display }}
+                        </span>
+
+                        <p class="text-muted small">
+                            {{ item.summary }}
+                        </p>
+
+                        <a
+                            href="{% url 'jobs:employment_information' %}"
+                            class="btn btn-outline-success btn-sm"
+                        >
+                            Read Information
+                            <i class="bi bi-arrow-right ms-1"></i>
+                        </a>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        {% empty %}
+
+            <div class="col-12">
+
+                <div class="alert alert-light border">
+                    No career guidance information is currently published.
+                </div>
+
+            </div>
+
+        {% endfor %}
+
+    </div>
+
+</div>
+
+{% endblock %}

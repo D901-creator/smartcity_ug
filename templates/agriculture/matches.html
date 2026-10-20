@@ -1,0 +1,182 @@
+{% extends "base.html" %}
+
+{% block title %}Farmer Buyer Matches{% endblock %}
+
+{% block content %}
+
+<div class="container-fluid">
+
+    <div class="mb-4">
+
+        <h1 class="fw-bold">
+            <i class="bi bi-link-45deg"></i>
+            Farmer–Buyer Matches
+        </h1>
+
+        <p class="text-muted">
+            The system automatically identifies agricultural products
+            that may satisfy buyer requests.
+        </p>
+
+    </div>
+
+
+    {% if matches %}
+
+        <div class="row">
+
+            {% for match in matches %}
+
+            <div class="col-lg-6 mb-4">
+
+                <div class="card shadow-sm h-100">
+
+                    <div class="card-header d-flex justify-content-between">
+
+                        <strong>
+                            {{ match.buyer_request.product_required }}
+                        </strong>
+
+                        <span class="badge bg-success">
+                            {{ match.match_score }}% Match
+                        </span>
+
+                    </div>
+
+                    <div class="card-body">
+
+                        <h5 class="fw-bold">
+                            Buyer Request
+                        </h5>
+
+                        <p>
+                            <strong>Buyer:</strong>
+                            {{ match.buyer_request.buyer_name }}
+                        </p>
+
+                        <p>
+                            <strong>Required:</strong>
+                            {{ match.buyer_request.quantity_required }}
+                            {{ match.buyer_request.unit }}
+                        </p>
+
+                        <p>
+                            <strong>Maximum Price:</strong>
+                            UGX {{ match.buyer_request.maximum_price }}
+                        </p>
+
+                        <p>
+                            <strong>District:</strong>
+                            {{ match.buyer_request.district }}
+                        </p>
+
+                        <hr>
+
+                        <h5 class="fw-bold">
+                            Farmer Product
+                        </h5>
+
+                        <p>
+                            <strong>Product:</strong>
+                            {{ match.market_listing.product_name }}
+                        </p>
+
+                        <p>
+                            <strong>Available:</strong>
+                            {{ match.market_listing.quantity }}
+                            {{ match.market_listing.unit }}
+                        </p>
+
+                        <p>
+                            <strong>Price:</strong>
+                            UGX {{ match.market_listing.price_per_unit }}
+                            / {{ match.market_listing.unit }}
+                        </p>
+
+                        <p>
+                            <strong>District:</strong>
+                            {{ match.market_listing.district }}
+                        </p>
+
+                        <p>
+                            <strong>Farmer:</strong>
+                            {{ match.market_listing.farmer.farmer_name }}
+                        </p>
+
+                        <p>
+                            <strong>Phone:</strong>
+                            {{ match.market_listing.farmer.phone_number }}
+                        </p>
+
+                        <hr>
+
+                        <h6 class="fw-bold">
+                            Match Details
+                        </h6>
+
+                        <div class="d-flex flex-wrap gap-2">
+
+                            {% if match.matched_product %}
+                                <span class="badge bg-success">
+                                    ✓ Product
+                                </span>
+                            {% endif %}
+
+                            {% if match.matched_quantity %}
+                                <span class="badge bg-success">
+                                    ✓ Quantity
+                                </span>
+                            {% endif %}
+
+                            {% if match.matched_district %}
+                                <span class="badge bg-success">
+                                    ✓ District
+                                </span>
+                            {% endif %}
+
+                            {% if match.matched_price %}
+                                <span class="badge bg-success">
+                                    ✓ Price
+                                </span>
+                            {% endif %}
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+            {% endfor %}
+
+        </div>
+
+    {% else %}
+
+        <div class="alert alert-info">
+
+            <i class="bi bi-info-circle"></i>
+            
+            There are currently no farmer–buyer matches.
+
+            Create a buyer request and make sure farmers have
+            available products listed in the marketplace.
+{% if match.pk %}
+
+<a href="{% url 'agriculture:match_detail' match.pk %}"
+   class="btn btn-primary w-100 mt-3">
+
+    <i class="bi bi-eye"></i>
+    View Match
+
+</a>
+
+{% endif %}
+        </div>
+
+    {% endif %}
+
+</div>
+
+{% endblock %}

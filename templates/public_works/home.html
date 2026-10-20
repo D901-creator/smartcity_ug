@@ -1,0 +1,195 @@
+{% extends "base.html" %}
+
+{% block title %}
+    Public Works & Transport | Smart City Uganda
+{% endblock %}
+
+{% block content %}
+
+<div class="container-fluid py-3">
+
+    <!-- Header -->
+    <div class="d-flex flex-column flex-md-row
+                justify-content-between align-items-md-center mb-3">
+
+        <div>
+            <h4 class="fw-bold mb-1">
+                <i class="bi bi-cone-striped text-success me-2"></i>
+                Public Works & Transport
+            </h4>
+
+            <p class="text-muted mb-0 small">
+                Access public works, roads, transport and infrastructure
+                services across Uganda.
+            </p>
+        </div>
+
+        <div class="mt-2 mt-md-0">
+            <span class="badge bg-success-subtle text-success px-3 py-2">
+                Citizen Services
+            </span>
+        </div>
+
+    </div>
+
+
+    <!-- Introduction -->
+    <div class="card border-0 shadow-sm mb-4">
+
+        <div class="card-body p-3 p-md-4">
+
+            <div class="row align-items-center">
+
+                <div class="col-lg-8">
+
+                    <h5 class="fw-bold">
+                        Public Works & Transport Services
+                    </h5>
+
+                    <p class="text-muted small mb-0">
+                        Use Smart City Uganda to access information about
+                        public roads, infrastructure, traffic safety,
+                        parking and public works projects.
+                    </p>
+
+                </div>
+
+                <div class="col-lg-4 text-lg-end mt-3 mt-lg-0">
+
+                    <button
+                        type="button"
+                        class="btn btn-success btn-sm"
+                        disabled>
+                        <i class="bi bi-plus-circle me-1"></i>
+                        Submit a Report
+                    </button>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- Services -->
+    <div class="d-flex justify-content-between align-items-center mb-3">
+
+        <div>
+            <h5 class="fw-bold mb-0">
+                Available Services
+            </h5>
+
+            <small class="text-muted">
+                Public works and transport services
+            </small>
+        </div>
+
+        <span class="badge bg-light text-dark border">
+            {{ services|length }} Services
+        </span>
+
+    </div>
+
+
+    <div class="row g-3">
+
+        {% for service in services %}
+
+        <div class="col-12 col-md-6 col-xl-4">
+
+            <div class="card h-100 border-0 shadow-sm">
+
+                <div class="card-body p-3">
+
+                    <div class="d-flex align-items-start">
+
+                        <div class="rounded bg-{{ service.color }} bg-opacity-10
+                                    p-2 me-3">
+
+                            <i class="bi {{ service.icon }}
+                                      text-{{ service.color }}"
+                               style="font-size: 1.25rem;">
+                            </i>
+
+                        </div>
+
+                        <div class="flex-grow-1">
+
+                            <h6 class="fw-bold mb-1">
+                                {{ service.name }}
+                            </h6>
+
+                            <p class="text-muted small mb-3">
+                                {{ service.description }}
+                            </p>
+
+                            {% if service.url %}
+
+                                <a href="{% url service.url %}"
+                                   class="btn btn-outline-{{ service.color }} btn-sm">
+                                    <i class="bi bi-arrow-right me-1"></i>
+                                    Open Service
+                                </a>
+
+                            {% else %}
+
+                                <button
+                                    type="button"
+                                    class="btn btn-outline-secondary btn-sm"
+                                    disabled>
+                                    <i class="bi bi-hourglass-split me-1"></i>
+                                    Coming Soon
+                                </button>
+
+                            {% endif %}
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+        {% endfor %}
+
+    </div>
+
+
+    <!-- Citizen information -->
+    <div class="card border-0 shadow-sm mt-4">
+
+        <div class="card-body p-3">
+
+            <div class="d-flex align-items-start">
+
+                <i class="bi bi-info-circle text-success fs-4 me-3"></i>
+
+                <div>
+
+                    <h6 class="fw-bold mb-1">
+                        About Public Works & Transport
+                    </h6>
+
+                    <p class="text-muted small mb-0">
+                        This section provides citizens with access to
+                        public works and transport-related services.
+                        Additional services will be introduced as the
+                        Smart City Uganda system is developed.
+                    </p>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+{% endblock %}

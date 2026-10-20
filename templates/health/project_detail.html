@@ -1,0 +1,136 @@
+{% extends "base.html" %}
+
+{% block title %}{{ project.title }} | Smart City Uganda{% endblock %}
+
+{% block content %}
+
+<div class="container-fluid py-3">
+
+    <a href="{% url 'health:projects' %}"
+       class="small text-decoration-none">
+        <i class="bi bi-arrow-left"></i>
+        Back to projects
+    </a>
+
+    <div class="card border-0 shadow-sm mt-3">
+
+        {% if project.image %}
+        <img src="{{ project.image.url }}"
+             class="card-img-top"
+             style="max-height:350px;object-fit:cover;"
+             alt="{{ project.title }}">
+        {% endif %}
+
+        <div class="card-body p-4">
+
+            <div class="d-flex flex-wrap gap-2 mb-2">
+
+                <span class="badge text-bg-light border">
+                    {{ project.get_project_type_display }}
+                </span>
+
+                <span class="badge text-bg-success">
+                    {{ project.get_status_display }}
+                </span>
+
+            </div>
+
+            <h3 class="fw-bold">
+                {{ project.title }}
+            </h3>
+
+            <p class="lead small">
+                {{ project.summary }}
+            </p>
+
+            <hr>
+
+            <h6 class="fw-bold">
+                Description
+            </h6>
+
+            <div class="small text-muted mb-4">
+                {{ project.description|linebreaks }}
+            </div>
+
+
+            <div class="row g-4">
+
+                <div class="col-md-6">
+
+                    <h6 class="fw-bold">
+                        Objectives
+                    </h6>
+
+                    <div class="small text-muted">
+                        {{ project.objectives|default:"Not provided."|linebreaks }}
+                    </div>
+
+                </div>
+
+
+                <div class="col-md-6">
+
+                    <h6 class="fw-bold">
+                        Expected Benefits
+                    </h6>
+
+                    <div class="small text-muted">
+                        {{ project.expected_benefits|default:"Not provided."|linebreaks }}
+                    </div>
+
+                </div>
+
+
+                <div class="col-md-6">
+
+                    <strong>Implementing Organization</strong>
+
+                    <div class="small text-muted">
+                        {{ project.implementing_organization|default:"Not specified" }}
+                    </div>
+
+                </div>
+
+
+                <div class="col-md-6">
+
+                    <strong>Location</strong>
+
+                    <div class="small text-muted">
+                        {{ project.location|default:"Not specified" }}
+                    </div>
+
+                </div>
+
+
+                <div class="col-md-6">
+
+                    <strong>Start Date</strong>
+
+                    <div class="small text-muted">
+                        {{ project.start_date|date:"d M Y"|default:"Not specified" }}
+                    </div>
+
+                </div>
+
+
+                <div class="col-md-6">
+
+                    <strong>Expected Completion</strong>
+
+                    <div class="small text-muted">
+                        {{ project.expected_completion_date|date:"d M Y"|default:"Not specified" }}
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+{% endblock %}

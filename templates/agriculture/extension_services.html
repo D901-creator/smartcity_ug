@@ -1,0 +1,137 @@
+{% extends "base.html" %}
+
+{% block title %}Agricultural Extension Services{% endblock %}
+
+{% block content %}
+
+<div class="container-fluid">
+
+    <div class="d-flex justify-content-between align-items-center mb-4">
+
+        <div>
+
+            <h1 class="fw-bold">
+                <i class="bi bi-person-video3"></i>
+                Agricultural Extension Services
+            </h1>
+
+            <p class="text-muted">
+                Farmer training, field visits, consultations,
+                demonstrations and agricultural advisory services.
+            </p>
+
+        </div>
+
+
+        <a href="{% url 'agriculture:create_extension_service' %}"
+           class="btn btn-success">
+
+            <i class="bi bi-calendar-plus"></i>
+            Schedule Service
+
+        </a>
+
+    </div>
+
+
+    {% if services %}
+
+    <div class="row">
+
+        {% for service in services %}
+
+        <div class="col-lg-4 col-md-6 mb-4">
+
+            <div class="card shadow-sm h-100">
+
+                <div class="card-body">
+
+                    <h4 class="fw-bold">
+
+                        {{ service.title }}
+
+                    </h4>
+
+
+                    <span class="badge bg-success mb-3">
+
+                        {{ service.get_service_type_display }}
+
+                    </span>
+
+
+                    <p>
+
+                        {{ service.description }}
+
+                    </p>
+
+
+                    <hr>
+
+
+                    <p>
+
+                        <strong>
+                            Agricultural Officer:
+                        </strong>
+
+                        {{ service.officer_name }}
+
+                    </p>
+
+
+                    <p>
+
+                        <strong>
+                            District:
+                        </strong>
+
+                        {{ service.district }}
+
+                    </p>
+
+
+                    <p>
+
+                        <strong>
+                            Scheduled Date:
+                        </strong>
+
+                        {{ service.scheduled_date }}
+
+                    </p>
+
+
+                    <button class="btn btn-outline-primary w-100">
+
+                        <i class="bi bi-person-check"></i>
+                        Request Support
+
+                    </button>
+
+                </div>
+
+            </div>
+
+        </div>
+
+        {% endfor %}
+
+    </div>
+
+    {% else %}
+
+    <div class="alert alert-info">
+
+        <i class="bi bi-info-circle"></i>
+
+        No agricultural extension services have been scheduled yet.
+
+    </div>
+
+    {% endif %}
+
+</div>
+
+{% endblock %}

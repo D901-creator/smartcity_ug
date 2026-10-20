@@ -1,0 +1,175 @@
+{% extends "base.html" %}
+
+{% block title %}Health Facility Reports | Smart City Uganda{% endblock %}
+
+{% block content %}
+
+<div class="container-fluid py-3">
+
+    <div class="d-flex flex-column flex-md-row justify-content-between mb-4">
+
+        <div>
+            <h4 class="fw-bold mb-1">
+                Health Facility Reports
+            </h4>
+
+            <p class="text-muted small mb-0">
+                View submitted health-facility reports and their status.
+            </p>
+        </div>
+
+        <a href="{% url 'health:facility_report_create' %}"
+           class="btn btn-danger mt-3 mt-md-0">
+            <i class="bi bi-flag me-1"></i>
+            Report a Problem
+        </a>
+
+    </div>
+
+
+    <div class="card border-0 shadow-sm mb-4">
+
+        <div class="card-body">
+
+            <form method="get">
+
+                <div class="row g-2">
+
+                    <div class="col-md-5">
+                        <input type="text"
+                               name="search"
+                               value="{{ search }}"
+                               class="form-control"
+                               placeholder="Reference, subject, facility">
+                    </div>
+
+                    <div class="col-md-3">
+                        <select name="report_type"
+                                class="form-select">
+
+                            <option value="">
+                                All report types
+                            </option>
+
+                            {% for value, label in report_types %}
+                            <option value="{{ value }}"
+                                {% if report_type == value %}selected{% endif %}>
+                                {{ label }}
+                            </option>
+                            {% endfor %}
+
+                        </select>
+                    </div>
+
+                    <div class="col-md-2">
+                        <select name="status"
+                                class="form-select">
+
+                            <option value="">All statuses</option>
+
+                            {% for value, label in status_choices %}
+                            <option value="{{ value }}"
+                                {% if status == value %}selected{% endif %}>
+                                {{ label }}
+                            </option>
+                            {% endfor %}
+
+                        </select>
+                    </div>
+
+                    <div class="col-md-2">
+                        <button class="btn btn-success w-100">
+                            Search
+                        </button>
+                    </div>
+
+                </div>
+
+            </form>
+
+        </div>
+
+    </div>
+
+
+    <div class="card border-0 shadow-sm">
+
+        <div class="table-responsive">
+
+            <table class="table table-hover align-middle mb-0">
+
+                <thead class="table-light">
+                    <tr>
+                        <th>Reference</th>
+                        <th>Issue</th>
+                        <th>Type</th>
+                        <th>District</th>
+                        <th>Status</th>
+                        <th>Date</th>
+                        <th></th>
+                    </tr>
+                </thead>
+
+                <tbody>
+
+                    {% for report in reports %}
+
+                    <tr>
+
+                        <td class="fw-semibold">
+                            {{ report.reference_number }}
+                        </td>
+
+                        <td>
+                            {{ report.subject|truncatechars:45 }}
+                        </td>
+
+                        <td class="small">
+                            {{ report.get_report_type_display }}
+                        </td>
+
+                        <td class="small">
+                            {{ report.district|default:"—" }}
+                        </td>
+
+                        <td>
+                            <span class="badge text-bg-light border">
+                                {{ report.get_status_display }}
+                            </span>
+                        </td>
+
+                        <td class="small text-muted">
+                            {{ report.created_at|date:"d M Y" }}
+                        </td>
+
+                        <td>
+                            <a href="{% url 'health:facility_report_detail' report.id %}"
+                               class="btn btn-sm btn-outline-success">
+                                View
+                            </a>
+                        </td>
+
+                    </tr>
+
+                    {% empty %}
+
+                    <tr>
+                        <td colspan="7"
+                            class="text-center text-muted py-4">
+                            No health facility reports found.
+                        </td>
+                    </tr>
+
+                    {% endfor %}
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+    </div>
+
+</div>
+
+{% endblock %}

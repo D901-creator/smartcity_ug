@@ -1,0 +1,667 @@
+
+{% extends "base.html" %}
+
+{% block title %}
+Education Services | Smart City Uganda
+{% endblock %}
+
+{% block content %}
+
+<div class="education-page">
+
+    <!-- =====================================================
+         EDUCATION HERO
+         ===================================================== -->
+
+    <div class="education-hero">
+
+        <div>
+
+            <span class="education-badge">
+                <i class="bi bi-mortarboard"></i>
+                EDUCATION SERVICES
+            </span>
+
+            <h1>Education Services</h1>
+
+            <p>
+                Find education institutions, programmes, scholarships,
+                teacher services, education information and submit
+                education-related requests through Smart City Uganda.
+            </p>
+
+        </div>
+
+        <div class="education-hero-icon">
+            <i class="bi bi-mortarboard"></i>
+        </div>
+
+    </div>
+
+
+    <!-- =====================================================
+         QUICK ACTIONS
+         ===================================================== -->
+
+    <div class="education-actions">
+
+        <a
+            href="{% url 'education:request' %}"
+            class="education-primary-button"
+        >
+            <i class="bi bi-plus-circle"></i>
+            Submit Education Request
+        </a>
+
+        <a
+            href="{% url 'education:application' %}"
+            class="education-secondary-button"
+        >
+            <i class="bi bi-file-earmark-plus"></i>
+            Apply / Register
+        </a>
+
+        <a
+            href="{% url 'education:report_problem' %}"
+            class="education-secondary-button"
+        >
+            <i class="bi bi-exclamation-triangle"></i>
+            Report Problem
+        </a>
+
+    </div>
+
+
+    <!-- =====================================================
+         EDUCATION SERVICE HUB
+         ===================================================== -->
+
+    <div class="education-section-heading">
+
+        <div>
+
+            <h2>Education Services & Information</h2>
+
+            <p>
+                Choose an education service or information area.
+            </p>
+
+        </div>
+
+    </div>
+
+
+    <div class="education-service-grid">
+
+        <!-- Institutions -->
+
+        <a
+            href="#institutions"
+            class="education-service-card"
+        >
+            <div class="education-service-icon">
+                <i class="bi bi-building"></i>
+            </div>
+
+            <h3>Schools & Institutions</h3>
+
+            <p>
+                Find schools, universities, colleges, TVET and
+                other education institutions.
+            </p>
+        </a>
+
+
+        <!-- Programmes -->
+
+        <a
+            href="{% url 'education:programmes' %}"
+            class="education-service-card"
+        >
+            <div class="education-service-icon">
+                <i class="bi bi-journal-bookmark"></i>
+            </div>
+
+            <h3>Programmes & Courses</h3>
+
+            <p>
+                Explore published education programmes and courses.
+            </p>
+        </a>
+
+
+        <!-- Scholarships -->
+
+        <a
+            href="{% url 'education:scholarships' %}"
+            class="education-service-card"
+        >
+            <div class="education-service-icon">
+                <i class="bi bi-award"></i>
+            </div>
+
+            <h3>Scholarships & Bursaries</h3>
+
+            <p>
+                Find scholarship, bursary and student opportunity
+                information.
+            </p>
+        </a>
+
+
+        <!-- Teachers -->
+
+        <a
+            href="{% url 'education:teacher_services' %}"
+            class="education-service-card"
+        >
+            <div class="education-service-icon">
+                <i class="bi bi-person-workspace"></i>
+            </div>
+
+            <h3>Teachers' Services</h3>
+
+            <p>
+                Access published teacher-related services,
+                requirements and guidance.
+            </p>
+        </a>
+
+
+        <!-- Administrators -->
+
+        <a
+            href="{% url 'education:administrator_services' %}"
+            class="education-service-card"
+        >
+            <div class="education-service-icon">
+                <i class="bi bi-person-badge"></i>
+            </div>
+
+            <h3>School Administrators</h3>
+
+            <p>
+                Find information and services intended for
+                school administrators.
+            </p>
+        </a>
+
+
+        <!-- Funding -->
+
+        <a
+            href="{% url 'education:funding' %}"
+            class="education-service-card"
+        >
+            <div class="education-service-icon">
+                <i class="bi bi-cash-stack"></i>
+            </div>
+
+            <h3>Education Funding</h3>
+
+            <p>
+                View published education funding and support
+                opportunities.
+            </p>
+        </a>
+
+
+        <!-- Examinations -->
+
+        <a
+            href="{% url 'education:examinations' %}"
+            class="education-service-card"
+        >
+            <div class="education-service-icon">
+                <i class="bi bi-pencil-square"></i>
+            </div>
+
+            <h3>Examinations</h3>
+
+            <p>
+                Access examination and academic information.
+            </p>
+        </a>
+
+
+        <!-- Services -->
+
+        <a
+            href="{% url 'education:services' %}"
+            class="education-service-card"
+        >
+            <div class="education-service-icon">
+                <i class="bi bi-list-check"></i>
+            </div>
+
+            <h3>Education Requirements</h3>
+
+            <p>
+                Learn about education services, requirements,
+                eligibility and access procedures.
+            </p>
+        </a>
+
+
+        <!-- Government Programmes -->
+
+        <a
+            href="{% url 'education:government_programmes' %}"
+            class="education-service-card"
+        >
+            <div class="education-service-icon">
+                <i class="bi bi-bank"></i>
+            </div>
+
+            <h3>Government Education Programmes</h3>
+
+            <p>
+                View published information about government
+                education programmes and registration.
+            </p>
+        </a>
+
+
+        <!-- Projects -->
+
+        <a
+            href="{% url 'education:projects' %}"
+            class="education-service-card"
+        >
+            <div class="education-service-icon">
+                <i class="bi bi-buildings"></i>
+            </div>
+
+            <h3>Projects & Infrastructure</h3>
+
+            <p>
+                View published education infrastructure and
+                development projects.
+            </p>
+        </a>
+
+
+        <!-- Notices -->
+
+        <a
+            href="{% url 'education:notices' %}"
+            class="education-service-card"
+        >
+            <div class="education-service-icon">
+                <i class="bi bi-megaphone"></i>
+            </div>
+
+            <h3>Updates & Notices</h3>
+
+            <p>
+                Stay informed about published education notices
+                and updates.
+            </p>
+        </a>
+
+
+        <!-- Information -->
+
+        <a
+            href="{% url 'education:information' %}"
+            class="education-service-card"
+        >
+            <div class="education-service-icon">
+                <i class="bi bi-info-circle"></i>
+            </div>
+
+            <h3>Information & Guidance</h3>
+
+            <p>
+                Access education guidance and practical information.
+            </p>
+        </a>
+
+
+        <!-- Statistics -->
+
+        <a
+            href="{% url 'education:statistics' %}"
+            class="education-service-card"
+        >
+            <div class="education-service-icon">
+                <i class="bi bi-bar-chart"></i>
+            </div>
+
+            <h3>Statistics & Reports</h3>
+
+            <p>
+                View published education statistics and reports,
+                including school information.
+            </p>
+        </a>
+
+    </div>
+<a
+    href="{% url 'education:learning_sources' %}"
+    class="education-service-card"
+>
+    <div class="education-service-icon">
+        <i class="bi bi-book-half"></i>
+    </div>
+
+    <div>
+        <h3>Learning Sources & Materials</h3>
+
+        <p>
+            Access learning materials, revision resources,
+            exercises, books, past papers and educational
+            resources for different learning levels.
+        </p>
+    </div>
+
+    <i class="bi bi-arrow-right education-service-arrow"></i>
+</a>
+
+    <!-- =====================================================
+         SEARCH INSTITUTIONS
+         ===================================================== -->
+
+    <div
+        class="education-search-panel"
+        id="institutions"
+    >
+
+        <div class="education-section-heading">
+
+            <div>
+
+                <h2>Find an Education Institution</h2>
+
+                <p>
+                    Search schools, universities, colleges,
+                    TVET and other institutions.
+                </p>
+
+            </div>
+
+        </div>
+
+
+        <form method="get">
+
+            <div class="education-search-grid">
+
+                <div>
+
+                    <label>Search</label>
+
+                    <input
+                        type="text"
+                        name="search"
+                        value="{{ search }}"
+                        placeholder="Search school, university or programme..."
+                    >
+
+                </div>
+
+
+                <div>
+
+                    <label>District</label>
+
+                    <select name="district">
+
+                        <option value="">
+                            All Districts
+                        </option>
+
+                        {% for item in districts %}
+
+                            <option
+                                value="{{ item }}"
+                                {% if selected_district == item %}
+                                    selected
+                                {% endif %}
+                            >
+                                {{ item }}
+                            </option>
+
+                        {% endfor %}
+
+                    </select>
+
+                </div>
+
+
+                <div>
+
+                    <label>Institution Type</label>
+
+                    <select name="institution_type">
+
+                        <option value="">
+                            All Types
+                        </option>
+
+                        {% for value, label in institution_types %}
+
+                            <option
+                                value="{{ value }}"
+                                {% if selected_institution_type == value %}
+                                    selected
+                                {% endif %}
+                            >
+                                {{ label }}
+                            </option>
+
+                        {% endfor %}
+
+                    </select>
+
+                </div>
+
+
+                <div class="education-search-button">
+
+                    <button type="submit">
+
+                        <i class="bi bi-search"></i>
+
+                        Search
+
+                    </button>
+
+                </div>
+
+            </div>
+
+        </form>
+
+    </div>
+
+
+    <!-- =====================================================
+         INSTITUTION RESULTS
+         ===================================================== -->
+
+    <div class="education-section-heading">
+
+        <div>
+
+            <h2>Education Institutions</h2>
+
+            <p>
+                Institutions available on the Smart City platform.
+            </p>
+
+        </div>
+
+        <span>
+            {{ institutions|length }} institutions
+        </span>
+
+    </div>
+
+
+    {% if institutions %}
+
+        <div class="education-institution-grid">
+
+            {% for institution in institutions %}
+
+                <div class="education-institution-card">
+
+                    <div class="institution-icon">
+
+                        <i class="bi bi-building"></i>
+
+                    </div>
+
+
+                    <div class="institution-content">
+
+                        <span class="institution-type">
+
+                            {{ institution.get_institution_type_display }}
+
+                        </span>
+
+
+                        <h3>
+                            {{ institution.name }}
+                        </h3>
+
+
+                        <p class="institution-location">
+
+                            <i class="bi bi-geo-alt"></i>
+
+                            {{ institution.district }}
+
+                            {% if institution.location %}
+                                — {{ institution.location }}
+                            {% endif %}
+
+                        </p>
+
+
+                        <p>
+                            {{ institution.description|truncatewords:22 }}
+                        </p>
+
+
+                        <div class="institution-meta">
+
+                            <span>
+
+                                <i class="bi bi-diagram-3"></i>
+
+                                {{ institution.get_ownership_display }}
+
+                            </span>
+
+
+                            {% if institution.phone_number %}
+
+                                <span>
+
+                                    <i class="bi bi-telephone"></i>
+
+                                    {{ institution.phone_number }}
+
+                                </span>
+
+                            {% endif %}
+
+                        </div>
+
+
+                        <a
+                            href="{% url 'education:institution_detail' institution.id %}"
+                            class="institution-button"
+                        >
+
+                            View Institution
+
+                            <i class="bi bi-arrow-right"></i>
+
+                        </a>
+
+                    </div>
+
+                </div>
+
+            {% endfor %}
+
+        </div>
+
+    {% else %}
+
+        <div class="education-empty">
+
+            <i class="bi bi-mortarboard"></i>
+
+            <h3>No education institutions found</h3>
+
+            <p>
+                Try changing your search or filters.
+            </p>
+
+        </div>
+
+    {% endif %}
+
+
+    <!-- =====================================================
+         QUICK EDUCATION INFORMATION
+         ===================================================== -->
+
+    <div class="education-information-strip">
+
+        <div>
+
+            <i class="bi bi-lightbulb"></i>
+
+            <div>
+
+                <h3>Need education assistance?</h3>
+
+                <p>
+                    You can submit an education request if you
+                    cannot find the information you need.
+                </p>
+
+            </div>
+
+        </div>
+
+
+        <a
+            href="{% url 'education:request' %}"
+            class="education-button"
+        >
+            Submit Request
+            <i class="bi bi-arrow-right"></i>
+        </a>
+
+    </div>
+
+
+    <!-- =====================================================
+         IMPORTANT NOTICE
+         ===================================================== -->
+
+    <div class="education-disclaimer">
+
+        <i class="bi bi-info-circle"></i>
+
+        <p>
+            Information displayed on Smart City Uganda is based
+            on information published or configured by authorized
+            institutions and administrators. Always verify
+            important requirements, dates and application
+            procedures with the relevant institution or official
+            information source.
+        </p>
+
+    </div>
+
+</div>
+
+{% endblock %}

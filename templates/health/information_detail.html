@@ -1,0 +1,97 @@
+{% extends "base.html" %}
+
+{% block title %}{{ information.title }} | Smart City Uganda{% endblock %}
+
+{% block content %}
+
+<div class="container-fluid py-3">
+
+    <a href="{% url 'health:information' %}"
+       class="small text-decoration-none">
+        <i class="bi bi-arrow-left"></i>
+        Back to health information
+    </a>
+
+    <div class="card border-0 shadow-sm mt-3">
+
+        {% if information.image %}
+        <img src="{{ information.image.url }}"
+             class="card-img-top"
+             style="max-height:350px;object-fit:cover;"
+             alt="{{ information.title }}">
+        {% endif %}
+
+        <div class="card-body p-4">
+
+            <span class="badge text-bg-success mb-2">
+                {{ information.get_information_type_display }}
+            </span>
+
+            <h3 class="fw-bold">
+                {{ information.title }}
+            </h3>
+
+            <p class="lead small">
+                {{ information.summary }}
+            </p>
+
+            <hr>
+
+            <h6 class="fw-bold">
+                Information
+            </h6>
+
+            <div class="small text-muted">
+                {{ information.description|linebreaks }}
+            </div>
+
+
+            {% if information.key_points %}
+
+            <div class="mt-4">
+
+                <h6 class="fw-bold">
+                    Key Points
+                </h6>
+
+                <div class="small text-muted">
+                    {{ information.key_points|linebreaks }}
+                </div>
+
+            </div>
+
+            {% endif %}
+
+
+            <div class="row g-3 mt-3">
+
+                <div class="col-md-6">
+
+                    <strong>District</strong>
+
+                    <div class="small text-muted">
+                        {{ information.district|default:"Not specified" }}
+                    </div>
+
+                </div>
+
+
+                <div class="col-md-6">
+
+                    <strong>Contact</strong>
+
+                    <div class="small text-muted">
+                        {{ information.contact_information|default:"Not provided" }}
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+{% endblock %}

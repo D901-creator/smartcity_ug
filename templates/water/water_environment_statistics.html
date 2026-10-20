@@ -1,0 +1,404 @@
+{% extends "base.html" %}
+
+{% block title %}
+    Water & Environment Statistics
+{% endblock %}
+
+{% block content %}
+
+<div class="container-fluid py-3">
+
+    <!-- HEADER -->
+    <div class="d-flex flex-wrap justify-content-between align-items-center mb-3">
+        <div>
+            <h4 class="mb-1">
+                <i class="bi bi-bar-chart-line me-2"></i>
+                Water & Environment Statistics
+            </h4>
+            <p class="text-muted mb-0 small">
+                Overview of water and environmental services and reports.
+            </p>
+        </div>
+
+        <a href="{% url 'water:home' %}" class="btn btn-outline-success btn-sm mt-2 mt-md-0">
+            <i class="bi bi-arrow-left me-1"></i>
+            Back to Water & Environment
+        </a>
+    </div>
+
+
+    <!-- FILTER -->
+    <div class="card shadow-sm border-0 mb-3">
+        <div class="card-body py-3">
+
+            <form method="get" class="row g-2 align-items-end">
+
+                <div class="col-12 col-md-8">
+                    <label class="form-label small fw-semibold">
+                        District / City
+                    </label>
+
+                    <input
+                        type="text"
+                        name="district"
+                        value="{{ district }}"
+                        class="form-control form-control-sm"
+                        placeholder="Example: Kampala, Jinja, Mbarara..."
+                    >
+                </div>
+
+                <div class="col-12 col-md-4 d-flex gap-2">
+
+                    <button type="submit" class="btn btn-success btn-sm flex-grow-1">
+                        <i class="bi bi-search me-1"></i>
+                        Filter
+                    </button>
+
+                    <a
+                        href="{% url 'water:water_environment_statistics' %}"
+                        class="btn btn-outline-secondary btn-sm"
+                    >
+                        Clear
+                    </a>
+
+                </div>
+
+            </form>
+
+            {% if district %}
+                <div class="mt-2">
+                    <span class="badge text-bg-success">
+                        Showing statistics for: {{ district }}
+                    </span>
+                </div>
+            {% endif %}
+
+        </div>
+    </div>
+
+
+    <!-- WATER SUMMARY -->
+    <div class="d-flex align-items-center mb-2">
+        <h5 class="mb-0">
+            <i class="bi bi-droplet me-2"></i>
+            Water Services
+        </h5>
+    </div>
+
+    <div class="row g-3 mb-4">
+
+        <div class="col-12 col-md-4">
+            <div class="card border-0 shadow-sm h-100">
+                <div class="card-body py-3">
+                    <div class="text-muted small">Water Facilities</div>
+                    <h3 class="mb-1">{{ water_facilities_count }}</h3>
+                    <small class="text-success">
+                        {{ operational_water_facilities_count }} operational
+                    </small>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-12 col-md-4">
+            <div class="card border-0 shadow-sm h-100">
+                <div class="card-body py-3">
+                    <div class="text-muted small">Water Problem Reports</div>
+                    <h3 class="mb-1">{{ water_reports_count }}</h3>
+                    <small class="text-warning">
+                        {{ water_pending_count }} pending
+                    </small>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-12 col-md-4">
+            <div class="card border-0 shadow-sm h-100">
+                <div class="card-body py-3">
+                    <div class="text-muted small">Resolved Water Problems</div>
+                    <h3 class="mb-1">{{ water_resolved_count }}</h3>
+                    <small class="text-success">
+                        Resolved
+                    </small>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+
+    <!-- WATER DETAILS -->
+    <div class="row g-3 mb-4">
+
+        <div class="col-12 col-md-6">
+            <div class="card border-0 shadow-sm">
+                <div class="card-header bg-white fw-semibold">
+                    <i class="bi bi-water me-2"></i>
+                    Drainage & Wastewater
+                </div>
+
+                <div class="card-body">
+                    <div class="d-flex justify-content-between mb-2">
+                        <span>Total Reports</span>
+                        <strong>{{ drainage_reports_count }}</strong>
+                    </div>
+
+                    <div class="d-flex justify-content-between">
+                        <span>Resolved</span>
+                        <strong class="text-success">
+                            {{ drainage_resolved_count }}
+                        </strong>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+        <div class="col-12 col-md-6">
+            <div class="card border-0 shadow-sm">
+                <div class="card-header bg-white fw-semibold">
+                    <i class="bi bi-building me-2"></i>
+                    Water Projects
+                </div>
+
+                <div class="card-body">
+                    <div class="d-flex justify-content-between mb-2">
+                        <span>Total Projects</span>
+                        <strong>{{ water_projects_count }}</strong>
+                    </div>
+
+                    <div class="d-flex justify-content-between mb-2">
+                        <span>Ongoing</span>
+                        <strong class="text-warning">
+                            {{ water_ongoing_projects_count }}
+                        </strong>
+                    </div>
+
+                    <div class="d-flex justify-content-between">
+                        <span>Completed</span>
+                        <strong class="text-success">
+                            {{ water_completed_projects_count }}
+                        </strong>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+
+    <!-- ENVIRONMENT SUMMARY -->
+    <div class="d-flex align-items-center mb-2">
+        <h5 class="mb-0">
+            <i class="bi bi-flower1 me-2"></i>
+            Environment
+        </h5>
+    </div>
+
+    <div class="row g-3 mb-4">
+
+        <div class="col-12 col-md-4 col-xl-3">
+            <div class="card border-0 shadow-sm h-100">
+                <div class="card-body py-3">
+                    <div class="text-muted small">
+                        Environmental Facilities
+                    </div>
+                    <h3>{{ environmental_facilities_count }}</h3>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-12 col-md-4 col-xl-3">
+            <div class="card border-0 shadow-sm h-100">
+                <div class="card-body py-3">
+                    <div class="text-muted small">
+                        Waste Management Services
+                    </div>
+                    <h3>{{ waste_services_count }}</h3>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-12 col-md-4 col-xl-3">
+            <div class="card border-0 shadow-sm h-100">
+                <div class="card-body py-3">
+                    <div class="text-muted small">
+                        Pollution Reports
+                    </div>
+                    <h3>{{ pollution_reports_count }}</h3>
+                    <small class="text-success">
+                        {{ pollution_resolved_count }} resolved
+                    </small>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-12 col-md-4 col-xl-3">
+            <div class="card border-0 shadow-sm h-100">
+                <div class="card-body py-3">
+                    <div class="text-muted small">
+                        Trees & Forest Sites
+                    </div>
+                    <h3>{{ tree_forest_sites_count }}</h3>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+
+    <!-- NATURAL RESOURCES -->
+    <div class="row g-3 mb-4">
+
+        <div class="col-12 col-md-4">
+            <div class="card border-0 shadow-sm">
+                <div class="card-body py-3">
+                    <div class="text-muted small">
+                        Wetlands & Natural Resources
+                    </div>
+
+                    <h3 class="mb-0">
+                        {{ wetlands_resources_count }}
+                    </h3>
+                </div>
+            </div>
+        </div>
+
+
+        <div class="col-12 col-md-4">
+            <div class="card border-0 shadow-sm">
+                <div class="card-body py-3">
+                    <div class="text-muted small">
+                        Environmental Projects
+                    </div>
+
+                    <h3 class="mb-1">
+                        {{ environmental_projects_count }}
+                    </h3>
+
+                    <small class="text-warning">
+                        {{ environmental_ongoing_projects_count }} ongoing
+                    </small>
+                </div>
+            </div>
+        </div>
+
+
+        <div class="col-12 col-md-4">
+            <div class="card border-0 shadow-sm">
+                <div class="card-body py-3">
+                    <div class="text-muted small">
+                        Climate & Environmental Information
+                    </div>
+
+                    <h3 class="mb-0">
+                        {{ climate_information_count }}
+                    </h3>
+
+                    <small class="text-muted">
+                        Published information
+                    </small>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+
+    <!-- INCIDENTS -->
+    <div class="card border-0 shadow-sm mb-4">
+
+        <div class="card-header bg-white fw-semibold">
+            <i class="bi bi-exclamation-triangle me-2"></i>
+            Environmental Incidents
+        </div>
+
+        <div class="card-body">
+
+            <div class="row g-3">
+
+                <div class="col-12 col-md-6">
+                    <div class="border rounded p-3">
+                        <div class="text-muted small">
+                            Total Environmental Incidents
+                        </div>
+
+                        <h3 class="mb-0">
+                            {{ environmental_incidents_count }}
+                        </h3>
+                    </div>
+                </div>
+
+                <div class="col-12 col-md-6">
+                    <div class="border rounded p-3">
+                        <div class="text-muted small">
+                            Resolved Incidents
+                        </div>
+
+                        <h3 class="mb-0 text-success">
+                            {{ environmental_incidents_resolved_count }}
+                        </h3>
+                    </div>
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- QUICK LINKS -->
+    <div class="card border-0 shadow-sm">
+
+        <div class="card-body">
+
+            <h6 class="fw-semibold mb-3">
+                Explore Water & Environment Services
+            </h6>
+
+            <div class="d-flex flex-wrap gap-2">
+
+                <a href="{% url 'water:water_facilities' %}"
+                   class="btn btn-outline-primary btn-sm">
+                    Water Facilities
+                </a>
+
+                <a href="{% url 'water:water_projects' %}"
+                   class="btn btn-outline-success btn-sm">
+                    Water Projects
+                </a>
+
+                <a href="{% url 'water:pollution_reports' %}"
+                   class="btn btn-outline-danger btn-sm">
+                    Pollution
+                </a>
+
+                <a href="{% url 'water:trees_forests' %}"
+                   class="btn btn-outline-success btn-sm">
+                    Trees & Forests
+                </a>
+
+                <a href="{% url 'water:wetlands_natural_resources' %}"
+                   class="btn btn-outline-info btn-sm">
+                    Wetlands & Natural Resources
+                </a>
+
+                <a href="{% url 'water:environmental_projects' %}"
+                   class="btn btn-outline-secondary btn-sm">
+                    Environmental Projects
+                </a>
+
+                <a href="{% url 'water:citizen_request_tracking' %}"
+                   class="btn btn-outline-dark btn-sm">
+                    Track My Request
+                </a>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+{% endblock %}

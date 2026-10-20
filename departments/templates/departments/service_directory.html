@@ -1,0 +1,76 @@
+
+{% extends "officer/base.html" %}
+
+{% block content %}
+<div class="container py-4">
+    <h2 class="mb-2">Citizen Service Directory</h2>
+    <p class="text-muted">Find services offered by participating departments.</p>
+
+    <form method="get" class="row g-2 mb-4">
+        <div class="col-md-7">
+            <input
+                type="search"
+                name="q"
+                class="form-control"
+                placeholder="Search services or departments"
+                value="{{ search_query }}"
+            >
+        </div>
+
+        <div class="col-md-3">
+            <select name="sector" class="form-select">
+                <option value="">All sectors</option>
+                {% for sector in sectors %}
+                    <option
+                        value="{{ sector.sector_id }}"
+                        {% if selected_sector == sector.sector_id|stringformat:"s" %}selected{% endif %}
+                    >
+                        {{ sector.sector__name }}
+                    </option>
+                {% endfor %}
+            </select>
+        </div>
+
+        <div class="col-md-2">
+            <button class="btn btn-success w-100" type="submit">Search</button>
+        </div>
+    </form>
+
+    <div class="row g-3">
+        {% for service in services %}
+            <div class="col-md-6 col-lg-4">
+                <div class="card h-100 shadow-sm">
+                    <div class="card-body">
+                        <h5>{{ service.name }}</h5>
+                        <p class="text-muted small mb-2">
+                            {{ service.department.name }}
+                        </p>
+                        <p>{{ service.description|truncatewords:22 }}</p>
+
+                        {% if service.sector %}
+                            <span class="badge bg-light text-dark">
+                                {{ service.sector.name }}
+                            </span>
+                        {% endif %}
+
+                        <div class="mt-3">
+                            <a
+                                href="{% url 'departments:service_detail' service.id %}"
+                                class="btn btn-outline-success btn-sm"
+                            >
+                                View details
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        {% empty %}
+            <div class="col-12">
+                <div class="alert alert-info">
+                    No active services found. Try another search or check back later.
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}

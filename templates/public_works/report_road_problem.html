@@ -1,0 +1,264 @@
+{% extends "base.html" %}
+
+{% block title %}
+    Report Road Problem | Smart City Uganda
+{% endblock %}
+
+{% block content %}
+
+<div class="container-fluid py-3">
+
+    <div class="d-flex justify-content-between
+                align-items-center mb-3">
+
+        <div>
+            <h4 class="fw-bold mb-1">
+                <i class="bi bi-exclamation-triangle
+                          text-danger me-2"></i>
+                Report Road Problem
+            </h4>
+
+            <p class="text-muted small mb-0">
+                Report a road problem to the relevant public
+                works authority.
+            </p>
+        </div>
+
+        <a href="{% url 'public_works:home' %}"
+           class="btn btn-outline-secondary btn-sm">
+
+            <i class="bi bi-arrow-left me-1"></i>
+            Back
+        </a>
+
+    </div>
+
+
+    <div class="row justify-content-center">
+
+        <div class="col-12 col-lg-9 col-xl-8">
+
+            <div class="card border-0 shadow-sm">
+
+                <div class="card-body p-3 p-md-4">
+
+                    <div class="alert alert-info small">
+
+                        <i class="bi bi-info-circle me-1"></i>
+
+                        Provide accurate information about the
+                        road problem so it can be properly identified.
+
+                    </div>
+
+
+                    <form method="post"
+                          enctype="multipart/form-data">
+
+                        {% csrf_token %}
+
+
+                        {% if form.non_field_errors %}
+                            <div class="alert alert-danger">
+                                {{ form.non_field_errors }}
+                            </div>
+                        {% endif %}
+
+
+                        <div class="row g-3">
+
+
+                            <div class="col-md-6">
+
+                                <label class="form-label small fw-semibold">
+                                    Your Name
+                                </label>
+
+                                {{ form.citizen_name }}
+
+                                {% for error in form.citizen_name.errors %}
+                                    <div class="text-danger small">
+                                        {{ error }}
+                                    </div>
+                                {% endfor %}
+
+                            </div>
+
+
+                            <div class="col-md-6">
+
+                                <label class="form-label small fw-semibold">
+                                    Phone Number
+                                </label>
+
+                                {{ form.phone_number }}
+
+                                {% for error in form.phone_number.errors %}
+                                    <div class="text-danger small">
+                                        {{ error }}
+                                    </div>
+                                {% endfor %}
+
+                            </div>
+
+
+                            <div class="col-md-6">
+
+                                <label class="form-label small fw-semibold">
+                                    Road Problem Type
+                                </label>
+
+                                {{ form.problem_type }}
+
+                                {% for error in form.problem_type.errors %}
+                                    <div class="text-danger small">
+                                        {{ error }}
+                                    </div>
+                                {% endfor %}
+
+                            </div>
+
+
+                            <div class="col-md-6">
+
+                                <label class="form-label small fw-semibold">
+                                    Urgency Level
+                                </label>
+
+                                {{ form.urgency }}
+
+                                {% for error in form.urgency.errors %}
+                                    <div class="text-danger small">
+                                        {{ error }}
+                                    </div>
+                                {% endfor %}
+
+                            </div>
+
+
+                            <div class="col-md-6">
+
+                                <label class="form-label small fw-semibold">
+                                    District / City
+                                </label>
+
+                                {{ form.district }}
+
+                                {% for error in form.district.errors %}
+                                    <div class="text-danger small">
+                                        {{ error }}
+                                    </div>
+                                {% endfor %}
+
+                            </div>
+
+
+                            <div class="col-md-6">
+
+                                <label class="form-label small fw-semibold">
+                                    Road Name
+                                </label>
+
+                                {{ form.road_name }}
+
+                                {% for error in form.road_name.errors %}
+                                    <div class="text-danger small">
+                                        {{ error }}
+                                    </div>
+                                {% endfor %}
+
+                            </div>
+
+
+                            <div class="col-12">
+
+                                <label class="form-label small fw-semibold">
+                                    Exact Location
+                                </label>
+
+                                {{ form.location }}
+
+                                {% for error in form.location.errors %}
+                                    <div class="text-danger small">
+                                        {{ error }}
+                                    </div>
+                                {% endfor %}
+
+                            </div>
+
+
+                            <div class="col-12">
+
+                                <label class="form-label small fw-semibold">
+                                    Problem Description
+                                </label>
+
+                                {{ form.description }}
+
+                                {% for error in form.description.errors %}
+                                    <div class="text-danger small">
+                                        {{ error }}
+                                    </div>
+                                {% endfor %}
+
+                            </div>
+
+
+                            <div class="col-12">
+
+                                <label class="form-label small fw-semibold">
+                                    Photo Evidence
+                                </label>
+
+                                {{ form.photo }}
+
+                                <div class="form-text">
+                                    Optional. You can upload a photo
+                                    showing the road problem.
+                                </div>
+
+                                {% for error in form.photo.errors %}
+                                    <div class="text-danger small">
+                                        {{ error }}
+                                    </div>
+                                {% endfor %}
+
+                            </div>
+
+
+                            <div class="col-12">
+
+                                <hr>
+
+                                <button type="submit"
+                                        class="btn btn-success">
+
+                                    <i class="bi bi-send me-1"></i>
+                                    Submit Road Problem
+
+                                </button>
+
+                                <a href="{% url 'public_works:home' %}"
+                                   class="btn btn-outline-secondary">
+
+                                    Cancel
+
+                                </a>
+
+                            </div>
+
+                        </div>
+
+                    </form>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+{% endblock %}

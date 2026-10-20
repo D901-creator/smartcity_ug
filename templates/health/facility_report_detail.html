@@ -1,0 +1,131 @@
+{% extends "base.html" %}
+
+{% block title %}{{ report.reference_number }} | Smart City Uganda{% endblock %}
+
+{% block content %}
+
+<div class="container-fluid py-3">
+
+    <a href="{% url 'health:facility_reports' %}"
+       class="small text-decoration-none">
+        <i class="bi bi-arrow-left"></i>
+        Back to reports
+    </a>
+
+    <div class="card border-0 shadow-sm mt-3">
+
+        <div class="card-body p-4">
+
+            <div class="d-flex flex-column flex-md-row justify-content-between gap-2">
+
+                <div>
+                    <div class="small text-muted">
+                        Health Facility Report
+                    </div>
+
+                    <h4 class="fw-bold">
+                        {{ report.reference_number }}
+                    </h4>
+                </div>
+
+                <span class="badge text-bg-success align-self-start">
+                    {{ report.get_status_display }}
+                </span>
+
+            </div>
+
+            <hr>
+
+            <h5 class="fw-bold">
+                {{ report.subject }}
+            </h5>
+
+            <div class="small text-muted mb-4">
+                {{ report.description|linebreaks }}
+            </div>
+
+
+            <div class="row g-3">
+
+                <div class="col-md-6">
+                    <strong>Problem Type</strong>
+                    <div class="small text-muted">
+                        {{ report.get_report_type_display }}
+                    </div>
+                </div>
+
+                <div class="col-md-6">
+                    <strong>Health Facility</strong>
+                    <div class="small text-muted">
+                        {% if report.facility %}
+                            {{ report.facility.title }}
+                        {% else %}
+                            Not specified
+                        {% endif %}
+                    </div>
+                </div>
+
+                <div class="col-md-6">
+                    <strong>District</strong>
+                    <div class="small text-muted">
+                        {{ report.district|default:"Not specified" }}
+                    </div>
+                </div>
+
+                <div class="col-md-6">
+                    <strong>Location</strong>
+                    <div class="small text-muted">
+                        {{ report.location|default:"Not specified" }}
+                    </div>
+                </div>
+
+                <div class="col-md-6">
+                    <strong>Incident Date</strong>
+                    <div class="small text-muted">
+                        {{ report.incident_date|date:"d M Y"|default:"Not provided" }}
+                    </div>
+                </div>
+
+                <div class="col-md-6">
+                    <strong>Submitted</strong>
+                    <div class="small text-muted">
+                        {{ report.created_at|date:"d M Y H:i" }}
+                    </div>
+                </div>
+
+            </div>
+
+
+            {% if report.evidence %}
+            <div class="mt-4">
+
+                <h6 class="fw-bold">
+                    Submitted Evidence
+                </h6>
+
+                <img src="{{ report.evidence.url }}"
+                     class="img-fluid rounded border"
+                     style="max-height:400px;"
+                     alt="Report evidence">
+
+            </div>
+            {% endif %}
+
+
+            <div class="alert alert-info small mt-4">
+
+                <i class="bi bi-info-circle me-1"></i>
+
+                Report status may progress through:
+                Submitted → Received → Assigned → In Progress →
+                Pending → Resolved → Closed.
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+{% endblock %}

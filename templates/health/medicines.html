@@ -1,0 +1,149 @@
+{% extends "base.html" %}
+
+{% block title %}Medicines | Smart City Uganda{% endblock %}
+
+{% block content %}
+
+<div class="container-fluid py-3">
+
+    <h4 class="fw-bold mb-1">Medicines & Medical Supplies</h4>
+
+    <p class="text-muted small mb-4">
+        View published medicine and supply availability information.
+    </p>
+
+    <div class="card border-0 shadow-sm mb-4">
+        <div class="card-body">
+
+            <form method="get">
+
+                <div class="row g-2">
+
+                    <div class="col-md-5">
+                        <input type="text"
+                               name="search"
+                               value="{{ search }}"
+                               class="form-control"
+                               placeholder="Medicine, category or facility">
+                    </div>
+
+                    <div class="col-md-4">
+                        <select name="availability"
+                                class="form-select">
+
+                            <option value="">
+                                All availability statuses
+                            </option>
+
+                            {% for value, label in availability_choices %}
+                            <option value="{{ value }}"
+                                {% if availability == value %}selected{% endif %}>
+                                {{ label }}
+                            </option>
+                            {% endfor %}
+
+                        </select>
+                    </div>
+
+                    <div class="col-md-3">
+                        <input type="text"
+                               name="district"
+                               value="{{ district }}"
+                               class="form-control"
+                               placeholder="District">
+                    </div>
+
+                </div>
+
+                <div class="mt-3">
+                    <button class="btn btn-success">
+                        <i class="bi bi-search me-1"></i>
+                        Search
+                    </button>
+
+                    <a href="{% url 'health:medicines' %}"
+                       class="btn btn-outline-secondary">
+                        Reset
+                    </a>
+                </div>
+
+            </form>
+
+        </div>
+    </div>
+
+
+    <div class="row g-3">
+
+        {% for medicine in medicines %}
+
+        <div class="col-md-6 col-xl-4">
+
+            <div class="card border-0 shadow-sm h-100">
+
+                <div class="card-body">
+
+                    <div class="d-flex justify-content-between gap-2">
+
+                        <h6 class="fw-bold">
+                            {{ medicine.title }}
+                        </h6>
+
+                        <span class="badge
+                            {% if medicine.availability_status == 'available' %}
+                                text-bg-success
+                            {% elif medicine.availability_status == 'limited' %}
+                                text-bg-warning
+                            {% elif medicine.availability_status == 'unavailable' %}
+                                text-bg-danger
+                            {% else %}
+                                text-bg-secondary
+                            {% endif %}">
+                            {{ medicine.get_availability_status_display }}
+                        </span>
+
+                    </div>
+
+                    {% if medicine.category %}
+                    <div class="small text-muted mb-2">
+                        {{ medicine.category }}
+                    </div>
+                    {% endif %}
+
+                    <p class="small text-muted">
+                        {{ medicine.description|truncatewords:28 }}
+                    </p>
+
+                    {% if medicine.facility %}
+                    <div class="small mb-2">
+                        <i class="bi bi-hospital text-success"></i>
+                        {{ medicine.facility.title }}
+                    </div>
+                    {% endif %}
+
+                    <a href="{% url 'health:medicine_detail' medicine.id %}"
+                       class="btn btn-sm btn-outline-success">
+                        View Information
+                    </a>
+
+                </div>
+
+            </div>
+
+        </div>
+
+        {% empty %}
+
+        <div class="col-12">
+            <div class="alert alert-light border">
+                No medicine information found.
+            </div>
+        </div>
+
+        {% endfor %}
+
+    </div>
+
+</div>
+
+{% endblock %}

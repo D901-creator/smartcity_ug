@@ -1,0 +1,88 @@
+{% extends "base.html" %}
+
+{% block title %}
+    Traffic Incident Report Submitted
+{% endblock %}
+
+{% block content %}
+
+<div class="container-fluid py-3">
+
+    <div class="row justify-content-center">
+
+        <div class="col-12 col-md-8 col-lg-6">
+
+            <div class="card shadow-sm border-0 text-center">
+
+                <div class="card-body p-4">
+
+                    <div class="mb-3">
+
+                        <i
+                            class="bi bi-check-circle-fill text-success"
+                            style="font-size: 3rem;"
+                        ></i>
+
+                    </div>
+
+
+                    <h4>
+                        Report Submitted
+                    </h4>
+
+
+                    <p class="text-muted small">
+                        Your traffic incident report has been
+                        successfully submitted.
+                    </p>
+
+
+                    <div class="alert alert-light border">
+
+                        <div class="small text-muted">
+                            Reference Number
+                        </div>
+
+                        <h4 class="mb-0 text-success">
+                            {{ incident.reference_number }}
+                        </h4>
+
+                    </div>
+
+
+                    <p class="small text-muted">
+                        Keep this reference number for future
+                        reference.
+                    </p>
+
+
+                    <div class="d-flex flex-wrap justify-content-center gap-2">
+
+                        <a
+                            href="{% url 'public_works:traffic_road_safety' %}"
+                            class="btn btn-success btn-sm"
+                        >
+                            <i class="bi bi-shield-check me-1"></i>
+                            Traffic & Road Safety
+                        </a>
+
+                        <a
+                            href="{% url 'public_works:traffic_incident_report' %}"
+                            class="btn btn-outline-danger btn-sm"
+                        >
+                            Report Another Incident
+                        </a>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+{% endblock %}

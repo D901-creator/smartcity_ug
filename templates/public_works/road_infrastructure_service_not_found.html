@@ -1,0 +1,41 @@
+{% extends "base.html" %}
+
+{% block title %}
+    Service Not Found | Public Works & Transport
+{% endblock %}
+
+{% block content %}
+
+<div class="container-fluid px-0">
+
+    <div class="card border-0 shadow-sm">
+
+        <div class="card-body text-center py-5">
+
+            <i class="bi bi-exclamation-circle
+                      text-warning display-5"></i>
+
+            <h4 class="mt-3">
+                Service Information Not Found
+            </h4>
+
+            <p class="text-muted">
+                The requested road or infrastructure service
+                could not be found.
+            </p>
+
+            <a href="{% url 'public_works:road_infrastructure_services' %}"
+               class="btn btn-success btn-sm">
+
+                <i class="bi bi-arrow-left me-1"></i>
+                Back to Road & Infrastructure Services
+
+            </a>
+
+        </div>
+
+    </div>
+
+</div>
+
+{% endblock %}

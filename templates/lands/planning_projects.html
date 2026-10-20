@@ -1,0 +1,277 @@
+{% extends "base.html" %}
+
+{% block title %}
+    Land, Housing & Planning Projects
+{% endblock %}
+
+{% block content %}
+
+<div class="container-fluid">
+
+    <div class="d-flex flex-wrap justify-content-between align-items-center mb-4">
+        <div>
+            <h4 class="mb-1">
+                <i class="bi bi-buildings"></i>
+                Land, Housing & Planning Projects
+            </h4>
+
+            <p class="text-muted mb-0">
+                View published land, housing and urban development projects.
+            </p>
+        </div>
+    </div>
+
+
+    <!-- Search and filters -->
+    <div class="card border-0 shadow-sm mb-4">
+
+        <div class="card-body">
+
+            <form method="get">
+
+                <div class="row g-3">
+
+                    <div class="col-md-5">
+
+                        <label class="form-label">
+                            Search Projects
+                        </label>
+
+                        <input
+                            type="text"
+                            name="search"
+                            value="{{ search }}"
+                            class="form-control"
+                            placeholder="Search by project, location or district..."
+                        >
+
+                    </div>
+
+
+                    <div class="col-md-3">
+
+                        <label class="form-label">
+                            Project Type
+                        </label>
+
+                        <select
+                            name="type"
+                            class="form-select"
+                        >
+
+                            <option value="">
+                                All project types
+                            </option>
+
+                            {% for value, label in project_types %}
+
+                                <option
+                                    value="{{ value }}"
+                                    {% if selected_type == value %}selected{% endif %}
+                                >
+                                    {{ label }}
+                                </option>
+
+                            {% endfor %}
+
+                        </select>
+
+                    </div>
+
+
+                    <div class="col-md-2">
+
+                        <label class="form-label">
+                            Status
+                        </label>
+
+                        <select
+                            name="status"
+                            class="form-select"
+                        >
+
+                            <option value="">
+                                All statuses
+                            </option>
+
+                            {% for value, label in statuses %}
+
+                                <option
+                                    value="{{ value }}"
+                                    {% if selected_status == value %}selected{% endif %}
+                                >
+                                    {{ label }}
+                                </option>
+
+                            {% endfor %}
+
+                        </select>
+
+                    </div>
+
+
+                    <div class="col-md-2 d-flex align-items-end">
+
+                        <button
+                            type="submit"
+                            class="btn btn-success w-100"
+                        >
+                            <i class="bi bi-search"></i>
+                            Search
+                        </button>
+
+                    </div>
+
+                </div>
+
+            </form>
+
+        </div>
+
+    </div>
+
+
+    <!-- Projects -->
+    <div class="row g-4">
+
+        {% for project in projects %}
+
+            <div class="col-12 col-md-6 col-xl-4">
+
+                <div class="card h-100 border-0 shadow-sm">
+
+                    {% if project.image %}
+
+                        <img
+                            src="{{ project.image.url }}"
+                            class="card-img-top"
+                            alt="{{ project.title }}"
+                            style="height: 190px; object-fit: cover;"
+                        >
+
+                    {% endif %}
+
+                    <div class="card-body">
+
+                        <div class="d-flex justify-content-between align-items-start gap-2 mb-2">
+
+                            <span class="badge bg-success-subtle text-success">
+                                {{ project.get_project_type_display }}
+                            </span>
+
+                            {% if project.status == "ongoing" %}
+
+                                <span class="badge bg-primary">
+                                    Ongoing
+                                </span>
+
+                            {% elif project.status == "completed" %}
+
+                                <span class="badge bg-success">
+                                    Completed
+                                </span>
+
+                            {% elif project.status == "planned" %}
+
+                                <span class="badge bg-warning text-dark">
+                                    Planned
+                                </span>
+
+                            {% elif project.status == "suspended" %}
+
+                                <span class="badge bg-danger">
+                                    Suspended
+                                </span>
+
+                            {% else %}
+
+                                <span class="badge bg-secondary">
+                                    {{ project.get_status_display }}
+                                </span>
+
+                            {% endif %}
+
+                        </div>
+
+
+                        <h5 class="card-title">
+                            {{ project.title }}
+                        </h5>
+
+
+                        <p class="text-muted small mb-2">
+
+                            <i class="bi bi-geo-alt"></i>
+
+                            {{ project.location }}
+
+                            {% if project.district %}
+                                · {{ project.district }}
+                            {% endif %}
+
+                        </p>
+
+
+                        <p class="card-text text-muted">
+                            {{ project.summary|truncatechars:150 }}
+                        </p>
+
+
+                        {% if project.implementing_organization %}
+
+                            <p class="small mb-3">
+
+                                <strong>Implementing organization:</strong><br>
+
+                                {{ project.implementing_organization }}
+
+                            </p>
+
+                        {% endif %}
+
+
+                        <a
+                            href="{% url 'lands:planning_project_detail' project.id %}"
+                            class="btn btn-outline-success w-100"
+                        >
+                            <i class="bi bi-eye"></i>
+                            View Project
+                        </a>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        {% empty %}
+
+            <div class="col-12">
+
+                <div class="card border-0 shadow-sm">
+
+                    <div class="card-body text-center py-5">
+
+                        <i class="bi bi-buildings fs-1 text-muted"></i>
+
+                        <h5 class="mt-3">
+                            No projects found
+                        </h5>
+
+                        <p class="text-muted mb-0">
+                            There are currently no published projects matching your search.
+                        </p>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        {% endfor %}
+
+    </div>
+
+</div>
+
+{% endblock %}

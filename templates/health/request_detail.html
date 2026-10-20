@@ -1,0 +1,96 @@
+{% extends "base.html" %}
+
+{% block title %}{{ health_request.reference_number }} | Smart City Uganda{% endblock %}
+
+{% block content %}
+
+<div class="container-fluid py-3">
+
+    <a href="{% url 'health:requests' %}"
+       class="small text-decoration-none">
+        <i class="bi bi-arrow-left"></i>
+        Back to requests
+    </a>
+
+    <div class="card border-0 shadow-sm mt-3">
+
+        <div class="card-body p-4">
+
+            <div class="d-flex flex-column flex-md-row justify-content-between gap-2">
+
+                <div>
+                    <div class="small text-muted">
+                        Health Request
+                    </div>
+
+                    <h4 class="fw-bold">
+                        {{ health_request.reference_number }}
+                    </h4>
+                </div>
+
+                <span class="badge text-bg-success align-self-start">
+                    {{ health_request.get_status_display }}
+                </span>
+
+            </div>
+
+            <hr>
+
+            <h5 class="fw-bold">
+                {{ health_request.subject }}
+            </h5>
+
+            <p class="small text-muted">
+                {{ health_request.description|linebreaks }}
+            </p>
+
+            <div class="row g-3 mt-2">
+
+                <div class="col-md-4">
+                    <strong>Request Type</strong>
+                    <div class="small text-muted">
+                        {{ health_request.get_request_type_display }}
+                    </div>
+                </div>
+
+                <div class="col-md-4">
+                    <strong>Facility</strong>
+                    <div class="small text-muted">
+                        {% if health_request.facility %}
+                            {{ health_request.facility.title }}
+                        {% else %}
+                            Not specified
+                        {% endif %}
+                    </div>
+                </div>
+
+                <div class="col-md-4">
+                    <strong>District</strong>
+                    <div class="small text-muted">
+                        {{ health_request.district|default:"Not specified" }}
+                    </div>
+                </div>
+
+                <div class="col-md-4">
+                    <strong>Submitted</strong>
+                    <div class="small text-muted">
+                        {{ health_request.created_at|date:"d M Y H:i" }}
+                    </div>
+                </div>
+
+                <div class="col-md-4">
+                    <strong>Citizen</strong>
+                    <div class="small text-muted">
+                        {{ health_request.citizen_name }}
+                    </div>
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+{% endblock %}

@@ -1,0 +1,288 @@
+{% extends "base.html" %}
+
+{% block title %}
+    Traffic & Road Safety
+{% endblock %}
+
+{% block content %}
+
+<div class="container-fluid py-3">
+
+    <!-- Header -->
+    <div class="d-flex flex-wrap justify-content-between align-items-center mb-3">
+
+        <div>
+            <h4 class="mb-1">
+                <i class="bi bi-shield-check text-success me-2"></i>
+                Traffic & Road Safety
+            </h4>
+
+            <p class="text-muted small mb-0">
+                Access traffic, road safety and road-user information.
+            </p>
+        </div>
+
+        <div class="mt-2 mt-md-0">
+
+            <a
+                href="{% url 'public_works:home' %}"
+                class="btn btn-outline-secondary btn-sm"
+            >
+                <i class="bi bi-arrow-left me-1"></i>
+                Public Works
+            </a>
+
+        </div>
+
+    </div>
+
+
+    <!-- Safety information -->
+    <div class="card shadow-sm border-0 mb-3">
+
+        <div class="card-body">
+
+            <div class="d-flex flex-wrap justify-content-between align-items-center">
+
+                <div>
+
+                    <h6 class="mb-1">
+                        Road Safety Information
+                    </h6>
+
+                    <p class="small text-muted mb-0">
+                        Find information about safe road use,
+                        traffic rules and road-user awareness.
+                    </p>
+
+                </div>
+
+                <span class="badge text-bg-success mt-2 mt-md-0">
+                    {{ total_information }}
+                    Information Item{{ total_information|pluralize }}
+                </span>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- Filters -->
+    <div class="card shadow-sm border-0 mb-3">
+
+        <div class="card-body">
+
+            <form method="get">
+
+                <div class="row g-2">
+
+                    <div class="col-12 col-md-6">
+
+                        <label class="form-label small">
+                            Category
+                        </label>
+
+                        <select
+                            name="category"
+                            class="form-select form-select-sm"
+                        >
+
+                            <option value="">
+                                All categories
+                            </option>
+
+                            {% for value, label in categories %}
+
+                                <option
+                                    value="{{ value }}"
+                                    {% if category == value %}
+                                        selected
+                                    {% endif %}
+                                >
+                                    {{ label }}
+                                </option>
+
+                            {% endfor %}
+
+                        </select>
+
+                    </div>
+
+
+                    <div class="col-12 col-md-6">
+
+                        <label class="form-label small">
+                            District / City
+                        </label>
+
+                        <input
+                            type="text"
+                            name="district"
+                            value="{{ district }}"
+                            class="form-control form-control-sm"
+                            placeholder="e.g. Kampala"
+                        >
+
+                    </div>
+
+                </div>
+
+
+                <div class="d-flex gap-2 mt-3">
+
+                    <button
+                        type="submit"
+                        class="btn btn-success btn-sm"
+                    >
+                        <i class="bi bi-search me-1"></i>
+                        Search
+                    </button>
+
+                    <a
+                        href="{% url 'public_works:traffic_road_safety' %}"
+                        class="btn btn-outline-secondary btn-sm"
+                    >
+                        Clear
+                    </a>
+
+                </div>
+
+            </form>
+
+        </div>
+
+    </div>
+
+
+    <!-- Information cards -->
+    <div class="row g-3">
+
+        {% for item in information %}
+
+        <div class="col-12 col-md-6 col-xl-4">
+
+            <div class="card h-100 shadow-sm border-0">
+
+                <div class="card-body">
+
+                    <div class="d-flex justify-content-between align-items-start mb-2">
+
+                        <h6 class="card-title mb-0">
+                            {{ item.title }}
+                        </h6>
+
+                        {% if item.is_featured %}
+
+                            <span class="badge text-bg-warning">
+                                Featured
+                            </span>
+
+                        {% endif %}
+
+                    </div>
+
+
+                    <span class="badge text-bg-light border mb-2">
+                        {{ item.get_category_display }}
+                    </span>
+
+
+                    {% if item.district %}
+
+                    <p class="small text-muted mb-2">
+
+                        <i class="bi bi-geo-alt me-1"></i>
+                        {{ item.district }}
+
+                    </p>
+
+                    {% endif %}
+
+
+                    <p class="small text-muted">
+
+                        {{ item.summary|truncatechars:140 }}
+
+                    </p>
+
+
+                    <a
+                        href="{% url 'public_works:traffic_road_safety_detail' item.id %}"
+                        class="btn btn-outline-success btn-sm w-100"
+                    >
+                        <i class="bi bi-eye me-1"></i>
+                        Read Information
+                    </a>
+
+                </div>
+
+            </div>
+
+        </div>
+
+        {% empty %}
+
+        <div class="col-12">
+
+            <div class="alert alert-light border text-center">
+
+                <i class="bi bi-info-circle me-1"></i>
+
+                No traffic or road-safety information is
+                currently available for your search.
+
+            </div>
+
+        </div>
+
+        {% endfor %}
+
+    </div>
+
+
+    <!-- Road problem link -->
+    <div class="card shadow-sm border-0 mt-3">
+
+        <div class="card-body">
+
+            <div class="d-flex flex-wrap justify-content-between align-items-center">
+
+                <div>
+
+                    <h6 class="mb-1">
+                        Found a road problem?
+                    </h6>
+
+                    <p class="small text-muted mb-0">
+                        Report potholes, damaged roads, missing signs
+                        and other road problems.
+                    </p>
+
+                </div>
+
+                <a
+                    href="{% url 'public_works:road_problem_report' %}"
+                    class="btn btn-danger btn-sm mt-2 mt-md-0"
+                >
+                    <i class="bi bi-exclamation-triangle me-1"></i>
+                    Report Road Problem
+                </a>
+
+                <a
+    href="{% url 'public_works:traffic_incident_report' %}"
+    class="btn btn-danger btn-sm mt-2 mt-md-0"
+>
+    <i class="bi bi-exclamation-triangle me-1"></i>
+    Report Traffic Incident
+</a>
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+{% endblock %}

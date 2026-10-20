@@ -1,0 +1,133 @@
+{% extends "city_admin/base.html" %}
+
+{% block title %}Review Security Event{% endblock %}
+{% block page_heading %}Review Security Event{% endblock %}
+
+{% block content %}
+<div class="container-fluid px-0">
+
+    <div class="d-flex flex-wrap justify-content-between align-items-center gap-3 mb-4">
+        <div>
+            <h1 class="h3 mb-1">Security Event #{{ event.id }}</h1>
+            <p class="text-muted mb-0">
+                Review the recorded details and update the investigation.
+            </p>
+        </div>
+        <a href="{% url 'city_admin:security_events' %}"
+           class="btn btn-outline-secondary">
+            <i class="bi bi-arrow-left me-1"></i> Back to Events
+        </a>
+    </div>
+
+    {% if messages %}
+        {% for message in messages %}
+            <div class="alert alert-{{ message.tags|default:'info' }} alert-dismissible fade show">
+                {{ message }}
+                <button type="button" class="btn-close"
+                        data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+        {% endfor %}
+    {% endif %}
+
+    <div class="card border-0 shadow-sm mb-4">
+        <div class="card-header bg-white py-3">
+            <h2 class="h5 mb-0">{{ event.summary }}</h2>
+        </div>
+
+        <div class="card-body">
+            <div class="row g-3">
+                <div class="col-12 col-md-6">
+                    <div class="text-muted small">Event Type</div>
+                    <div class="fw-semibold">{{ event.get_event_type_display }}</div>
+                </div>
+                <div class="col-12 col-md-6">
+                    <div class="text-muted small">Severity</div>
+                    <div class="fw-semibold">{{ event.get_severity_display }}</div>
+                </div>
+                <div class="col-12 col-md-6">
+                    <div class="text-muted small">Current Status</div>
+                    <div class="fw-semibold">{{ event.get_status_display }}</div>
+                </div>
+                <div class="col-12 col-md-6">
+                    <div class="text-muted small">Recorded At</div>
+                    <div>{{ event.created_at|date:"d M Y H:i:s" }}</div>
+                </div>
+                <div class="col-12 col-md-6">
+                    <div class="text-muted small">Associated User</div>
+                    <div>
+                        {% if event.user %}
+                            {{ event.user.get_username }}
+                        {% else %}
+                            Unknown or unauthenticated user
+                        {% endif %}
+                    </div>
+                </div>
+                <div class="col-12 col-md-6">
+                    <div class="text-muted small">IP Address</div>
+                    <div>{{ event.ip_address|default:"Not recorded" }}</div>
+                </div>
+                <div class="col-12">
+                    <div class="text-muted small">Request Path</div>
+                    <code>{{ event.request_path|default:"Not recorded" }}</code>
+                </div>
+                <div class="col-12">
+                    <div class="text-muted small">Event Details</div>
+                    <div class="border rounded p-3 bg-light"
+                         style="white-space: pre-wrap; overflow-wrap: anywhere;">{{ event.details|default:"No additional details recorded." }}</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="card border-0 shadow-sm">
+        <div class="card-header bg-white py-3">
+            <h2 class="h5 mb-0">Investigation and Review</h2>
+        </div>
+
+        <div class="card-body">
+            <form method="post"
+                  action="{% url 'city_admin:security_event_review' event.id %}">
+                {% csrf_token %}
+
+                <div class="mb-3">
+                    <label class="form-label" for="status">
+                        Investigation Status
+                    </label>
+                    <select class="form-select" id="status" name="status" required>
+                        {% for value, label in event.STATUS_CHOICES %}
+                            <option value="{{ value }}"
+                                {% if event.status == value %}selected{% endif %}>
+                                {{ label }}
+                            </option>
+                        {% endfor %}
+                    </select>
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label" for="review_notes">
+                        Investigation Notes
+                    </label>
+                    <textarea class="form-control" id="review_notes"
+                              name="review_notes" rows="5"
+                              placeholder="Record findings, actions taken and the reason for resolution or dismissal.">{{ event.review_notes }}</textarea>
+                </div>
+
+                {% if event.reviewed_by %}
+                    <p class="small text-muted">
+                        Last reviewed by {{ event.reviewed_by.get_username }}
+                        {% if event.reviewed_at %}
+                            on {{ event.reviewed_at|date:"d M Y H:i" }}
+                        {% endif %}
+                    </p>
+                {% endif %}
+
+                <button type="submit" class="btn btn-success">
+                    <i class="bi bi-check-circle me-1"></i>
+                    Save Investigation
+                </button>
+            </form>
+        </div>
+    </div>
+
+</div>
+{% endblock %}

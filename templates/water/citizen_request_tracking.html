@@ -1,0 +1,480 @@
+{% extends "base.html" %}
+
+{% block title %}
+    Track My Request | Smart City Uganda
+{% endblock %}
+
+{% block content %}
+
+<div class="container-fluid py-3">
+
+    <!-- Header -->
+    <div class="mb-3">
+
+        <h4 class="fw-bold mb-1">
+
+            <i class="bi bi-search text-success"></i>
+
+            Track My Request
+
+        </h4>
+
+        <p class="text-muted mb-0">
+
+            Enter your report reference number to check
+            its current status.
+
+        </p>
+
+    </div>
+
+
+    <!-- Search -->
+    <div class="card border-0 shadow-sm mb-4">
+
+        <div class="card-body">
+
+            <form method="get">
+
+                <div class="row g-2">
+
+                    <div class="col-12 col-md-5">
+
+                        <label class="form-label small fw-semibold">
+
+                            Reference Number
+
+                        </label>
+
+                        <input
+                            type="text"
+                            name="reference_number"
+                            value="{{ reference_number }}"
+                            class="form-control"
+                            placeholder="Example: WTR-12345678"
+                            required
+                        >
+
+                    </div>
+
+
+                    <div class="col-12 col-md-4">
+
+                        <label class="form-label small fw-semibold">
+
+                            Report Type
+
+                        </label>
+
+                        <select
+                            name="report_type"
+                            class="form-select"
+                        >
+
+                            <option value="">
+                                Search All Report Types
+                            </option>
+
+                            <option
+                                value="water"
+                                {% if report_type == "water" %}
+                                    selected
+                                {% endif %}
+                            >
+                                Water Problem
+                            </option>
+
+                            <option
+                                value="drainage"
+                                {% if report_type == "drainage" %}
+                                    selected
+                                {% endif %}
+                            >
+                                Drainage & Wastewater
+                            </option>
+
+                            <option
+                                value="pollution"
+                                {% if report_type == "pollution" %}
+                                    selected
+                                {% endif %}
+                            >
+                                Pollution
+                            </option>
+
+                            <option
+                                value="incident"
+                                {% if report_type == "incident" %}
+                                    selected
+                                {% endif %}
+                            >
+                                Environmental Incident
+                            </option>
+
+                        </select>
+
+                    </div>
+
+
+                    <div class="col-12 col-md-3 d-flex align-items-end">
+
+                        <button
+                            type="submit"
+                            class="btn btn-success w-100"
+                        >
+
+                            <i class="bi bi-search me-1"></i>
+
+                            Track Request
+
+                        </button>
+
+                    </div>
+
+                </div>
+
+            </form>
+
+        </div>
+
+    </div>
+
+
+    <!-- Not Found -->
+
+    {% if not_found %}
+
+        <div class="alert alert-warning shadow-sm">
+
+            <i class="bi bi-exclamation-circle me-2"></i>
+
+            No report was found with reference number
+
+            <strong>
+                {{ reference_number }}
+            </strong>.
+
+            Please check the reference number and try again.
+
+        </div>
+
+    {% endif %}
+
+
+    {% if report %}
+
+        <!-- Report Summary -->
+
+        <div class="row g-3">
+
+            <div class="col-12 col-lg-8">
+
+                <div class="card border-0 shadow-sm">
+
+                    <div class="card-body">
+
+                        <div class="d-flex justify-content-between
+                                    align-items-start flex-wrap gap-2">
+
+                            <div>
+
+                                <span class="badge bg-success mb-2">
+
+                                    {{ report_category }}
+
+                                </span>
+
+                                <h5 class="fw-bold mb-1">
+
+                                    {{ report.get_status_display }}
+
+                                </h5>
+
+                                <p class="text-muted mb-0">
+
+                                    Reference:
+
+                                    <strong>
+                                        {{ report.reference_number }}
+                                    </strong>
+
+                                </p>
+
+                            </div>
+
+
+                            {% if report.status == "resolved" %}
+
+                                <span class="badge bg-success">
+
+                                    Resolved
+
+                                </span>
+
+                            {% elif report.status == "rejected" %}
+
+                                <span class="badge bg-danger">
+
+                                    Rejected
+
+                                </span>
+
+                            {% elif report.status == "in_progress" %}
+
+                                <span class="badge bg-primary">
+
+                                    In Progress
+
+                                </span>
+
+                            {% elif report.status == "investigating" %}
+
+                                <span class="badge bg-warning text-dark">
+
+                                    Investigating
+
+                                </span>
+
+                            {% else %}
+
+                                <span class="badge bg-secondary">
+
+                                    {{ report.get_status_display }}
+
+                                </span>
+
+                            {% endif %}
+
+                        </div>
+
+
+                        <hr>
+
+
+                        <!-- Status Timeline -->
+
+                        <h6 class="fw-bold mb-3">
+
+                            Request Progress
+
+                        </h6>
+
+
+                        <div class="list-group list-group-flush">
+
+                            {% for step in status_steps %}
+
+                                <div
+                                    class="list-group-item px-0
+                                    {% if step.current %}
+                                        bg-light
+                                    {% endif %}"
+                                >
+
+                                    <div class="d-flex
+                                                align-items-center">
+
+                                        {% if step.completed %}
+
+                                            <div
+                                                class="bg-success
+                                                       text-white
+                                                       rounded-circle
+                                                       d-flex
+                                                       align-items-center
+                                                       justify-content-center
+                                                       me-3"
+                                                style="width: 32px;
+                                                       height: 32px;"
+                                            >
+
+                                                <i class="bi bi-check"></i>
+
+                                            </div>
+
+                                        {% else %}
+
+                                            <div
+                                                class="bg-light
+                                                       text-secondary
+                                                       border
+                                                       rounded-circle
+                                                       d-flex
+                                                       align-items-center
+                                                       justify-content-center
+                                                       me-3"
+                                                style="width: 32px;
+                                                       height: 32px;"
+                                            >
+
+                                                <i class="bi bi-circle"></i>
+
+                                            </div>
+
+                                        {% endif %}
+
+
+                                        <div>
+
+                                            <strong>
+                                                {{ step.label }}
+                                            </strong>
+
+                                            {% if step.current %}
+
+                                                <div class="small text-success">
+                                                    Current status
+                                                </div>
+
+                                            {% endif %}
+
+                                        </div>
+
+                                    </div>
+
+                                </div>
+
+                            {% endfor %}
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <!-- Request Information -->
+
+            <div class="col-12 col-lg-4">
+
+                <div class="card border-0 shadow-sm">
+
+                    <div class="card-header bg-success text-white">
+
+                        <strong>
+                            Request Information
+                        </strong>
+
+                    </div>
+
+
+                    <div class="list-group list-group-flush">
+
+                        {% if report.incident_type %}
+
+                            <div class="list-group-item">
+
+                                <small class="text-muted d-block">
+                                    Incident Type
+                                </small>
+
+                                <strong>
+                                    {{ report.get_incident_type_display }}
+                                </strong>
+
+                            </div>
+
+                        {% endif %}
+
+
+                        {% if report.problem_type %}
+
+                            <div class="list-group-item">
+
+                                <small class="text-muted d-block">
+                                    Problem Type
+                                </small>
+
+                                <strong>
+                                    {{ report.get_problem_type_display }}
+                                </strong>
+
+                            </div>
+
+                        {% endif %}
+
+
+                        {% if report.pollution_type %}
+
+                            <div class="list-group-item">
+
+                                <small class="text-muted d-block">
+                                    Pollution Type
+                                </small>
+
+                                <strong>
+                                    {{ report.get_pollution_type_display }}
+                                </strong>
+
+                            </div>
+
+                        {% endif %}
+
+
+                        <div class="list-group-item">
+
+                            <small class="text-muted d-block">
+                                District / City
+                            </small>
+
+                            <strong>
+                                {{ report.district }}
+                            </strong>
+
+                        </div>
+
+
+                        <div class="list-group-item">
+
+                            <small class="text-muted d-block">
+                                Location
+                            </small>
+
+                            <strong>
+                                {{ report.location }}
+                            </strong>
+
+                        </div>
+
+
+                        <div class="list-group-item">
+
+                            <small class="text-muted d-block">
+                                Urgency
+                            </small>
+
+                            <strong>
+                                {{ report.get_urgency_display }}
+                            </strong>
+
+                        </div>
+
+
+                        <div class="list-group-item">
+
+                            <small class="text-muted d-block">
+                                Submitted
+                            </small>
+
+                            <strong>
+                                {{ report.created_at|date:"d M Y H:i" }}
+                            </strong>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+    {% endif %}
+
+</div>
+
+{% endblock %}

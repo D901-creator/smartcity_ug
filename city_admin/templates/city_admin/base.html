@@ -1,0 +1,320 @@
+
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>{% block title %}National Administration Centre{% endblock %} | Smart City Uganda</title>
+
+    <link rel="stylesheet"
+          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
+          rel="stylesheet">
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css"
+          rel="stylesheet">
+
+    <link rel="stylesheet" href="{% static 'city_admin/css/admin.css' %}">
+
+    {% block extra_css %}{% endblock %}
+</head>
+
+<body>
+<div class="admin-shell">
+
+    <aside class="admin-sidebar" id="adminSidebar">
+
+        
+            <a href="/" class="sidebar-brand-link"
+           aria-label="Smart City Uganda home">
+
+            <img
+                src="{% static 'images/ug.jpg' %}"
+                alt="Uganda emblem"
+                class="sidebar-logo"
+            >
+            <span>
+                <strong>SMART CITY</strong>
+                <small>UGANDA · ADMIN OS</small>
+            </span>
+        </a>
+
+        <div class="sidebar-caption">ADMIN MENU</div>
+
+        <nav class="admin-nav" aria-label="Administration navigation">
+
+            <a href="{% url 'city_admin:dashboard' %}"
+               class="{% if active_section == 'dashboard' %}active{% endif %}">
+                <i class="bi bi-grid-1x2"></i>
+                <span>Dashboard</span>
+            </a>
+
+            <a href="{% url 'city_admin:users' %}"
+               class="{% if active_section == 'users' %}active{% endif %}">
+                <i class="bi bi-people"></i>
+                <span>User management</span>
+            </a>
+
+            <a href="{% url 'city_admin:verifications' %}"
+               class="{% if active_section == 'verifications' %}active{% endif %}">
+                <i class="bi bi-patch-check"></i>
+                <span>Verifications</span>
+            </a>
+<li class="nav-item">
+    <a class="nav-link"
+       href="{% url 'city_admin:verification_applications' %}">
+        <i class="bi bi-person-check"></i>
+        <span>Verification Approvals</span>
+    </a>
+</li>
+            <a href="{% url 'city_admin:departments' %}"
+               class="sidebar-link {% if active_section == 'departments' %}active{% endif %}">
+                <i class="bi bi-diagram-3"></i>
+                <span>Departments &amp; Services</span>
+            </a>
+
+            <a href="{% url 'city_admin:analytics' %}"
+               class="sidebar-link {% if active_section == 'analytics' %}active{% endif %}">
+                <i class="bi bi-graph-up-arrow"></i>
+                <span>Analytics &amp; Reports</span>
+            </a>
+
+            <a href="{% url 'city_admin:locations' %}"
+               class="{% if active_section == 'locations' %}active{% endif %}">
+                <i class="bi bi-geo-alt"></i>
+                <span>Locations &amp; Maps</span>
+            </a>
+
+            <a href="{% url 'city_admin:district_map' %}"
+               class="nav-link city-map-link">
+                <i class="fa-solid fa-map me-2 city-map-icon"></i>
+                <span>District Maps</span>
+            </a>
+
+            <a href="{% url 'city_admin:district_issue_map' %}"
+               class="nav-link city-map-link">
+                <i class="fa-solid fa-map-location-dot me-2 city-map-icon"></i>
+                <span>District Issue Maps</span>
+            </a>
+
+            <a href="{% url 'city_admin:notifications' %}"
+               class="{% if active_section == 'notifications' %}active{% endif %}">
+                <i class="bi bi-bell"></i>
+                <span>Notifications</span>
+
+                {% if unread_notification_count > 0 %}
+                    <span class="notification-sidebar-badge">
+                        {{ unread_notification_count }}
+                    </span>
+                {% endif %}
+            </a>
+
+           <a href="{% url 'city_admin:database' %}"
+   class="{% if active_section == 'database' %}active{% endif %}">
+    <i class="bi bi-database"></i>
+    <span>Database</span>
+</a>
+
+           <a href="{% url 'city_admin:security_audit' %}"
+   class="{% if active_section == 'security_audit' %}active{% endif %}">
+    <i class="bi bi-shield-lock"></i>
+    <span>Security &amp; Audit</span>
+</a>
+
+            <a href="{% url 'city_admin:settings' %}"
+   class="{% if active_section == 'settings' %}active{% endif %}">
+    <i class="bi bi-sliders"></i>
+    <span>System Settings</span>
+</a>
+
+<form method="post"
+      action="{% url 'city_admin:signout' %}"
+      class="sidebar-signout-form">
+    {% csrf_token %}
+    <button type="submit" class="sidebar-signout-button">
+        <i class="bi bi-box-arrow-right"></i>
+        <span>Sign Out</span>
+    </button>
+</form>
+
+        </nav>
+
+        
+    </aside>
+
+    <div class="admin-main">
+
+        <!-- Single topbar: heading on the left, actions on the right -->
+       
+<header class="admin-topbar">
+    <button
+        type="button"
+        class="sidebar-toggle"
+        id="sidebarToggle"
+        aria-label="Toggle navigation"
+        aria-controls="adminSidebar"
+        aria-expanded="false"
+    >
+        <i class="bi bi-list"></i>
+    </button>
+
+    <div class="topbar-heading">
+        <span class="topbar-eyebrow">NATIONAL ADMINISTRATION CENTRE</span>
+        <strong>{% block page_heading %}System overview{% endblock %}</strong>
+    </div>
+
+    <div class="topbar-actions">
+        
+        <div class="dropdown">
+            <button
+                class="btn notification-bell"
+                type="button"
+                id="adminNotificationDropdown"
+                data-bs-toggle="dropdown"
+                aria-expanded="false"
+                aria-label="Notifications"
+            >
+                <i class="bi bi-bell"></i>
+
+                {% if unread_notification_count > 0 %}
+                    <span class="notification-count">
+                        {{ unread_notification_count }}
+                    </span>
+                {% endif %}
+            </button>
+
+            <div
+                class="dropdown-menu dropdown-menu-end notification-dropdown"
+                aria-labelledby="adminNotificationDropdown"
+            >
+                <div class="notification-dropdown-header">
+                    <strong>Notifications</strong>
+                    <a href="{% url 'city_admin:notifications' %}">View all</a>
+                </div>
+
+                {% for notification in nav_notifications %}
+                    <form
+                        method="post"
+                        action="{% url 'city_admin:notification_mark_read' notification.id %}"
+                        class="notification-item-form"
+                    >
+                        {% csrf_token %}
+
+                        <button
+                            type="submit"
+                            class="notification-item {% if not notification.is_read %}unread{% endif %}"
+                        >
+                            <span class="notification-item-icon">
+                                <i class="bi bi-bell"></i>
+                            </span>
+
+                            <span class="notification-item-content">
+                                <strong>{{ notification.title }}</strong>
+                                <small>{{ notification.message|truncatechars:90 }}</small>
+                                <small>{{ notification.created_at|date:"d M Y, H:i" }}</small>
+                            </span>
+                        </button>
+                    </form>
+                {% empty %}
+                    <div class="notification-empty">
+                        <i class="bi bi-bell-slash"></i>
+                        <p>No notifications yet.</p>
+                    </div>
+                {% endfor %}
+
+                {% if unread_notification_count > 0 %}
+                    <form
+                        method="post"
+                        action="{% url 'city_admin:notifications_mark_all_read' %}"
+                    >
+                        {% csrf_token %}
+                        <button type="submit" class="notification-mark-all">
+                            Mark all as read
+                        </button>
+                    </form>
+                {% endif %}
+            </div>
+        </div>
+
+        <div class="topbar-status">
+            <i class="bi bi-shield-lock"></i>
+            <span>Admin portal</span>
+        </div>
+    </div>
+</header>
+
+        <main class="admin-content">
+
+            {% block content %}{% endblock %}
+
+            <footer class="admin-footer">
+                Smart City Uganda <span>·</span> National Digital Citizen Services
+            </footer>
+
+        </main>
+
+    </div>
+
+</div>
+
+<div class="sidebar-overlay" id="sidebarOverlay"></div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+
+<script>
+(function () {
+    const sidebar = document.getElementById("adminSidebar");
+    const toggle = document.getElementById("sidebarToggle");
+    const overlay = document.getElementById("sidebarOverlay");
+
+    function setSidebar(open) {
+        sidebar.classList.toggle("sidebar-open", open);
+        overlay.classList.toggle("overlay-visible", open);
+        toggle.setAttribute("aria-expanded", String(open));
+    }
+
+    toggle.addEventListener("click", function () {
+        setSidebar(!sidebar.classList.contains("sidebar-open"));
+    });
+
+    overlay.addEventListener("click", function () {
+        setSidebar(false);
+    });
+
+    document.addEventListener("keydown", function (event) {
+        if (event.key === "Escape") {
+            setSidebar(false);
+        }
+    });
+
+    window.addEventListener("resize", function () {
+        if (window.innerWidth > 900) {
+            setSidebar(false);
+        }
+    });
+})();
+
+document.addEventListener("DOMContentLoaded", function () {
+    const currentPath = window.location.pathname.replace(/\/+$/, "");
+
+    document.querySelectorAll(".city-map-link").forEach(function (link) {
+        const linkPath = new URL(link.href, window.location.origin)
+            .pathname.replace(/\/+$/, "");
+
+        if (currentPath === linkPath) {
+            link.classList.add("active");
+            link.setAttribute("aria-current", "page");
+        } else {
+            link.classList.remove("active");
+            link.removeAttribute("aria-current");
+        }
+    });
+});
+</script>
+
+{% block extra_js %}{% endblock %}
+
+</body>
+</html>

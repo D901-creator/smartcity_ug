@@ -1,0 +1,385 @@
+{% extends "base.html" %}
+
+{% block title %}
+    Community Safety Programmes | Smart City Uganda
+{% endblock %}
+
+{% block content %}
+
+<div class="container-fluid py-3">
+
+    <!-- Header -->
+    <div class="d-flex justify-content-between align-items-center mb-4">
+
+        <div>
+            <h2 class="fw-bold mb-1">
+                <i class="bi bi-people text-success"></i>
+                Community Safety Programmes
+            </h2>
+
+            <p class="text-muted mb-0">
+                View community policing, crime prevention and
+                public safety programmes.
+            </p>
+        </div>
+
+        <a href="{% url 'security:home' %}"
+           class="btn btn-outline-secondary">
+
+            <i class="bi bi-arrow-left"></i>
+            Back
+
+        </a>
+
+    </div>
+
+
+    <!-- Information notice -->
+    <div class="alert alert-success border-0 shadow-sm">
+
+        <div class="d-flex">
+
+            <div class="me-3 fs-4">
+                <i class="bi bi-shield-check"></i>
+            </div>
+
+            <div>
+
+                <h5 class="alert-heading fw-bold">
+                    Community Safety
+                </h5>
+
+                <p class="mb-0">
+                    Explore published programmes intended to
+                    support community safety, crime prevention,
+                    awareness and emergency preparedness.
+                </p>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- Filters -->
+    <div class="card border-0 shadow-sm mb-4">
+
+        <div class="card-body">
+
+            <form method="GET">
+
+                <div class="row g-3">
+
+                    <!-- Search -->
+                    <div class="col-lg-4">
+
+                        <label class="form-label fw-semibold">
+                            Search
+                        </label>
+
+                        <input
+                            type="text"
+                            name="q"
+                            value="{{ search_query|default:'' }}"
+                            class="form-control"
+                            placeholder="Search programmes..."
+                        >
+
+                    </div>
+
+
+                    <!-- Programme type -->
+                    <div class="col-lg-3">
+
+                        <label class="form-label fw-semibold">
+                            Programme Type
+                        </label>
+
+                        <select
+                            name="programme_type"
+                            class="form-select"
+                        >
+
+                            <option value="">
+                                All Programme Types
+                            </option>
+
+                            {% for value, label in programme_types %}
+
+                                <option
+                                    value="{{ value }}"
+                                    {% if selected_type == value %}
+                                        selected
+                                    {% endif %}
+                                >
+                                    {{ label }}
+                                </option>
+
+                            {% endfor %}
+
+                        </select>
+
+                    </div>
+
+
+                    <!-- District -->
+                    <div class="col-lg-2">
+
+                        <label class="form-label fw-semibold">
+                            District / City
+                        </label>
+
+                        <input
+                            type="text"
+                            name="district"
+                            value="{{ selected_district|default:'' }}"
+                            class="form-control"
+                            placeholder="District"
+                        >
+
+                    </div>
+
+
+                    <!-- Status -->
+                    <div class="col-lg-2">
+
+                        <label class="form-label fw-semibold">
+                            Status
+                        </label>
+
+                        <select
+                            name="status"
+                            class="form-select"
+                        >
+
+                            <option value="">
+                                All
+                            </option>
+
+                            {% for value, label in statuses %}
+
+                                <option
+                                    value="{{ value }}"
+                                    {% if selected_status == value %}
+                                        selected
+                                    {% endif %}
+                                >
+                                    {{ label }}
+                                </option>
+
+                            {% endfor %}
+
+                        </select>
+
+                    </div>
+
+
+                    <!-- Search button -->
+                    <div class="col-lg-1 d-flex align-items-end">
+
+                        <button
+                            type="submit"
+                            class="btn btn-success w-100"
+                            title="Search"
+                        >
+
+                            <i class="bi bi-search"></i>
+
+                        </button>
+
+                    </div>
+
+                </div>
+
+            </form>
+
+        </div>
+
+    </div>
+
+
+    <!-- Programme cards -->
+    <div class="row g-3">
+
+        {% for programme in programmes %}
+
+            <div class="col-md-6 col-xl-4">
+
+                <div class="card h-100 border-0 shadow-sm">
+
+                    {% if programme.image %}
+
+                        <img
+                            src="{{ programme.image.url }}"
+                            class="card-img-top"
+                            alt="{{ programme.title }}"
+                            style="height: 190px; object-fit: cover;"
+                        >
+
+                    {% endif %}
+
+
+                    <div class="card-body">
+
+                        <!-- Title -->
+                        <div class="d-flex justify-content-between
+                                    align-items-start mb-2">
+
+                            <h5 class="fw-bold mb-0">
+                                {{ programme.title }}
+                            </h5>
+
+                            {% if programme.is_featured %}
+
+                                <span class="badge bg-warning text-dark">
+                                    Featured
+                                </span>
+
+                            {% endif %}
+
+                        </div>
+
+
+                        <!-- Programme type -->
+                        <div class="mb-2">
+
+                            <span class="badge bg-success">
+                                {{ programme.get_programme_type_display }}
+                            </span>
+
+                            <span class="badge
+                                         {% if programme.status == 'active' %}
+                                             bg-success
+                                         {% elif programme.status == 'completed' %}
+                                             bg-primary
+                                         {% elif programme.status == 'suspended' %}
+                                             bg-danger
+                                         {% else %}
+                                             bg-secondary
+                                         {% endif %}">
+
+                                {{ programme.get_status_display }}
+
+                            </span>
+
+                        </div>
+
+
+                        <!-- Location -->
+                        <p class="small text-muted mb-2">
+
+                            <i class="bi bi-geo-alt"></i>
+
+                            {{ programme.district }}
+
+                            {% if programme.location %}
+                                — {{ programme.location }}
+                            {% endif %}
+
+                        </p>
+
+
+                        <!-- Summary -->
+                        {% if programme.summary %}
+
+                            <p class="text-muted">
+                                {{ programme.summary }}
+                            </p>
+
+                        {% endif %}
+
+
+                        <!-- Description -->
+                        <p class="mb-3">
+                            {{ programme.description|truncatewords:30 }}
+                        </p>
+
+
+                        <!-- Organization -->
+                        {% if programme.participating_organization %}
+
+                            <p class="small mb-2">
+
+                                <strong>
+                                    Organization:
+                                </strong>
+
+                                {{ programme.participating_organization }}
+
+                            </p>
+
+                        {% endif %}
+
+
+                        <!-- Dates -->
+                        {% if programme.start_date or programme.end_date %}
+
+                            <div class="small text-muted mb-2">
+
+                                <i class="bi bi-calendar3"></i>
+
+                                {% if programme.start_date %}
+                                    {{ programme.start_date }}
+                                {% endif %}
+
+                                {% if programme.end_date %}
+                                    — {{ programme.end_date }}
+                                {% endif %}
+
+                            </div>
+
+                        {% endif %}
+
+
+                        <!-- Contact -->
+                        {% if programme.contact_information %}
+
+                            <p class="small mb-0">
+
+                                <i class="bi bi-telephone"></i>
+
+                                {{ programme.contact_information }}
+
+                            </p>
+
+                        {% endif %}
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        {% empty %}
+
+            <div class="col-12">
+
+                <div class="card border-0 shadow-sm">
+
+                    <div class="card-body text-center py-5">
+
+                        <i class="bi bi-people display-5 text-muted"></i>
+
+                        <h5 class="mt-3">
+                            No community safety programmes available
+                        </h5>
+
+                        <p class="text-muted mb-0">
+                            No published programmes match your
+                            current search or filters.
+                        </p>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        {% endfor %}
+
+    </div>
+
+</div>
+
+{% endblock %}

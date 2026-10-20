@@ -1,0 +1,129 @@
+{% extends "auth_base.html" %}
+
+{% block title %}Account Verification | Smart City Uganda{% endblock %}
+
+{% block content %}
+<div class="card shadow-sm border-0 mx-auto p-4" style="max-width: 650px;">
+    <div class="text-center mb-4">
+        <i class="bi bi-shield-check text-success" style="font-size: 3rem;"></i>
+        <h2 class="text-success mt-2">Account Verification</h2>
+        <p class="text-muted">
+            Verify your identity to continue using Smart City Uganda.
+        </p>
+        <span class="badge bg-secondary">
+            {{ profile.get_role_display }}
+        </span>
+    </div>
+
+    {% if messages %}
+        {% for message in messages %}
+            <div class="alert alert-{{ message.tags|default:'info' }}">
+                {{ message }}
+            </div>
+        {% endfor %}
+    {% endif %}
+
+    <form method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+
+        {% for field in form %}
+            <div class="mb-3">
+                <label class="form-label" for="{{ field.id_for_label }}">
+                    {{ field.label }}
+                </label>
+
+                {{ field }}
+
+                {% if field.help_text %}
+                    <div class="form-text">{{ field.help_text }}</div>
+                {% endif %}
+
+                {% for error in field.errors %}
+                    <div class="text-danger small">{{ error }}</div>
+                {% endfor %}
+            </div>
+        {% endfor %}
+
+        {% if form.non_field_errors %}
+            <div class="alert alert-danger">
+                {{ form.non_field_errors }}
+            </div>
+        {% endif %}
+
+        <button type="submit" class="btn btn-success w-100">
+            Submit for Verification
+        </button>
+    </form>
+
+    <div class="text-center mt-3">
+        <a href="{% url 'accounts:verification_pending' %}"
+           class="text-success">Back to Verification Status</a>
+    </div>
+</div>
+
+
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+    const areaType = document.getElementById("id_area_type");
+    const areaName = document.getElementById("id_area_name");
+    const county = document.getElementById("id_county");
+    const subcounty = document.getElementById("id_subcounty");
+
+    function updateLocationLabels() {
+        if (!areaType) return;
+
+        const isCity = areaType.value === "city";
+
+        const areaLabel = document.querySelector(
+            'label[for="id_area_name"]'
+        );
+        const countyLabel = document.querySelector(
+            'label[for="id_county"]'
+        );
+        const subcountyLabel = document.querySelector(
+            'label[for="id_subcounty"]'
+        );
+
+        if (areaLabel) {
+            areaLabel.textContent = isCity ? "City Name" : "District Name";
+        }
+
+        if (countyLabel) {
+            countyLabel.textContent = isCity
+                ? "County/Division"
+                : "County";
+        }
+
+        if (subcountyLabel) {
+            subcountyLabel.textContent = isCity
+                ? "Subcounty/Ward"
+                : "Subcounty";
+        }
+
+        if (areaName) {
+            areaName.placeholder = isCity
+                ? "Enter your city name"
+                : "Enter your district name";
+        }
+
+        if (county) {
+            county.placeholder = isCity
+                ? "Enter your division"
+                : "Enter your county";
+        }
+
+        if (subcounty) {
+            subcounty.placeholder = isCity
+                ? "Enter your ward"
+                : "Enter your subcounty";
+        }
+    }
+
+    if (areaType) {
+        areaType.addEventListener("change", updateLocationLabels);
+        updateLocationLabels();
+    }
+});
+</script>
+
+{% endblock %}

@@ -1,0 +1,333 @@
+{% extends "base.html" %}
+
+{% block title %}
+    Environmental Incidents | Smart City Uganda
+{% endblock %}
+
+{% block content %}
+
+<div class="container-fluid py-3">
+
+    <div class="d-flex flex-wrap justify-content-between
+                align-items-center mb-3">
+
+        <div>
+
+            <h4 class="fw-bold mb-1">
+
+                <i class="bi bi-exclamation-triangle text-success"></i>
+
+                Environmental Incidents
+
+            </h4>
+
+            <p class="text-muted mb-0">
+                View environmental incidents reported through
+                the Smart City Uganda platform.
+            </p>
+
+        </div>
+
+
+        <a
+            href="{% url 'water:report_environmental_incident' %}"
+            class="btn btn-success btn-sm mt-2 mt-md-0"
+        >
+            <i class="bi bi-plus-circle me-1"></i>
+            Report Incident
+        </a>
+
+    </div>
+
+
+    <!-- Filters -->
+
+    <div class="card border-0 shadow-sm mb-4">
+
+        <div class="card-body">
+
+            <form method="get">
+
+                <div class="row g-2">
+
+                    <div class="col-12 col-md-4">
+
+                        <label class="form-label small fw-semibold">
+                            District / City
+                        </label>
+
+                        <input
+                            type="text"
+                            name="district"
+                            value="{{ district }}"
+                            class="form-control"
+                            placeholder="e.g. Kampala"
+                        >
+
+                    </div>
+
+
+                    <div class="col-12 col-md-4">
+
+                        <label class="form-label small fw-semibold">
+                            Incident Type
+                        </label>
+
+                        <select
+                            name="incident_type"
+                            class="form-select"
+                        >
+
+                            <option value="">
+                                All Incident Types
+                            </option>
+
+                            {% for value, label in incident_types %}
+
+                                <option
+                                    value="{{ value }}"
+                                    {% if incident_type == value %}
+                                        selected
+                                    {% endif %}
+                                >
+                                    {{ label }}
+                                </option>
+
+                            {% endfor %}
+
+                        </select>
+
+                    </div>
+
+
+                    <div class="col-12 col-md-3">
+
+                        <label class="form-label small fw-semibold">
+                            Status
+                        </label>
+
+                        <select
+                            name="status"
+                            class="form-select"
+                        >
+
+                            <option value="">
+                                All Statuses
+                            </option>
+
+                            {% for value, label in status_choices %}
+
+                                <option
+                                    value="{{ value }}"
+                                    {% if status == value %}
+                                        selected
+                                    {% endif %}
+                                >
+                                    {{ label }}
+                                </option>
+
+                            {% endfor %}
+
+                        </select>
+
+                    </div>
+
+
+                    <div class="col-12 col-md-1 d-flex align-items-end">
+
+                        <button
+                            type="submit"
+                            class="btn btn-success w-100"
+                        >
+                            <i class="bi bi-search"></i>
+                        </button>
+
+                    </div>
+
+                </div>
+
+            </form>
+
+        </div>
+
+    </div>
+
+
+    <!-- Incident Cards -->
+
+    <div class="row g-3">
+
+        {% for incident in incidents %}
+
+            <div class="col-12 col-md-6 col-xl-4">
+
+                <div class="card h-100 border-0 shadow-sm">
+
+                    <div class="card-body">
+
+                        <div class="d-flex justify-content-between
+                                    align-items-start mb-2">
+
+                            <div class="bg-warning-subtle rounded p-2">
+
+                                <i class="bi bi-exclamation-triangle
+                                          text-warning fs-5"></i>
+
+                            </div>
+
+
+                            {% if incident.urgency == "emergency" %}
+
+                                <span class="badge bg-danger">
+                                    Emergency
+                                </span>
+
+                            {% elif incident.urgency == "high" %}
+
+                                <span class="badge bg-warning text-dark">
+                                    High
+                                </span>
+
+                            {% else %}
+
+                                <span class="badge bg-secondary">
+                                    {{ incident.get_urgency_display }}
+                                </span>
+
+                            {% endif %}
+
+                        </div>
+
+
+                        <h6 class="fw-bold">
+
+                            {{ incident.get_incident_type_display }}
+
+                        </h6>
+
+
+                        <p class="small text-muted">
+
+                            {{ incident.description|truncatechars:120 }}
+
+                        </p>
+
+
+                        <div class="small text-muted mb-1">
+
+                            <i class="bi bi-hash me-1"></i>
+
+                            {{ incident.reference_number }}
+
+                        </div>
+
+
+                        <div class="small text-muted mb-1">
+
+                            <i class="bi bi-geo-alt text-success me-1"></i>
+
+                            {{ incident.district }}
+
+                        </div>
+
+
+                        <div class="small text-muted">
+
+                            <i class="bi bi-pin-map text-success me-1"></i>
+
+                            {{ incident.location }}
+
+                        </div>
+
+
+                        <div class="mt-3">
+
+                            {% if incident.status == "resolved" %}
+
+                                <span class="badge bg-success">
+                                    Resolved
+                                </span>
+
+                            {% elif incident.status == "rejected" %}
+
+                                <span class="badge bg-danger">
+                                    Rejected
+                                </span>
+
+                            {% elif incident.status == "in_progress" %}
+
+                                <span class="badge bg-primary">
+                                    In Progress
+                                </span>
+
+                            {% elif incident.status == "investigating" %}
+
+                                <span class="badge bg-warning text-dark">
+                                    Investigating
+                                </span>
+
+                            {% else %}
+
+                                <span class="badge bg-secondary">
+                                    {{ incident.get_status_display }}
+                                </span>
+
+                            {% endif %}
+
+                        </div>
+
+
+                        <a
+                            href="{% url 'water:environmental_incident_detail' incident.pk %}"
+                            class="btn btn-outline-success btn-sm w-100 mt-3"
+                        >
+                            <i class="bi bi-eye me-1"></i>
+                            View Details
+                        </a>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        {% empty %}
+
+            <div class="col-12">
+
+                <div class="card border-0 shadow-sm">
+
+                    <div class="card-body text-center py-5">
+
+                        <i class="bi bi-exclamation-triangle
+                                  fs-1 text-muted"></i>
+
+                        <h5 class="mt-3">
+                            No Environmental Incidents
+                        </h5>
+
+                        <p class="text-muted">
+                            No environmental incidents match
+                            the selected filters.
+                        </p>
+
+                        <a
+                            href="{% url 'water:report_environmental_incident' %}"
+                            class="btn btn-success"
+                        >
+                            Report an Incident
+                        </a>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        {% endfor %}
+
+    </div>
+
+</div>
+
+{% endblock %}

@@ -1,0 +1,135 @@
+
+{% extends "city_admin/base.html" %}
+
+{% block content %}
+<div class="container-fluid py-3">
+    <div class="d-flex flex-wrap justify-content-between align-items-center gap-2 mb-4">
+        <div>
+            <h2 class="fw-bold mb-1">Verification Management</h2>
+            <p class="text-muted mb-0">
+                Review submitted citizen and government-worker verification records.
+            </p>
+        </div>
+        <span class="badge text-bg-primary fs-6">
+            {{ total_matching }} records
+        </span>
+    </div>
+
+    <form method="get" class="card border-0 shadow-sm mb-4">
+        <div class="card-body">
+            <div class="row g-3">
+                <div class="col-md-7">
+                    <label for="verification-search" class="form-label">
+                        Search submissions
+                    </label>
+                    <input
+                        id="verification-search"
+                        type="search"
+                        name="q"
+                        value="{{ search_query }}"
+                        class="form-control"
+                        placeholder="Name, username or identification number"
+                    >
+                </div>
+
+                <div class="col-md-3">
+                    <label for="verification-status" class="form-label">
+                        Status
+                    </label>
+                    <select id="verification-status" name="status" class="form-select">
+                        <option value="">All statuses</option>
+                        <option value="pending" {% if selected_status == "pending" %}selected{% endif %}>Pending</option>
+                        <option value="approved" {% if selected_status == "approved" %}selected{% endif %}>Approved</option>
+                        <option value="rejected" {% if selected_status == "rejected" %}selected{% endif %}>Rejected</option>
+                    </select>
+                </div>
+
+                <div class="col-md-2 d-flex align-items-end">
+                    <button class="btn btn-primary w-100" type="submit">
+                        Filter
+                    </button>
+                </div>
+            </div>
+        </div>
+    </form>
+
+    <div class="card border-0 shadow-sm">
+        <div class="table-responsive">
+            <table class="table table-hover align-middle mb-0">
+                <thead class="table-light">
+                    <tr>
+                        <th>Applicant</th>
+                        <th>Account role</th>
+                        <th>Identification type</th>
+                        <th>Submitted</th>
+                        <th>Status</th>
+                        <th>Review</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for submission in page_obj %}
+                    <tr>
+                        <td>
+                            <div class="fw-semibold">
+                                {{ submission.profile.full_name|default:submission.profile.user.username }}
+                            </div>
+                            <div class="text-muted small">
+                                {{ submission.profile.user.username }}
+                            </div>
+                        </td>
+                        <td>{{ submission.profile.get_role_display }}</td>
+                        <td>{{ submission.identification_type|default:"—" }}</td>
+                        <td>{{ submission.submitted_at|date:"d M Y, H:i" }}</td>
+                        <td>
+                            {% if submission.status|lower == "approved" %}
+                                <span class="badge text-bg-success">Approved</span>
+                            {% elif submission.status|lower == "rejected" %}
+                                <span class="badge text-bg-danger">Rejected</span>
+                            {% else %}
+                                <span class="badge text-bg-warning">Pending</span>
+                            {% endif %}
+                        </td>
+                        <td>
+                            <a href="{% url 'city_admin:verification_review' submission.pk %}"
+   class="btn btn-outline-primary btn-sm">
+    <i class="bi bi-file-earmark-check"></i> Review documents
+</a>
+                        </td>
+                    </tr>
+                    {% empty %}
+                    <tr>
+                        <td colspan="6" class="text-center text-muted py-5">
+                            No verification submissions found.
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+
+        {% if page_obj.has_other_pages %}
+        <div class="card-body border-top d-flex justify-content-between align-items-center">
+            <span class="text-muted small">
+                Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}
+            </span>
+
+            <div class="d-flex gap-2">
+                {% if page_obj.has_previous %}
+                <a class="btn btn-outline-primary btn-sm"
+                   href="?q={{ search_query|urlencode }}&status={{ selected_status|urlencode }}&page={{ page_obj.previous_page_number }}">
+                    Previous
+                </a>
+                {% endif %}
+
+                {% if page_obj.has_next %}
+                <a class="btn btn-outline-primary btn-sm"
+                   href="?q={{ search_query|urlencode }}&status={{ selected_status|urlencode }}&page={{ page_obj.next_page_number }}">
+                    Next
+                </a>
+                {% endif %}
+            </div>
+        </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

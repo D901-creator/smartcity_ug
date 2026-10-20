@@ -1,0 +1,310 @@
+{% extends "base.html" %}
+
+{% block title %}
+    Mining & Mineral Development | Smart City Uganda
+{% endblock %}
+
+{% block content %}
+
+<div class="container-fluid py-3">
+
+    <div class="d-flex flex-wrap justify-content-between align-items-center mb-3">
+
+        <div>
+            <h4 class="mb-1">
+                <i class="bi bi-hammer text-dark"></i>
+                Mining & Mineral Development
+            </h4>
+
+            <p class="text-muted mb-0">
+                Access public information about mining and
+                mineral development activities.
+            </p>
+        </div>
+
+        <a href="{% url 'energy:home' %}"
+           class="btn btn-outline-secondary btn-sm mt-2 mt-md-0">
+
+            <i class="bi bi-arrow-left"></i>
+            Back to Energy
+
+        </a>
+
+    </div>
+
+
+    <!-- Filters -->
+
+    <div class="card border-0 shadow-sm mb-3">
+
+        <div class="card-body">
+
+            <form method="get">
+
+                <div class="row g-2">
+
+                    <div class="col-12 col-md-4">
+
+                        <label class="form-label small">
+                            Activity Type
+                        </label>
+
+                        <select name="activity_type"
+                                class="form-select">
+
+                            <option value="">
+                                All Activity Types
+                            </option>
+
+                            {% for value, label in activity_types %}
+
+                                <option value="{{ value }}"
+                                    {% if activity_type == value %}
+                                        selected
+                                    {% endif %}>
+
+                                    {{ label }}
+
+                                </option>
+
+                            {% endfor %}
+
+                        </select>
+
+                    </div>
+
+
+                    <div class="col-12 col-md-3">
+
+                        <label class="form-label small">
+                            Status
+                        </label>
+
+                        <select name="status"
+                                class="form-select">
+
+                            <option value="">
+                                All Statuses
+                            </option>
+
+                            {% for value, label in statuses %}
+
+                                <option value="{{ value }}"
+                                    {% if status == value %}
+                                        selected
+                                    {% endif %}>
+
+                                    {{ label }}
+
+                                </option>
+
+                            {% endfor %}
+
+                        </select>
+
+                    </div>
+
+
+                    <div class="col-12 col-md-3">
+
+                        <label class="form-label small">
+                            District / City
+                        </label>
+
+                        <input
+                            type="text"
+                            name="district"
+                            value="{{ district }}"
+                            class="form-control"
+                            placeholder="e.g. Mubende"
+                        >
+
+                    </div>
+
+
+                    <div class="col-12 col-md-2 d-flex align-items-end">
+
+                        <button
+                            type="submit"
+                            class="btn btn-dark w-100">
+
+                            <i class="bi bi-search"></i>
+                            Filter
+
+                        </button>
+
+                    </div>
+
+                </div>
+
+            </form>
+
+        </div>
+
+    </div>
+
+
+    <div class="d-flex justify-content-between align-items-center mb-2">
+
+        <h6 class="mb-0">
+            Mining Activities
+        </h6>
+
+        <span class="badge bg-dark">
+
+            {{ total_activities }}
+            activit{{ total_activities|pluralize:"y,ies" }}
+
+        </span>
+
+    </div>
+
+
+    {% if activities %}
+
+        <div class="row g-3">
+
+            {% for activity in activities %}
+
+                <div class="col-12 col-md-6 col-xl-4">
+
+                    <div class="card h-100 border-0 shadow-sm">
+
+                        <div class="card-body">
+
+                            {% if activity.is_featured %}
+
+                                <span class="badge bg-warning text-dark mb-2">
+                                    Featured
+                                </span>
+
+                            {% endif %}
+
+
+                            <div class="mb-2">
+
+                                <span class="badge bg-dark">
+                                    {{ activity.get_activity_type_display }}
+                                </span>
+
+                            </div>
+
+
+                            <h6 class="fw-bold">
+                                {{ activity.title }}
+                            </h6>
+
+
+                            {% if activity.mineral %}
+
+                                <div class="small text-muted mb-1">
+
+                                    <i class="bi bi-gem"></i>
+
+                                    Mineral:
+                                    {{ activity.mineral }}
+
+                                </div>
+
+                            {% endif %}
+
+
+                            <div class="small text-muted mb-2">
+
+                                <i class="bi bi-geo-alt"></i>
+
+                                {{ activity.district }}
+
+                                {% if activity.location %}
+                                    — {{ activity.location }}
+                                {% endif %}
+
+                            </div>
+
+
+                            <p class="small text-muted">
+
+                                {{ activity.description|truncatewords:25 }}
+
+                            </p>
+
+
+                            {% if activity.status == "active" %}
+
+                                <span class="badge bg-success mb-3">
+                                    {{ activity.get_status_display }}
+                                </span>
+
+                            {% elif activity.status == "planned" %}
+
+                                <span class="badge bg-warning text-dark mb-3">
+                                    {{ activity.get_status_display }}
+                                </span>
+
+                            {% elif activity.status == "completed" %}
+
+                                <span class="badge bg-primary mb-3">
+                                    {{ activity.get_status_display }}
+                                </span>
+
+                            {% else %}
+
+                                <span class="badge bg-secondary mb-3">
+                                    {{ activity.get_status_display }}
+                                </span>
+
+                            {% endif %}
+
+
+                            <div>
+
+                                <a
+                                    href="{% url 'energy:mining_development_detail' activity.id %}"
+                                    class="btn btn-dark btn-sm">
+
+                                    <i class="bi bi-eye"></i>
+                                    View Information
+
+                                </a>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            {% endfor %}
+
+        </div>
+
+    {% else %}
+
+        <div class="card border-0 shadow-sm">
+
+            <div class="card-body text-center py-5">
+
+                <i class="bi bi-hammer text-muted"
+                   style="font-size: 2.5rem;"></i>
+
+                <h6 class="mt-3">
+                    No mining information found
+                </h6>
+
+                <p class="text-muted small mb-0">
+
+                    There is currently no published mining
+                    information matching your filters.
+
+                </p>
+
+            </div>
+
+        </div>
+
+    {% endif %}
+
+</div>
+
+{% endblock %}

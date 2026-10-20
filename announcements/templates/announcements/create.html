@@ -1,0 +1,57 @@
+{% extends "department_head/base.html" %}
+
+{% block content %}
+<div class="container-fluid py-3">
+    <div class="mb-4">
+        <h2>Create Announcement</h2>
+        <p class="text-muted">Publish information for your department.</p>
+    </div>
+
+    {% if messages %}
+        {% for message in messages %}
+            <div class="alert alert-warning">{{ message }}</div>
+        {% endfor %}
+    {% endif %}
+
+    <div class="card border-0 shadow-sm">
+        <div class="card-body">
+            <form method="post">
+                {% csrf_token %}
+
+                <div class="mb-3">
+                    <label for="title" class="form-label">Announcement title</label>
+                    <input type="text" id="title" name="title"
+                           class="form-control" maxlength="200" required>
+                </div>
+
+                <div class="mb-3">
+                    <label for="message" class="form-label">Announcement message</label>
+                    <textarea id="message" name="message"
+                              class="form-control" rows="6" required></textarea>
+                </div>
+
+                <div class="mb-4">
+                    <label for="expires_at" class="form-label">
+                        Expiry date and time (optional)
+                    </label>
+                    <input type="datetime-local" id="expires_at"
+                           name="expires_at" class="form-control">
+                </div>
+
+                <button type="submit" name="action" value="draft"
+                        class="btn btn-outline-secondary">
+                    Save Draft
+                </button>
+
+                <button type="submit" name="action" value="publish"
+                        class="btn btn-success">
+                    Publish
+                </button>
+
+                <a href="{% url 'announcements:list' %}"
+                   class="btn btn-light">Cancel</a>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}

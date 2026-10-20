@@ -1,0 +1,164 @@
+
+{% extends "city_admin/base.html" %}
+
+{% block content %}
+<div class="container-fluid py-3">
+    <h2>District Map Management</h2>
+    <p class="text-muted">
+        Select a district, save verified coordinates and preview its real map.
+    </p>
+
+    {% for message in messages %}
+        <div class="alert alert-{{ message.tags|default:'info' }}">
+            {{ message }}
+        </div>
+    {% endfor %}
+
+    <div class="card shadow-sm mb-4">
+        <div class="card-body">
+            <form method="get">
+                <label for="district_id" class="form-label">
+                    Select district
+                </label>
+
+                <select
+                    id="district_id"
+                    name="district_id"
+                    class="form-select"
+                    onchange="this.form.submit()"
+                    required
+                >
+                    <option value="">Choose a district</option>
+                    {% for district in districts %}
+                        <option
+                            value="{{ district.pk }}"
+                            {% if selected_district and selected_district.pk == district.pk %}
+                                selected
+                            {% endif %}
+                        >
+                            {{ district.name }} — {{ district.region.name }}
+                        </option>
+                    {% endfor %}
+                </select>
+                <noscript>
+                    <button class="btn btn-primary mt-3" type="submit">
+                        Load District
+                    </button>
+                </noscript>
+            </form>
+        </div>
+    </div>
+
+    {% if selected_district %}
+        <div class="card shadow-sm mb-4">
+            <div class="card-body">
+                <h4>{{ selected_district.name }} District</h4>
+
+                <form method="post">
+                    {% csrf_token %}
+                    <input
+                        type="hidden"
+                        name="district_id"
+                        value="{{ selected_district.pk }}"
+                    >
+
+                    <div class="row g-3">
+                        <div class="col-md-6">
+                            <label for="latitude" class="form-label">
+                                Latitude
+                            </label>
+                            <input
+                                class="form-control"
+                                type="number"
+                                step="any"
+                                min="-90"
+                                max="90"
+                                id="latitude"
+                                name="latitude"
+                                value="{{ selected_district.latitude|default_if_none:'' }}"
+                                required
+                            >
+                        </div>
+
+                        <div class="col-md-6">
+                            <label for="longitude" class="form-label">
+                                Longitude
+                            </label>
+                            <input
+                                class="form-control"
+                                type="number"
+                                step="any"
+                                min="-180"
+                                max="180"
+                                id="longitude"
+                                name="longitude"
+                                value="{{ selected_district.longitude|default_if_none:'' }}"
+                                required
+                            >
+                        </div>
+                    </div>
+
+                    <button type="submit" class="btn btn-success mt-3">
+                        Save Coordinates &amp; Generate Map
+                    </button>
+                </form>
+            </div>
+        </div>
+
+        {% if selected_district.latitude != None and selected_district.longitude != None %}
+            <div class="card shadow-sm">
+                <div class="card-body">
+                    <h4>Interactive District Map</h4>
+                    <p class="text-muted">
+                        {{ selected_district.name }} — OpenStreetMap
+                    </p>
+                    <div id="district-map"
+                         style="height: 500px; width: 100%; border-radius: 10px;">
+                    </div>
+                    <small class="text-muted">
+                        Map tiles © OpenStreetMap contributors.
+                    </small>
+                </div>
+            </div>
+        {% else %}
+            <div class="alert alert-warning">
+                Save verified coordinates to display this district on the map.
+            </div>
+        {% endif %}
+    {% endif %}
+</div>
+
+{% if selected_district and selected_district.latitude != None and selected_district.longitude != None %}
+<link
+    rel="stylesheet"
+    href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+>
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+
+<script>
+    const districtLatitude = Number("{{ selected_district.latitude }}");
+    const districtLongitude = Number("{{ selected_district.longitude }}");
+
+    const districtMap = L.map("district-map").setView(
+        [districtLatitude, districtLongitude],
+        10
+    );
+
+    L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
+        maxZoom: 19,
+        attribution: "&copy; OpenStreetMap contributors"
+    }).addTo(districtMap);
+
+    const popup = document.createElement("div");
+    const heading = document.createElement("strong");
+    heading.textContent = "{{ selected_district.name|escapejs }} District";
+
+    popup.appendChild(heading);
+
+    L.marker([districtLatitude, districtLongitude])
+        .addTo(districtMap)
+        .bindPopup(popup)
+        .openPopup();
+</script>
+{% endif %}
+{% endblock %}

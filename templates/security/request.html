@@ -1,0 +1,295 @@
+{% extends "base.html" %}
+
+{% block title %}
+Security Reports / Requests | Smart City Uganda
+{% endblock %}
+
+{% block content %}
+
+<div class="container-fluid py-3">
+
+    <div class="row justify-content-center">
+
+        <div class="col-xl-9 col-lg-10">
+
+            <!-- Header -->
+            <div class="mb-4">
+
+                <h3 class="mb-1">
+                    <i class="bi bi-clipboard-check text-primary"></i>
+                    Security Reports / Requests
+                </h3>
+
+                <p class="text-muted mb-0">
+                    Submit a general security-related report,
+                    request, concern or inquiry.
+                </p>
+
+            </div>
+
+
+            <!-- Important notice -->
+            <div class="alert alert-warning">
+
+                <div class="d-flex align-items-start">
+
+                    <i class="bi bi-exclamation-triangle-fill fs-4 me-3"></i>
+
+                    <div>
+
+                        <strong>Emergency situations</strong>
+
+                        <p class="small mb-0 mt-1">
+                            Do not use this form for situations requiring
+                            immediate emergency assistance. Use the
+                            appropriate emergency contact instead.
+                        </p>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <!-- Form -->
+            <div class="card border-0 shadow-sm">
+
+                <div class="card-body p-4">
+
+                    <form
+                        method="post"
+                        enctype="multipart/form-data"
+                    >
+
+                        {% csrf_token %}
+
+
+                        {% if form.non_field_errors %}
+
+                            <div class="alert alert-danger">
+
+                                {{ form.non_field_errors }}
+
+                            </div>
+
+                        {% endif %}
+
+
+                        <div class="row g-3">
+
+                            <!-- Name -->
+                            <div class="col-md-6">
+
+                                <label class="form-label">
+                                    {{ form.citizen_name.label }}
+                                </label>
+
+                                {{ form.citizen_name }}
+
+                                {% for error in form.citizen_name.errors %}
+
+                                    <div class="text-danger small">
+                                        {{ error }}
+                                    </div>
+
+                                {% endfor %}
+
+                            </div>
+
+
+                            <!-- Phone -->
+                            <div class="col-md-6">
+
+                                <label class="form-label">
+                                    {{ form.phone_number.label }}
+                                </label>
+
+                                {{ form.phone_number }}
+
+                                {% for error in form.phone_number.errors %}
+
+                                    <div class="text-danger small">
+                                        {{ error }}
+                                    </div>
+
+                                {% endfor %}
+
+                            </div>
+
+
+                            <!-- Email -->
+                            <div class="col-md-6">
+
+                                <label class="form-label">
+                                    {{ form.email.label }}
+                                </label>
+
+                                {{ form.email }}
+
+                                {% for error in form.email.errors %}
+
+                                    <div class="text-danger small">
+                                        {{ error }}
+                                    </div>
+
+                                {% endfor %}
+
+                            </div>
+
+
+                            <!-- District -->
+                            <div class="col-md-6">
+
+                                <label class="form-label">
+                                    {{ form.district.label }}
+                                </label>
+
+                                {{ form.district }}
+
+                                {% for error in form.district.errors %}
+
+                                    <div class="text-danger small">
+                                        {{ error }}
+                                    </div>
+
+                                {% endfor %}
+
+                            </div>
+
+
+                            <!-- Location -->
+                            <div class="col-md-6">
+
+                                <label class="form-label">
+                                    {{ form.location.label }}
+                                </label>
+
+                                {{ form.location }}
+
+                                {% for error in form.location.errors %}
+
+                                    <div class="text-danger small">
+                                        {{ error }}
+                                    </div>
+
+                                {% endfor %}
+
+                            </div>
+
+
+                            <!-- Request type -->
+                            <div class="col-md-6">
+
+                                <label class="form-label">
+                                    {{ form.request_type.label }}
+                                </label>
+
+                                {{ form.request_type }}
+
+                                {% for error in form.request_type.errors %}
+
+                                    <div class="text-danger small">
+                                        {{ error }}
+                                    </div>
+
+                                {% endfor %}
+
+                            </div>
+
+
+                            <!-- Subject -->
+                            <div class="col-12">
+
+                                <label class="form-label">
+                                    {{ form.subject.label }}
+                                </label>
+
+                                {{ form.subject }}
+
+                                {% for error in form.subject.errors %}
+
+                                    <div class="text-danger small">
+                                        {{ error }}
+                                    </div>
+
+                                {% endfor %}
+
+                            </div>
+
+
+                            <!-- Description -->
+                            <div class="col-12">
+
+                                <label class="form-label">
+                                    {{ form.description.label }}
+                                </label>
+
+                                {{ form.description }}
+
+                                {% for error in form.description.errors %}
+
+                                    <div class="text-danger small">
+                                        {{ error }}
+                                    </div>
+
+                                {% endfor %}
+
+                            </div>
+
+
+                            <!-- Attachment -->
+                            <div class="col-12">
+
+                                <label class="form-label">
+                                    {{ form.attachment.label }}
+                                </label>
+
+                                {{ form.attachment }}
+
+                                <div class="form-text">
+                                    You may attach a supporting file
+                                    or image if necessary.
+                                </div>
+
+                                {% for error in form.attachment.errors %}
+
+                                    <div class="text-danger small">
+                                        {{ error }}
+                                    </div>
+
+                                {% endfor %}
+
+                            </div>
+
+                        </div>
+
+
+                        <hr class="my-4">
+
+
+                        <div class="d-flex justify-content-end">
+
+                            <button
+                                type="submit"
+                                class="btn btn-primary px-4"
+                            >
+                                <i class="bi bi-send"></i>
+                                Submit Security Request
+                            </button>
+
+                        </div>
+
+                    </form>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+{% endblock %}

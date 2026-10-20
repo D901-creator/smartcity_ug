@@ -1,0 +1,138 @@
+{% extends "base.html" %}
+
+{% block title %}Agricultural Inputs{% endblock %}
+
+{% block content %}
+
+<div class="container-fluid">
+
+    <div class="d-flex justify-content-between align-items-center mb-4">
+
+        <div>
+
+            <h1 class="fw-bold">
+                <i class="bi bi-box-seam"></i>
+                Agricultural Inputs
+            </h1>
+
+            <p class="text-muted">
+                Find seeds, fertilizers, pesticides, feeds,
+                equipment and agricultural machinery.
+            </p>
+
+        </div>
+
+        <a href="{% url 'agriculture:create_agricultural_input' %}"
+           class="btn btn-success">
+
+            <i class="bi bi-plus-circle"></i>
+            Add Agricultural Input
+
+        </a>
+
+    </div>
+
+
+    {% if inputs %}
+
+    <div class="row">
+
+        {% for input in inputs %}
+
+        <div class="col-lg-4 col-md-6 mb-4">
+
+            <div class="card shadow-sm h-100">
+
+                <div class="card-body">
+
+                    <div class="d-flex justify-content-between">
+
+                        <h4 class="fw-bold">
+                            {{ input.name }}
+                        </h4>
+
+                        {% if input.is_available %}
+
+                        <span class="badge bg-success">
+                            Available
+                        </span>
+
+                        {% endif %}
+
+                    </div>
+
+
+                    <span class="badge bg-primary mb-3">
+                        {{ input.get_input_type_display }}
+                    </span>
+
+
+                    <p>
+                        <strong>Supplier:</strong>
+                        {{ input.supplier }}
+                    </p>
+
+
+                    <p>
+                        <strong>District:</strong>
+                        {{ input.district }}
+                    </p>
+
+
+                    <p>
+                        <strong>Price:</strong>
+
+                        {% if input.price %}
+
+                            UGX {{ input.price }}
+
+                        {% else %}
+
+                            Contact supplier
+
+                        {% endif %}
+
+                    </p>
+
+
+                    {% if input.description %}
+
+                    <p class="text-muted">
+                        {{ input.description }}
+                    </p>
+
+                    {% endif %}
+
+
+                    <button class="btn btn-outline-success w-100">
+
+                        <i class="bi bi-telephone"></i>
+                        Contact Supplier
+
+                    </button>
+
+                </div>
+
+            </div>
+
+        </div>
+
+        {% endfor %}
+
+    </div>
+
+    {% else %}
+
+    <div class="alert alert-info">
+
+        <i class="bi bi-info-circle"></i>
+
+        No agricultural inputs are currently available.
+
+    </div>
+
+    {% endif %}
+
+</div>
+
+{% endblock %}

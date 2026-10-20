@@ -1,0 +1,262 @@
+
+{% load static %}
+
+<header class="smart-city-topbar">
+
+    <!-- LEFT: LOGO, SIDEBAR BUTTON AND BRAND -->
+    <div class="topbar-left">
+
+        <button
+            type="button"
+            class="sidebar-toggle"
+            id="sidebarToggle"
+            aria-label="Toggle sidebar"
+            aria-expanded="true"
+            title="Toggle sidebar">
+            <i class="bi bi-list"></i>
+        </button>
+
+        <a href="/citizen/"
+           class="topbar-brand"
+           aria-label="Smart City Uganda home">
+
+
+            <span class="topbar-page-title">
+                <span class="topbar-title">
+                 Building A Brighter Smart City Uganda Together
+                </span>
+
+                <span class="topbar-subtitle">
+                    Digital Citizen Services
+                </span>
+            </span>
+
+        </a>
+
+    </div>
+
+    <!-- RIGHT: SEARCH, NOTIFICATIONS AND PROFILE -->
+    <div class="topbar-right">
+
+        <button
+            type="button"
+            class="topbar-icon-button"
+            id="topbarSearchToggle"
+            aria-label="Open search"
+            aria-expanded="false"
+            title="Search">
+            <i class="bi bi-search"></i>
+        </button>
+
+        {% include "components/_notification_bell.html" %}
+
+        {% include "components/_profile_menu.html" %}
+
+    </div>
+
+    <!-- SEARCH PANEL -->
+    <div class="topbar-search-panel"
+         id="topbarSearchPanel"
+         hidden>
+
+        <label for="topbarSearchInput" class="form-label">
+            Search this portal
+        </label>
+
+        <input
+            type="search"
+            id="topbarSearchInput"
+            class="form-control"
+            placeholder="Search menu items..."
+            autocomplete="off">
+
+        <small id="topbarSearchMessage"
+               class="text-muted">
+            Enter a menu name to find it.
+        </small>
+
+    </div>
+
+</header>
+
+<style>
+    .smart-city-topbar {
+        position: relative;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 12px;
+        padding: 10px 18px;
+        background: #fff;
+        border-bottom: 1px solid #e5e7eb;
+        z-index: 100;
+    }
+
+    .topbar-left,
+    .topbar-right,
+    .topbar-brand {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+    }
+
+    .topbar-brand {
+        color: inherit;
+        text-decoration: none;
+        min-width: 0;
+    }
+
+    .topbar-logo {
+        width: 46px;
+        height: 46px;
+        object-fit: contain;
+        border-radius: 50%;
+        background: #fff;
+        flex-shrink: 0;
+    }
+
+    .topbar-page-title {
+        display: flex;
+        flex-direction: column;
+        min-width: 0;
+    }
+
+    .topbar-title {
+        font-weight: 700;
+        font-size: 1rem;
+        line-height: 1.3;
+        color: #176b3a;
+    }
+
+    .topbar-subtitle {
+        font-size: .78rem;
+        color: #64748b;
+    }
+
+    .topbar-icon-button,
+    .sidebar-toggle {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        min-width: 40px;
+        min-height: 40px;
+        border: 1px solid #e5e7eb;
+        border-radius: 9px;
+        background: #fff;
+        color: #334155;
+        cursor: pointer;
+    }
+
+    .topbar-icon-button:hover,
+    .sidebar-toggle:hover {
+        background: #f1f5f9;
+    }
+
+    .topbar-search-panel {
+        position: absolute;
+        top: calc(100% + 8px);
+        right: 16px;
+        width: min(340px, calc(100vw - 32px));
+        padding: 16px;
+        background: #fff;
+        border: 1px solid #e5e7eb;
+        border-radius: 12px;
+        box-shadow: 0 8px 24px rgba(0, 0, 0, .12);
+        z-index: 1050;
+    }
+
+    @media (max-width: 575px) {
+        .smart-city-topbar {
+            padding: 8px 10px;
+            gap: 6px;
+        }
+
+        .topbar-left,
+        .topbar-right,
+        .topbar-brand {
+            gap: 7px;
+        }
+
+        .topbar-logo {
+            width: 36px;
+            height: 36px;
+        }
+
+        .topbar-title {
+            font-size: .86rem;
+        }
+
+        .topbar-subtitle {
+            font-size: .68rem;
+        }
+
+        .topbar-icon-button,
+        .sidebar-toggle {
+            min-width: 36px;
+            min-height: 36px;
+        }
+    }
+</style>
+
+<script>
+(function () {
+    const toggle = document.getElementById("topbarSearchToggle");
+    const panel = document.getElementById("topbarSearchPanel");
+    const input = document.getElementById("topbarSearchInput");
+    const message = document.getElementById("topbarSearchMessage");
+
+    if (!toggle || !panel || !input) return;
+
+    toggle.addEventListener("click", function () {
+        const opening = panel.hidden;
+        panel.hidden = !opening;
+        toggle.setAttribute("aria-expanded", String(opening));
+
+        if (opening) input.focus();
+    });
+
+    input.addEventListener("input", function () {
+        const query = input.value.trim().toLowerCase();
+        const links = document.querySelectorAll(
+            ".sidebar a, .sidebar-menu a, #sidebar a, aside a"
+        );
+
+        let matches = 0;
+
+        links.forEach(function (link) {
+            const matchesQuery =
+                query !== "" &&
+                link.textContent.toLowerCase().includes(query);
+
+            link.classList.toggle(
+                "topbar-search-match",
+                matchesQuery
+            );
+
+            if (matchesQuery) matches++;
+        });
+
+        message.textContent = query === ""
+            ? "Enter a menu name to find it."
+            : matches + " matching menu item(s) found.";
+    });
+
+    input.addEventListener("keydown", function (event) {
+        if (event.key === "Escape") {
+            panel.hidden = true;
+            toggle.setAttribute("aria-expanded", "false");
+            input.value = "";
+            input.dispatchEvent(new Event("input"));
+            toggle.focus();
+        }
+
+        if (event.key === "Enter") {
+            const firstMatch = document.querySelector(
+                ".topbar-search-match"
+            );
+
+            if (firstMatch) firstMatch.click();
+        }
+    });
+})();
+</script>

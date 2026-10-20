@@ -1,0 +1,545 @@
+{% extends "base.html" %}
+
+{% block title %}
+    Report Water Problem | Smart City Uganda
+{% endblock %}
+
+{% block content %}
+
+<div class="container-fluid">
+
+    <!-- PAGE HEADER -->
+    <div class="d-flex flex-wrap justify-content-between align-items-center gap-3 mb-4">
+
+        <div>
+            <h2 class="fw-bold mb-1">
+                <i class="bi bi-droplet-half text-primary"></i>
+                Report Water Problem
+            </h2>
+
+            <p class="text-muted mb-0">
+                Report a water supply or water infrastructure problem
+                affecting your community.
+            </p>
+        </div>
+
+        <a href="{% url 'water:home' %}"
+           class="btn btn-outline-primary">
+
+            <i class="bi bi-arrow-left"></i>
+            Back to Water & Environment
+
+        </a>
+
+    </div>
+
+
+    <!-- INFORMATION ALERT -->
+    <div class="alert alert-primary d-flex align-items-start gap-3"
+         role="alert">
+
+        <i class="bi bi-info-circle-fill fs-4"></i>
+
+        <div>
+            <h6 class="alert-heading fw-bold">
+                Before submitting your report
+            </h6>
+
+            <p class="mb-0">
+                Provide accurate information about the water problem,
+                including the location and urgency. If possible,
+                attach a photo showing the problem.
+            </p>
+        </div>
+
+    </div>
+
+
+    <div class="row g-4">
+
+        <!-- FORM -->
+        <div class="col-lg-8">
+
+            <div class="card shadow-sm border-0">
+
+                <div class="card-header bg-white py-3">
+
+                    <h5 class="fw-bold mb-1">
+                        <i class="bi bi-file-earmark-text text-primary"></i>
+                        Water Problem Details
+                    </h5>
+
+                    <small class="text-muted">
+                        Complete the form below to submit your report.
+                    </small>
+
+                </div>
+
+
+                <div class="card-body p-4">
+
+                    <form method="post"
+                          enctype="multipart/form-data">
+
+                        {% csrf_token %}
+
+
+                        <!-- PERSONAL INFORMATION -->
+                        <div class="mb-4">
+
+                            <h6 class="fw-bold border-bottom pb-2 mb-3">
+                                <i class="bi bi-person text-primary"></i>
+                                Your Information
+                            </h6>
+
+                            <div class="row g-3">
+
+                                <div class="col-md-6">
+
+                                    <label for="{{ form.citizen_name.id_for_label }}"
+                                           class="form-label fw-semibold">
+
+                                        Your Name
+
+                                    </label>
+
+                                    {{ form.citizen_name }}
+
+                                    {% if form.citizen_name.errors %}
+
+                                        <div class="text-danger small mt-1">
+
+                                            {{ form.citizen_name.errors }}
+
+                                        </div>
+
+                                    {% endif %}
+
+                                </div>
+
+
+                                <div class="col-md-6">
+
+                                    <label for="{{ form.phone_number.id_for_label }}"
+                                           class="form-label fw-semibold">
+
+                                        Phone Number
+
+                                    </label>
+
+                                    {{ form.phone_number }}
+
+                                    {% if form.phone_number.errors %}
+
+                                        <div class="text-danger small mt-1">
+
+                                            {{ form.phone_number.errors }}
+
+                                        </div>
+
+                                    {% endif %}
+
+                                </div>
+
+                            </div>
+
+                        </div>
+
+
+                        <!-- PROBLEM INFORMATION -->
+                        <div class="mb-4">
+
+                            <h6 class="fw-bold border-bottom pb-2 mb-3">
+                                <i class="bi bi-exclamation-triangle text-warning"></i>
+                                Problem Information
+                            </h6>
+
+                            <div class="row g-3">
+
+                                <div class="col-md-6">
+
+                                    <label for="{{ form.problem_type.id_for_label }}"
+                                           class="form-label fw-semibold">
+
+                                        Water Problem
+
+                                    </label>
+
+                                    {{ form.problem_type }}
+
+                                    {% if form.problem_type.errors %}
+
+                                        <div class="text-danger small mt-1">
+
+                                            {{ form.problem_type.errors }}
+
+                                        </div>
+
+                                    {% endif %}
+
+                                </div>
+
+
+                                <div class="col-md-6">
+
+                                    <label for="{{ form.urgency.id_for_label }}"
+                                           class="form-label fw-semibold">
+
+                                        Urgency Level
+
+                                    </label>
+
+                                    {{ form.urgency }}
+
+                                    {% if form.urgency.errors %}
+
+                                        <div class="text-danger small mt-1">
+
+                                            {{ form.urgency.errors }}
+
+                                        </div>
+
+                                    {% endif %}
+
+                                </div>
+
+
+                                <div class="col-12">
+
+                                    <label for="{{ form.description.id_for_label }}"
+                                           class="form-label fw-semibold">
+
+                                        Problem Description
+
+                                    </label>
+
+                                    {{ form.description }}
+
+                                    <div class="form-text">
+                                        Explain what happened and how the
+                                        problem is affecting the community.
+                                    </div>
+
+                                    {% if form.description.errors %}
+
+                                        <div class="text-danger small mt-1">
+
+                                            {{ form.description.errors }}
+
+                                        </div>
+
+                                    {% endif %}
+
+                                </div>
+
+                            </div>
+
+                        </div>
+
+
+                        <!-- LOCATION -->
+                        <div class="mb-4">
+
+                            <h6 class="fw-bold border-bottom pb-2 mb-3">
+                                <i class="bi bi-geo-alt text-danger"></i>
+                                Problem Location
+                            </h6>
+
+                            <div class="row g-3">
+
+                                <div class="col-md-6">
+
+                                    <label for="{{ form.district.id_for_label }}"
+                                           class="form-label fw-semibold">
+
+                                        District / City
+
+                                    </label>
+
+                                    {{ form.district }}
+
+                                    {% if form.district.errors %}
+
+                                        <div class="text-danger small mt-1">
+
+                                            {{ form.district.errors }}
+
+                                        </div>
+
+                                    {% endif %}
+
+                                </div>
+
+
+                                <div class="col-md-6">
+
+                                    <label for="{{ form.location.id_for_label }}"
+                                           class="form-label fw-semibold">
+
+                                        Exact Location
+
+                                    </label>
+
+                                    {{ form.location }}
+
+                                    <div class="form-text">
+                                        Example: village, street,
+                                        parish, ward or neighbourhood.
+                                    </div>
+
+                                    {% if form.location.errors %}
+
+                                        <div class="text-danger small mt-1">
+
+                                            {{ form.location.errors }}
+
+                                        </div>
+
+                                    {% endif %}
+
+                                </div>
+
+                            </div>
+
+                        </div>
+
+
+                        <!-- PHOTO -->
+                        <div class="mb-4">
+
+                            <h6 class="fw-bold border-bottom pb-2 mb-3">
+                                <i class="bi bi-camera text-success"></i>
+                                Photo Evidence
+                            </h6>
+
+                            <label for="{{ form.photo.id_for_label }}"
+                                   class="form-label fw-semibold">
+
+                                Upload Photo
+
+                            </label>
+
+                            {{ form.photo }}
+
+                            <div class="form-text">
+                                A photo can help the responsible department
+                                understand the problem. This is optional.
+                            </div>
+
+                            {% if form.photo.errors %}
+
+                                <div class="text-danger small mt-1">
+
+                                    {{ form.photo.errors }}
+
+                                </div>
+
+                            {% endif %}
+
+                        </div>
+
+
+                        <!-- NON FIELD ERRORS -->
+                        {% if form.non_field_errors %}
+
+                            <div class="alert alert-danger">
+
+                                <i class="bi bi-exclamation-circle"></i>
+
+                                {{ form.non_field_errors }}
+
+                            </div>
+
+                        {% endif %}
+
+
+                        <!-- BUTTONS -->
+                        <div class="d-flex flex-wrap gap-2 pt-3 border-top">
+
+                            <button type="submit"
+                                    class="btn btn-primary">
+
+                                <i class="bi bi-send"></i>
+                                Submit Water Report
+
+                            </button>
+
+
+                            <a href="{% url 'water:home' %}"
+                               class="btn btn-outline-secondary">
+
+                                <i class="bi bi-x-circle"></i>
+                                Cancel
+
+                            </a>
+
+                        </div>
+
+                    </form>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <!-- RIGHT INFORMATION PANEL -->
+        <div class="col-lg-4">
+
+            <!-- HOW IT WORKS -->
+            <div class="card shadow-sm border-0 mb-4">
+
+                <div class="card-header bg-primary text-white">
+
+                    <h6 class="fw-bold mb-0">
+                        <i class="bi bi-list-check"></i>
+                        How Reporting Works
+                    </h6>
+
+                </div>
+
+                <div class="card-body">
+
+                    <div class="d-flex gap-3 mb-4">
+
+                        <span class="badge rounded-pill bg-primary fs-6">
+                            1
+                        </span>
+
+                        <div>
+                            <h6 class="fw-bold mb-1">
+                                Submit Report
+                            </h6>
+
+                            <p class="small text-muted mb-0">
+                                Provide details about the water problem.
+                            </p>
+                        </div>
+
+                    </div>
+
+
+                    <div class="d-flex gap-3 mb-4">
+
+                        <span class="badge rounded-pill bg-primary fs-6">
+                            2
+                        </span>
+
+                        <div>
+                            <h6 class="fw-bold mb-1">
+                                Government Receives It
+                            </h6>
+
+                            <p class="small text-muted mb-0">
+                                Your report is recorded by the system.
+                            </p>
+                        </div>
+
+                    </div>
+
+
+                    <div class="d-flex gap-3 mb-4">
+
+                        <span class="badge rounded-pill bg-primary fs-6">
+                            3
+                        </span>
+
+                        <div>
+                            <h6 class="fw-bold mb-1">
+                                Investigation
+                            </h6>
+
+                            <p class="small text-muted mb-0">
+                                The responsible team can investigate
+                                the reported problem.
+                            </p>
+                        </div>
+
+                    </div>
+
+
+                    <div class="d-flex gap-3">
+
+                        <span class="badge rounded-pill bg-success fs-6">
+                            4
+                        </span>
+
+                        <div>
+                            <h6 class="fw-bold mb-1">
+                                Resolution
+                            </h6>
+
+                            <p class="small text-muted mb-0">
+                                The report can later be updated when
+                                the problem is resolved.
+                            </p>
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <!-- PROBLEM TYPES -->
+            <div class="card shadow-sm border-0">
+
+                <div class="card-header bg-white">
+
+                    <h6 class="fw-bold mb-0">
+                        <i class="bi bi-droplet text-primary"></i>
+                        Problems You Can Report
+                    </h6>
+
+                </div>
+
+                <div class="list-group list-group-flush">
+
+                    <div class="list-group-item">
+                        <i class="bi bi-droplet-half text-primary me-2"></i>
+                        No Water Supply
+                    </div>
+
+                    <div class="list-group-item">
+                        <i class="bi bi-tools text-warning me-2"></i>
+                        Broken Water Point
+                    </div>
+
+                    <div class="list-group-item">
+                        <i class="bi bi-wrench text-warning me-2"></i>
+                        Broken Borehole
+                    </div>
+
+                    <div class="list-group-item">
+                        <i class="bi bi-water text-info me-2"></i>
+                        Leaking Water Pipe
+                    </div>
+
+                    <div class="list-group-item">
+                        <i class="bi bi-exclamation-octagon text-danger me-2"></i>
+                        Contaminated Water
+                    </div>
+
+                    <div class="list-group-item">
+                        <i class="bi bi-speedometer2 text-secondary me-2"></i>
+                        Low Water Pressure
+                    </div>
+
+                    <div class="list-group-item">
+                        <i class="bi bi-building-exclamation text-danger me-2"></i>
+                        Damaged Infrastructure
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+{% endblock %}

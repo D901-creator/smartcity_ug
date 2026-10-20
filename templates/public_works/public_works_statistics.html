@@ -1,0 +1,727 @@
+{% extends "base.html" %}
+
+{% block title %}
+    Public Works & Transport Statistics | Smart City Uganda
+{% endblock %}
+
+{% block content %}
+
+<div class="container-fluid">
+
+    <!-- Header -->
+    <div class="d-flex flex-wrap justify-content-between align-items-center mb-3">
+
+        <div>
+
+            <h4 class="mb-1">
+                <i class="bi bi-bar-chart-line text-success me-2"></i>
+                Public Works & Transport Statistics
+            </h4>
+
+            <p class="text-muted small mb-0">
+                Overview of roads, projects, facilities, traffic,
+                parking and transport information.
+            </p>
+
+        </div>
+
+        <div class="mt-2 mt-md-0">
+
+            <a
+                href="{% url 'public_works:home' %}"
+                class="btn btn-outline-secondary btn-sm"
+            >
+                <i class="bi bi-arrow-left me-1"></i>
+                Public Works
+            </a>
+
+        </div>
+
+    </div>
+
+
+    <!-- District Filter -->
+    <div class="card border-0 shadow-sm mb-3">
+
+        <div class="card-body">
+
+            <form method="get">
+
+                <div class="row g-2">
+
+                    <div class="col-12 col-md-6">
+
+                        <label class="form-label small fw-semibold">
+                            District / City
+                        </label>
+
+                        <input
+                            type="text"
+                            name="district"
+                            value="{{ district }}"
+                            class="form-control form-control-sm"
+                            placeholder="Leave blank for all areas"
+                        >
+
+                    </div>
+
+                    <div class="col-12 col-md-3 d-flex align-items-end">
+
+                        <button
+                            type="submit"
+                            class="btn btn-success btn-sm w-100"
+                        >
+                            <i class="bi bi-search me-1"></i>
+                            Filter Statistics
+                        </button>
+
+                    </div>
+
+                    <div class="col-12 col-md-3 d-flex align-items-end">
+
+                        <a
+                            href="{% url 'public_works:public_works_statistics' %}"
+                            class="btn btn-outline-secondary btn-sm w-100"
+                        >
+                            <i class="bi bi-arrow-clockwise me-1"></i>
+                            All Uganda
+                        </a>
+
+                    </div>
+
+                </div>
+
+            </form>
+
+        </div>
+
+    </div>
+
+
+    {% if district %}
+
+        <div class="alert alert-info small py-2">
+
+            <i class="bi bi-geo-alt me-1"></i>
+
+            Statistics filtered for:
+            <strong>{{ district }}</strong>
+
+        </div>
+
+    {% endif %}
+
+
+    <!-- Overall Summary -->
+    <div class="row g-3 mb-4">
+
+        <div class="col-6 col-md-3">
+
+            <div class="card border-0 shadow-sm h-100">
+
+                <div class="card-body">
+
+                    <div class="text-muted small">
+                        Roads
+                    </div>
+
+                    <h4 class="mb-0 mt-1">
+                        {{ roads_count }}
+                    </h4>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <div class="col-6 col-md-3">
+
+            <div class="card border-0 shadow-sm h-100">
+
+                <div class="card-body">
+
+                    <div class="text-muted small">
+                        Projects
+                    </div>
+
+                    <h4 class="mb-0 mt-1">
+                        {{ projects_count }}
+                    </h4>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <div class="col-6 col-md-3">
+
+            <div class="card border-0 shadow-sm h-100">
+
+                <div class="card-body">
+
+                    <div class="text-muted small">
+                        Facilities
+                    </div>
+
+                    <h4 class="mb-0 mt-1">
+                        {{ facilities_count }}
+                    </h4>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <div class="col-6 col-md-3">
+
+            <div class="card border-0 shadow-sm h-100">
+
+                <div class="card-body">
+
+                    <div class="text-muted small">
+                        Total Records
+                    </div>
+
+                    <h4 class="mb-0 mt-1">
+                        {{ total_records }}
+                    </h4>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- Roads -->
+    <div class="card border-0 shadow-sm mb-3">
+
+        <div class="card-header bg-white">
+
+            <strong>
+                <i class="bi bi-signpost-2 text-success me-1"></i>
+                Roads & Road Network
+            </strong>
+
+        </div>
+
+        <div class="card-body">
+
+            <div class="row g-3">
+
+                <div class="col-6 col-md-3">
+
+                    <div class="small text-muted">
+                        Total Roads
+                    </div>
+
+                    <h5>
+                        {{ roads_count }}
+                    </h5>
+
+                </div>
+
+                <div class="col-6 col-md-3">
+
+                    <div class="small text-muted">
+                        Operational
+                    </div>
+
+                    <h5 class="text-success">
+                        {{ operational_roads_count }}
+                    </h5>
+
+                </div>
+
+                <div class="col-6 col-md-3">
+
+                    <div class="small text-muted">
+                        Good Condition
+                    </div>
+
+                    <h5>
+                        {{ good_roads_count }}
+                    </h5>
+
+                </div>
+
+                <div class="col-6 col-md-3">
+
+                    <div class="small text-muted">
+                        Poor / Critical
+                    </div>
+
+                    <h5 class="text-danger">
+                        {{ poor_roads_count|add:critical_roads_count }}
+                    </h5>
+
+                </div>
+
+            </div>
+
+            <hr>
+
+            <div class="small text-muted">
+                Total recorded road length
+            </div>
+
+            <strong>
+                {{ total_road_length|floatformat:2 }} km
+            </strong>
+
+        </div>
+
+    </div>
+
+
+    <!-- Road Problems -->
+    <div class="card border-0 shadow-sm mb-3">
+
+        <div class="card-header bg-white">
+
+            <strong>
+                <i class="bi bi-exclamation-triangle text-warning me-1"></i>
+                Road Problem Reports
+            </strong>
+
+        </div>
+
+        <div class="card-body">
+
+            <div class="row g-3">
+
+                <div class="col-4">
+
+                    <div class="small text-muted">
+                        Total
+                    </div>
+
+                    <h5>
+                        {{ road_reports_count }}
+                    </h5>
+
+                </div>
+
+                <div class="col-4">
+
+                    <div class="small text-muted">
+                        Pending
+                    </div>
+
+                    <h5 class="text-warning">
+                        {{ road_reports_pending }}
+                    </h5>
+
+                </div>
+
+                <div class="col-4">
+
+                    <div class="small text-muted">
+                        Resolved
+                    </div>
+
+                    <h5 class="text-success">
+                        {{ road_reports_resolved }}
+                    </h5>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- Projects -->
+    <div class="card border-0 shadow-sm mb-3">
+
+        <div class="card-header bg-white">
+
+            <strong>
+                <i class="bi bi-kanban text-primary me-1"></i>
+                Public Works Projects
+            </strong>
+
+        </div>
+
+        <div class="card-body">
+
+            <div class="row g-3">
+
+                <div class="col-6 col-md-3">
+
+                    <div class="small text-muted">
+                        Total
+                    </div>
+
+                    <h5>
+                        {{ projects_count }}
+                    </h5>
+
+                </div>
+
+                <div class="col-6 col-md-3">
+
+                    <div class="small text-muted">
+                        Planned
+                    </div>
+
+                    <h5>
+                        {{ planned_projects_count }}
+                    </h5>
+
+                </div>
+
+                <div class="col-6 col-md-3">
+
+                    <div class="small text-muted">
+                        Ongoing
+                    </div>
+
+                    <h5 class="text-primary">
+                        {{ ongoing_projects_count }}
+                    </h5>
+
+                </div>
+
+                <div class="col-6 col-md-3">
+
+                    <div class="small text-muted">
+                        Completed
+                    </div>
+
+                    <h5 class="text-success">
+                        {{ completed_projects_count }}
+                    </h5>
+
+                </div>
+
+            </div>
+
+
+            <hr>
+
+            <div class="small text-muted mb-1">
+                Average project completion
+            </div>
+
+            <div class="progress" style="height: 8px;">
+
+                <div
+                    class="progress-bar"
+                    style="width: {{ project_average_completion }}%;"
+                ></div>
+
+            </div>
+
+            <div class="small mt-1">
+                {{ project_average_completion }}%
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- Traffic -->
+    <div class="card border-0 shadow-sm mb-3">
+
+        <div class="card-header bg-white">
+
+            <strong>
+                <i class="bi bi-car-front text-danger me-1"></i>
+                Traffic Incidents
+            </strong>
+
+        </div>
+
+        <div class="card-body">
+
+            <div class="row g-3">
+
+                <div class="col-4">
+
+                    <div class="small text-muted">
+                        Total
+                    </div>
+
+                    <h5>
+                        {{ traffic_incidents_count }}
+                    </h5>
+
+                </div>
+
+                <div class="col-4">
+
+                    <div class="small text-muted">
+                        Pending
+                    </div>
+
+                    <h5 class="text-warning">
+                        {{ traffic_incidents_pending }}
+                    </h5>
+
+                </div>
+
+                <div class="col-4">
+
+                    <div class="small text-muted">
+                        Resolved
+                    </div>
+
+                    <h5 class="text-success">
+                        {{ traffic_incidents_resolved }}
+                    </h5>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- Parking -->
+    <div class="card border-0 shadow-sm mb-3">
+
+        <div class="card-header bg-white">
+
+            <strong>
+                <i class="bi bi-p-square text-primary me-1"></i>
+                Parking Services
+            </strong>
+
+        </div>
+
+        <div class="card-body">
+
+            <div class="row g-3">
+
+                <div class="col-6 col-md-3">
+
+                    <div class="small text-muted">
+                        Facilities
+                    </div>
+
+                    <h5>
+                        {{ parking_facilities_count }}
+                    </h5>
+
+                </div>
+
+                <div class="col-6 col-md-3">
+
+                    <div class="small text-muted">
+                        Operational
+                    </div>
+
+                    <h5 class="text-success">
+                        {{ operational_parking_count }}
+                    </h5>
+
+                </div>
+
+                <div class="col-6 col-md-3">
+
+                    <div class="small text-muted">
+                        Payments
+                    </div>
+
+                    <h5>
+                        {{ parking_payments_count }}
+                    </h5>
+
+                </div>
+
+                <div class="col-6 col-md-3">
+
+                    <div class="small text-muted">
+                        Paid
+                    </div>
+
+                    <h5 class="text-success">
+                        {{ parking_paid_count }}
+                    </h5>
+
+                </div>
+
+            </div>
+
+
+            <hr>
+
+            <div class="row g-3">
+
+                <div class="col-6">
+
+                    <div class="small text-muted">
+                        Pending Payments
+                    </div>
+
+                    <strong class="text-warning">
+                        {{ parking_pending_count }}
+                    </strong>
+
+                </div>
+
+                <div class="col-6">
+
+                    <div class="small text-muted">
+                        Recorded Paid Revenue
+                    </div>
+
+                    <strong>
+                        UGX {{ parking_revenue|floatformat:0 }}
+                    </strong>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- Facilities & Advisories -->
+    <div class="row g-3">
+
+        <div class="col-12 col-md-6">
+
+            <div class="card border-0 shadow-sm h-100">
+
+                <div class="card-header bg-white">
+
+                    <strong>
+                        <i class="bi bi-building text-success me-1"></i>
+                        Public Works Facilities
+                    </strong>
+
+                </div>
+
+                <div class="card-body">
+
+                    <div class="row">
+
+                        <div class="col-6">
+
+                            <div class="small text-muted">
+                                Total Facilities
+                            </div>
+
+                            <h5>
+                                {{ facilities_count }}
+                            </h5>
+
+                        </div>
+
+                        <div class="col-6">
+
+                            <div class="small text-muted">
+                                Operational
+                            </div>
+
+                            <h5 class="text-success">
+                                {{ operational_facilities_count }}
+                            </h5>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <div class="col-12 col-md-6">
+
+            <div class="card border-0 shadow-sm h-100">
+
+                <div class="card-header bg-white">
+
+                    <strong>
+                        <i class="bi bi-megaphone text-info me-1"></i>
+                        Transport Advisories
+                    </strong>
+
+                </div>
+
+                <div class="card-body">
+
+                    <div class="row">
+
+                        <div class="col-4">
+
+                            <div class="small text-muted">
+                                Published
+                            </div>
+
+                            <h5>
+                                {{ advisories_count }}
+                            </h5>
+
+                        </div>
+
+                        <div class="col-4">
+
+                            <div class="small text-muted">
+                                High
+                            </div>
+
+                            <h5 class="text-warning">
+                                {{ high_advisories_count }}
+                            </h5>
+
+                        </div>
+
+                        <div class="col-4">
+
+                            <div class="small text-muted">
+                                Urgent
+                            </div>
+
+                            <h5 class="text-danger">
+                                {{ urgent_advisories_count }}
+                            </h5>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- Citizen Notice -->
+    <div class="alert alert-info small mt-4">
+
+        <i class="bi bi-info-circle me-1"></i>
+
+        These statistics are generated from information currently
+        recorded in the Smart City Uganda Public Works & Transport
+        module. They are intended to provide citizens with a
+        general overview of available records and services.
+
+    </div>
+
+</div>
+
+{% endblock %}

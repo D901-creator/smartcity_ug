@@ -1,0 +1,574 @@
+{% extends "base.html" %}
+
+{% block title %}
+    Agricultural Statistics | Smart City Uganda
+{% endblock %}
+
+{% block content %}
+
+<div class="container-fluid">
+
+    <!-- Header -->
+    <div class="d-flex justify-content-between align-items-center mb-4">
+
+        <div>
+            <h2 class="fw-bold">
+                <i class="bi bi-bar-chart-fill text-success"></i>
+                Agricultural Statistics
+            </h2>
+
+            <p class="text-muted mb-0">
+                View current agricultural information available
+                through Smart City Uganda.
+            </p>
+        </div>
+
+        <a href="{% url 'agriculture:home' %}"
+           class="btn btn-outline-success">
+
+            <i class="bi bi-arrow-left"></i>
+            Agriculture
+
+        </a>
+
+    </div>
+
+
+    <!-- Main Statistics -->
+
+    <div class="row g-4 mb-4">
+
+        <!-- Farmers -->
+        <div class="col-12 col-sm-6 col-xl-3">
+
+            <div class="card border-0 shadow-sm h-100">
+
+                <div class="card-body">
+
+                    <div class="d-flex justify-content-between">
+
+                        <div>
+                            <p class="text-muted mb-1">
+                                Farmers
+                            </p>
+
+                            <h3 class="fw-bold">
+                                {{ farmers_count }}
+                            </h3>
+                        </div>
+
+                        <i class="bi bi-person-lines-fill
+                                  fs-1 text-success"></i>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <!-- Farms -->
+        <div class="col-12 col-sm-6 col-xl-3">
+
+            <div class="card border-0 shadow-sm h-100">
+
+                <div class="card-body">
+
+                    <div class="d-flex justify-content-between">
+
+                        <div>
+                            <p class="text-muted mb-1">
+                                Farms
+                            </p>
+
+                            <h3 class="fw-bold">
+                                {{ farms_count }}
+                            </h3>
+                        </div>
+
+                        <i class="bi bi-house-door-fill
+                                  fs-1 text-primary"></i>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <!-- Crop Production -->
+        <div class="col-12 col-sm-6 col-xl-3">
+
+            <div class="card border-0 shadow-sm h-100">
+
+                <div class="card-body">
+
+                    <div class="d-flex justify-content-between">
+
+                        <div>
+                            <p class="text-muted mb-1">
+                                Crop Production Records
+                            </p>
+
+                            <h3 class="fw-bold">
+                                {{ crop_production_count }}
+                            </h3>
+                        </div>
+
+                        <i class="bi bi-tree-fill
+                                  fs-1 text-success"></i>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <!-- Livestock -->
+        <div class="col-12 col-sm-6 col-xl-3">
+
+            <div class="card border-0 shadow-sm h-100">
+
+                <div class="card-body">
+
+                    <div class="d-flex justify-content-between">
+
+                        <div>
+                            <p class="text-muted mb-1">
+                                Livestock Records
+                            </p>
+
+                            <h3 class="fw-bold">
+                                {{ livestock_count }}
+                            </h3>
+                        </div>
+
+                        <i class="bi bi-heart-pulse-fill
+                                  fs-1 text-danger"></i>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- Market Statistics -->
+
+    <div class="card border-0 shadow-sm mb-4">
+
+        <div class="card-body">
+
+            <h4 class="fw-bold mb-4">
+                <i class="bi bi-shop text-success"></i>
+                Agricultural Market
+            </h4>
+
+            <div class="row g-4">
+
+                <div class="col-12 col-md-6">
+
+                    <div class="border rounded p-4">
+
+                        <div class="d-flex justify-content-between">
+
+                            <div>
+                                <span class="text-muted">
+                                    Available Market Listings
+                                </span>
+
+                                <h3 class="fw-bold mt-2">
+                                    {{ market_listings_count }}
+                                </h3>
+                            </div>
+
+                            <i class="bi bi-basket-fill
+                                      fs-2 text-success"></i>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+                <div class="col-12 col-md-6">
+
+                    <div class="border rounded p-4">
+
+                        <div class="d-flex justify-content-between">
+
+                            <div>
+                                <span class="text-muted">
+                                    Open Buyer Requests
+                                </span>
+
+                                <h3 class="fw-bold mt-2">
+                                    {{ buyer_requests_count }}
+                                </h3>
+                            </div>
+
+                            <i class="bi bi-cart-check-fill
+                                      fs-2 text-primary"></i>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- Agriculture Programmes -->
+
+    <div class="card border-0 shadow-sm mb-4">
+
+        <div class="card-body">
+
+            <h4 class="fw-bold mb-4">
+                <i class="bi bi-diagram-3-fill text-success"></i>
+                Agricultural Programmes & Community
+            </h4>
+
+            <div class="row g-4">
+
+                <div class="col-12 col-md-4">
+
+                    <div class="border rounded p-4">
+
+                        <span class="text-muted">
+                            Cooperatives
+                        </span>
+
+                        <h3 class="fw-bold mt-2">
+                            {{ cooperatives_count }}
+                        </h3>
+
+                    </div>
+
+                </div>
+
+
+                <div class="col-12 col-md-4">
+
+                    <div class="border rounded p-4">
+
+                        <span class="text-muted">
+                            Active Projects
+                        </span>
+
+                        <h3 class="fw-bold mt-2">
+                            {{ projects_count }}
+                        </h3>
+
+                    </div>
+
+                </div>
+
+
+                <div class="col-12 col-md-4">
+
+                    <div class="border rounded p-4">
+
+                        <span class="text-muted">
+                            Active Disease Reports
+                        </span>
+
+                        <h3 class="fw-bold mt-2">
+                            {{ disease_reports_count }}
+                        </h3>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- Irrigation -->
+
+    <div class="card border-0 shadow-sm mb-4">
+
+        <div class="card-body">
+
+            <div class="d-flex justify-content-between align-items-center">
+
+                <div>
+
+                    <h4 class="fw-bold">
+                        <i class="bi bi-droplet-half text-primary"></i>
+                        Irrigation
+                    </h4>
+
+                    <p class="text-muted mb-0">
+                        Registered irrigation projects available
+                        in the Agriculture system.
+                    </p>
+
+                </div>
+
+                <div class="text-end">
+
+                    <h2 class="fw-bold">
+                        {{ irrigation_projects_count }}
+                    </h2>
+
+                    <small class="text-muted">
+                        Projects
+                    </small>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+<!-- ============================================================
+     PHASE 3 — FISHING & FISHERIES STATISTICS
+     ============================================================ -->
+
+<div class="card border-0 shadow-sm mb-4">
+
+    <div class="card-body">
+
+        <div class="d-flex justify-content-between align-items-center mb-4">
+
+            <div>
+
+                <h4 class="fw-bold mb-1">
+
+                    <i class="bi bi-water text-success"></i>
+
+                    Fishing & Fisheries Statistics
+
+                </h4>
+
+                <p class="text-muted mb-0">
+
+                    Current fisheries information recorded
+                    in the Agriculture system.
+
+                </p>
+
+            </div>
+
+        </div>
+
+
+        <div class="row g-4">
+
+
+            <!-- Registered Fishers -->
+
+            <div class="col-12 col-sm-6 col-xl-3">
+
+                <div class="border rounded p-4 h-100">
+
+                    <div class="d-flex justify-content-between">
+
+                        <div>
+
+                            <span class="text-muted">
+
+                                Registered Fishers
+
+                            </span>
+
+                            <h3 class="fw-bold mt-2">
+
+                                {{ fishers_count }}
+
+                            </h3>
+
+                        </div>
+
+                        <i class="bi bi-person-vcard
+                                  fs-2 text-success"></i>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <!-- Fishing Activities -->
+
+            <div class="col-12 col-sm-6 col-xl-3">
+
+                <div class="border rounded p-4 h-100">
+
+                    <div class="d-flex justify-content-between">
+
+                        <div>
+
+                            <span class="text-muted">
+
+                                Fishing Activities
+
+                            </span>
+
+                            <h3 class="fw-bold mt-2">
+
+                                {{ fishing_activities_count }}
+
+                            </h3>
+
+                        </div>
+
+                        <i class="bi bi-water
+                                  fs-2 text-primary"></i>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <!-- Aquaculture Farms -->
+
+            <div class="col-12 col-sm-6 col-xl-3">
+
+                <div class="border rounded p-4 h-100">
+
+                    <div class="d-flex justify-content-between">
+
+                        <div>
+
+                            <span class="text-muted">
+
+                                Aquaculture Farms
+
+                            </span>
+
+                            <h3 class="fw-bold mt-2">
+
+                                {{ aquaculture_farms_count }}
+
+                            </h3>
+
+                        </div>
+
+                        <i class="bi bi-droplet-half
+                                  fs-2 text-info"></i>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <!-- Processing Facilities -->
+
+            <div class="col-12 col-sm-6 col-xl-3">
+
+                <div class="border rounded p-4 h-100">
+
+                    <div class="d-flex justify-content-between">
+
+                        <div>
+
+                            <span class="text-muted">
+
+                                Processing Facilities
+
+                            </span>
+
+                            <h3 class="fw-bold mt-2">
+
+                                {{ fish_processing_facilities_count }}
+
+                            </h3>
+
+                        </div>
+
+                        <i class="bi bi-box-seam
+                                  fs-2 text-warning"></i>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <!-- Fish Market Listings -->
+
+            <div class="col-12 col-sm-6 col-xl-3">
+
+                <div class="border rounded p-4 h-100">
+
+                    <div class="d-flex justify-content-between">
+
+                        <div>
+
+                            <span class="text-muted">
+
+                                Fish Market Listings
+
+                            </span>
+
+                            <h3 class="fw-bold mt-2">
+
+                                {{ fish_market_listings_count }}
+
+                            </h3>
+
+                        </div>
+
+                        <i class="bi bi-shop
+                                  fs-2 text-success"></i>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+    <!-- Information Notice -->
+
+    <div class="alert alert-light border">
+
+        <i class="bi bi-info-circle text-success"></i>
+
+        <strong>Citizen information:</strong>
+
+        These statistics are generated from agricultural information
+        currently recorded in Smart City Uganda. Official management,
+        verification and detailed analytical tools will be available
+        through the appropriate government management portals later.
+
+    </div>
+
+</div>
+
+{% endblock %}

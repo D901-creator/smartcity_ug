@@ -1,0 +1,272 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>District Map Generator | Smart City Uganda</title>
+
+    <link
+        rel="stylesheet"
+        href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+    >
+
+    <style>
+        body {
+            margin: 0;
+            padding: 20px;
+            background: #f5f7fa;
+            color: #253247;
+            font-family: Arial, sans-serif;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: auto;
+        }
+
+        .panel {
+            background: white;
+            padding: 22px;
+            margin-bottom: 20px;
+            border-radius: 12px;
+            box-shadow: 0 2px 12px #0000000d;
+        }
+
+        label {
+            display: block;
+            margin: 14px 0 6px;
+            font-weight: bold;
+        }
+
+        input, select {
+            box-sizing: border-box;
+            width: 100%;
+            padding: 11px;
+            border: 1px solid #ccd5df;
+            border-radius: 7px;
+        }
+
+        button, .button {
+            display: inline-block;
+            margin-top: 16px;
+            padding: 12px 18px;
+            background: #167447;
+            color: white;
+            border: 0;
+            border-radius: 7px;
+            cursor: pointer;
+            text-decoration: none;
+        }
+
+        .button-secondary {
+            background: #245c91;
+        }
+
+        .message {
+            padding: 12px;
+            margin-bottom: 10px;
+            border-radius: 6px;
+            background: #eaf5ed;
+        }
+
+        .muted {
+            color: #65748b;
+        }
+
+        #district-map {
+            width: 100%;
+            height: 520px;
+            border-radius: 10px;
+        }
+
+        .fields {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+        }
+
+        @media (max-width: 650px) {
+            body { padding: 10px; }
+            .fields { grid-template-columns: 1fr; }
+            #district-map { height: 400px; }
+        }
+    </style>
+</head>
+
+<body>
+<div class="container">
+
+    <div class="panel">
+        <h1>District Map Generator</h1>
+        <p class="muted">
+            Smart City Uganda — National Location Management
+        </p>
+
+        <a href="/" class="button button-secondary">
+            Back to Dashboard
+        </a>
+    </div>
+
+    <div class="panel">
+        <h2>1. Select a district</h2>
+
+        {% for message in messages %}
+            <div class="message">{{ message }}</div>
+        {% endfor %}
+
+        <form method="get">
+            <label for="district_id">District</label>
+
+            <select
+                id="district_id"
+                name="district_id"
+                required
+                onchange="this.form.submit()"
+            >
+                <option value="">-- Select district --</option>
+
+                {% for district in districts %}
+                    <option
+                        value="{{ district.pk }}"
+                        {% if selected_district and selected_district.pk == district.pk %}
+                            selected
+                        {% endif %}
+                    >
+                        {{ district.name }} — {{ district.region.name }}
+                    </option>
+                {% endfor %}
+            </select>
+
+            <noscript>
+                <button type="submit">Load District</button>
+            </noscript>
+        </form>
+    </div>
+
+    {% if selected_district %}
+    <div class="panel">
+        <h2>2. Configure district coordinates</h2>
+
+        <p>
+            Selected district:
+            <strong>
+                {{ selected_district.name }},
+                {{ selected_district.region.name }}
+            </strong>
+        </p>
+
+        <p class="muted">
+            Enter verified coordinates for the district's representative
+            map point. These coordinates identify the district map centre,
+            not every individual issue location.
+        </p>
+
+        <form method="post">
+            {% csrf_token %}
+
+            <input
+                type="hidden"
+                name="district_id"
+                value="{{ selected_district.pk }}"
+            >
+
+            <div class="fields">
+                <div>
+                    <label for="latitude">Latitude</label>
+                    <input
+                        id="latitude"
+                        name="latitude"
+                        type="number"
+                        step="any"
+                        min="-90"
+                        max="90"
+                        value="{{ selected_district.latitude|default_if_none:'' }}"
+                        placeholder="Example: verified latitude"
+                        required
+                    >
+                </div>
+
+                <div>
+                    <label for="longitude">Longitude</label>
+                    <input
+                        id="longitude"
+                        name="longitude"
+                        type="number"
+                        step="any"
+                        min="-180"
+                        max="180"
+                        value="{{ selected_district.longitude|default_if_none:'' }}"
+                        placeholder="Example: verified longitude"
+                        required
+                    >
+                </div>
+            </div>
+
+            <button type="submit">Save Coordinates &amp; Generate Map</button>
+        </form>
+    </div>
+
+    <div class="panel">
+        <h2>3. District map preview</h2>
+        <p class="muted">
+            Move and zoom the map. The district marker appears at the
+            saved coordinates.
+        </p>
+
+        <div id="district-map"></div>
+
+        <p class="muted">
+            Map tiles © OpenStreetMap contributors.
+        </p>
+    </div>
+    {% endif %}
+
+</div>
+
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+
+{% if selected_district and selected_district.latitude != None and selected_district.longitude != None %}
+<script>
+    const latitude = Number("{{ selected_district.latitude }}");
+    const longitude = Number("{{ selected_district.longitude }}");
+
+    const map = L.map("district-map").setView(
+        [latitude, longitude],
+        10
+    );
+
+    L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
+        maxZoom: 19,
+        attribution: "&copy; OpenStreetMap contributors"
+    }).addTo(map);
+
+    const popup = document.createElement("div");
+    const heading = document.createElement("strong");
+    heading.textContent = "District: {{ selected_district.name|escapejs }}";
+
+    const details = document.createElement("p");
+    details.textContent =
+        "Latitude: " + latitude + ", Longitude: " + longitude;
+
+    popup.appendChild(heading);
+    popup.appendChild(details);
+
+    L.marker([latitude, longitude])
+        .addTo(map)
+        .bindPopup(popup)
+        .openPopup();
+</script>
+{% else %}
+<script>
+    const mapElement = document.getElementById("district-map");
+
+    if (mapElement) {
+        mapElement.innerHTML =
+            "<p style='padding:20px'>Save verified district coordinates to display its map.</p>";
+    }
+</script>
+{% endif %}
+
+</body>
+</html>

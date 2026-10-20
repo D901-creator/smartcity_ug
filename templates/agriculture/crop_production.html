@@ -1,0 +1,154 @@
+{% extends "base.html" %}
+
+{% block title %}
+Crop Production | Agriculture
+{% endblock %}
+
+{% block content %}
+
+<div class="container-fluid">
+
+    <div class="d-flex justify-content-between align-items-center mb-4">
+
+        <div>
+            <h1 class="fw-bold">
+                <i class="bi bi-flower1"></i>
+                Crop Production
+            </h1>
+
+            <p class="text-muted">
+                Monitor crop production, seasons and harvests.
+            </p>
+        </div>
+
+        <a
+            href="{% url 'agriculture:register_crop_production' %}"
+            class="btn btn-success"
+        >
+            <i class="bi bi-plus-circle"></i>
+            Add Production
+        </a>
+
+    </div>
+
+
+    <div class="card border-0 shadow-sm">
+
+        <div class="card-body">
+
+            <div class="table-responsive">
+
+                <table class="table table-hover">
+
+                    <thead>
+
+                        <tr>
+                            <th>Farmer</th>
+                            <th>Farm</th>
+                            <th>Crop</th>
+                            <th>Season</th>
+                            <th>Expected</th>
+                            <th>Actual</th>
+                            <th>Status</th>
+                        </tr>
+
+                    </thead>
+
+                    <tbody>
+
+                        {% for item in production %}
+
+                        <tr>
+
+                            <td>
+                                {{ item.farmer.farmer_name }}
+                            </td>
+
+                            <td>
+                                {{ item.farm.farm_name }}
+                            </td>
+
+                            <td>
+                                {{ item.crop.name }}
+                            </td>
+
+                            <td>
+                                {{ item.season }}
+                            </td>
+
+                            <td>
+                                {{ item.expected_quantity }}
+                                {{ item.unit }}
+                            </td>
+
+                            <td>
+                                {{ item.actual_quantity }}
+                                {{ item.unit }}
+                            </td>
+
+                            <td>
+
+                                {% if item.status == "harvested" %}
+
+                                    <span class="badge bg-success">
+                                        Harvested
+                                    </span>
+
+                                {% elif item.status == "growing" %}
+
+                                    <span class="badge bg-primary">
+                                        Growing
+                                    </span>
+
+                                {% elif item.status == "sold" %}
+
+                                    <span class="badge bg-dark">
+                                        Sold
+                                    </span>
+
+                                {% else %}
+
+                                    <span class="badge bg-warning text-dark">
+                                        Planned
+                                    </span>
+
+                                {% endif %}
+
+                            </td>
+
+                        </tr>
+
+                        {% empty %}
+
+                        <tr>
+
+                            <td
+                                colspan="7"
+                                class="text-center py-5 text-muted"
+                            >
+
+                                <i class="bi bi-flower1 fs-1"></i>
+
+                                <p class="mt-2">
+                                    No crop production records yet.
+                                </p>
+
+                            </td>
+
+                        </tr>
+
+                        {% endfor %}
+
+                    </tbody>
+
+                </table>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+{% endblock %}

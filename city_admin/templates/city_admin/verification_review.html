@@ -1,0 +1,290 @@
+
+{% extends "city_admin/base.html" %}
+
+{% block content %}
+<div class="container-fluid py-4">
+
+    <div class="d-flex flex-wrap justify-content-between align-items-center gap-3 mb-4">
+        <div>
+            <h2 class="fw-bold mb-1">Verification Applications</h2>
+            <p class="text-muted mb-0">
+                Review identity and government employment details before approving accounts.
+            </p>
+        </div>
+
+        <span class="badge text-bg-warning fs-6">
+            {{ pending_count }} Pending
+        </span>
+    </div>
+
+    {% if messages %}
+        {% for message in messages %}
+            <div class="alert alert-{{ message.tags|default:'info' }} alert-dismissible fade show"
+                 role="alert">
+                {{ message }}
+                <button type="button"
+                        class="btn-close"
+                        data-bs-dismiss="alert"
+                        aria-label="Close"></button>
+            </div>
+        {% endfor %}
+    {% endif %}
+
+    {% for submission in submissions %}
+        <div class="card border-0 shadow-sm mb-4">
+
+            <div class="card-header bg-white py-3">
+                <div class="d-flex flex-wrap justify-content-between align-items-center gap-2">
+                    <div>
+                        <h5 class="fw-bold mb-1">
+                            {{ submission.profile.full_name }}
+                        </h5>
+                        <div class="small text-muted">
+                            Submitted {{ submission.submitted_at|date:"d M Y, H:i" }}
+                        </div>
+                    </div>
+
+                    <span class="badge text-bg-warning">
+                        Pending Review
+                    </span>
+                </div>
+            </div>
+
+            <div class="card-body">
+                <div class="row g-4">
+
+                    <div class="col-12 col-lg-6">
+                        <h6 class="fw-bold mb-3">Applicant Information</h6>
+
+                        <p>
+                            <strong>Username:</strong>
+                            {{ submission.profile.user.username }}
+                        </p>
+
+                        <p>
+                            <strong>Email:</strong>
+                            {{ submission.profile.user.email|default:"Not provided" }}
+                        </p>
+
+                        <p>
+                            <strong>Phone:</strong>
+                            {{ submission.profile.phone_number|default:"Not provided" }}
+                        </p>
+
+                        <p>
+                            <strong>Role:</strong>
+                            {{ submission.profile.get_role_display }}
+                        </p>
+
+                        <p>
+                            <strong>Current account status:</strong>
+                            {{ submission.profile.get_verification_status_display }}
+                        </p>
+
+                        <p>
+                            <strong>ID type:</strong>
+                            {{ submission.identification_type|default:"Not provided" }}
+                        </p>
+
+                        <p>
+                            <strong>ID number:</strong>
+                            {{ submission.id_number|default:submission.identification_number|default:"Not provided" }}
+                        </p>
+
+                        {% if submission.profile.role != "citizen" %}
+                            <hr>
+                            <h6 class="fw-bold mb-3">Employment Details</h6>
+
+                            <p>
+                                <strong>Department:</strong>
+                                {{ submission.department|default:"Not provided" }}
+                            </p>
+
+                            <p>
+                                <strong>Staff ID:</strong>
+                                {{ submission.staff_id|default:"Not provided" }}
+                            </p>
+
+                            <p>
+                                <strong>Occupation:</strong>
+                                {{ submission.occupation|default:"Not provided" }}
+                            </p>
+                        {% endif %}
+
+                        <hr>
+                        <h6 class="fw-bold mb-3">Location</h6>
+
+                        <p>
+                            <strong>District:</strong>
+                            {{ submission.profile.district|default:"Not provided" }}
+                        </p>
+
+                        <p>
+                            <strong>City:</strong>
+                            {{ submission.profile.city|default:"Not provided" }}
+                        </p>
+
+                        <p>
+                            <strong>Application area:</strong>
+                            {{ submission.get_area_type_display }} —
+                            {{ submission.area_name|default:"Not provided" }}
+                        </p>
+
+                        <p>
+                            <strong>County:</strong>
+                            {{ submission.county|default:"Not provided" }}
+                        </p>
+
+                        <p>
+                            <strong>Subcounty:</strong>
+                            {{ submission.subcounty|default:"Not provided" }}
+                        </p>
+
+                        <p>
+                            <strong>Parish:</strong>
+                            {{ submission.parish|default:"Not provided" }}
+                        </p>
+
+                        <p>
+                            <strong>Village:</strong>
+                            {{ submission.village|default:"Not provided" }}
+                        </p>
+                    </div>
+
+                    <div class="col-12 col-lg-6">
+                        <h6 class="fw-bold mb-3">Supporting Documents</h6>
+
+                        {% if submission.identification_document %}
+                            <p>
+                                <strong>Identification document:</strong>
+                                <a href="{{ submission.identification_document.url }}"
+                                   target="_blank"
+                                   rel="noopener noreferrer">
+                                    Open document
+                                </a>
+                            </p>
+                        {% endif %}
+
+                        {% if submission.id_front_image %}
+                            <p>
+                                <strong>ID front image:</strong>
+                                <a href="{{ submission.id_front_image.url }}"
+                                   target="_blank"
+                                   rel="noopener noreferrer">
+                                    View image
+                                </a>
+                            </p>
+                        {% endif %}
+
+                        {% if submission.id_back_image %}
+                            <p>
+                                <strong>ID back image:</strong>
+                                <a href="{{ submission.id_back_image.url }}"
+                                   target="_blank"
+                                   rel="noopener noreferrer">
+                                    View image
+                                </a>
+                            </p>
+                        {% endif %}
+
+                        {% if submission.appointment_document %}
+                            <p>
+                                <strong>Appointment letter:</strong>
+                                <a href="{{ submission.appointment_document.url }}"
+                                   target="_blank"
+                                   rel="noopener noreferrer">
+                                    Open document
+                                </a>
+                            </p>
+                        {% endif %}
+
+                        {% if submission.profile_image %}
+                            <p>
+                                <strong>Applicant photo:</strong>
+                                <a href="{{ submission.profile_image.url }}"
+                                   target="_blank"
+                                   rel="noopener noreferrer">
+                                    View image
+                                </a>
+                            </p>
+                        {% endif %}
+
+                        {% if not submission.identification_document and not submission.id_front_image and not submission.id_back_image and not submission.appointment_document and not submission.profile_image %}
+                            <div class="alert alert-warning">
+                                No supporting documents are attached to this application.
+                            </div>
+                        {% endif %}
+
+                        <div class="alert alert-info small mt-4 mb-0">
+                            Check the applicant's identity, employment information,
+                            and documents before making a decision.
+                        </div>
+                    </div>
+                </div>
+
+                <hr class="my-4">
+
+                <form method="post">
+                    {% csrf_token %}
+
+                    <input type="hidden"
+                           name="submission_id"
+                           value="{{ submission.pk }}">
+
+                    <div class="mb-3">
+                        <label for="reason-{{ submission.pk }}"
+                               class="form-label fw-semibold">
+                            Rejection reason
+                        </label>
+
+                        <textarea
+                            class="form-control"
+                            id="reason-{{ submission.pk }}"
+                            name="review_reason"
+                            rows="3"
+                            maxlength="5000"
+                            placeholder="If rejecting, explain what is incorrect or missing.">{{ submission.review_reason }}</textarea>
+
+                        <div class="form-text">
+                            Required when you click Reject. Be clear so the applicant
+                            knows what needs correction.
+                        </div>
+                    </div>
+
+                    <div class="d-flex flex-wrap gap-2">
+                        <button type="submit"
+                                name="action"
+                                value="approve"
+                                class="btn btn-success"
+                                onclick="return confirm('Approve this applicant after checking the submitted information?');">
+                            <i class="bi bi-check-circle"></i>
+                            Approve Application
+                        </button>
+
+                        <button type="submit"
+                                name="action"
+                                value="reject"
+                                class="btn btn-danger"
+                                onclick="return confirm('Reject this application? The reason will be recorded.');">
+                            <i class="bi bi-x-circle"></i>
+                            Reject Application
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+    {% empty %}
+        <div class="card border-0 shadow-sm">
+            <div class="card-body text-center py-5">
+                <i class="bi bi-clipboard-check fs-1 text-success"></i>
+                <h5 class="fw-bold mt-3">No Pending Applications</h5>
+                <p class="text-muted mb-0">
+                    New verification applications will appear here when submitted.
+                </p>
+            </div>
+        </div>
+    {% endfor %}
+
+</div>
+{% endblock %}

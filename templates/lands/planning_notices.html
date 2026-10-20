@@ -1,0 +1,286 @@
+{% extends "base.html" %}
+
+{% block title %}
+    Lands, Housing & Planning Notices
+{% endblock %}
+
+{% block content %}
+
+<div class="container-fluid">
+
+    <div class="mb-4">
+
+        <h4 class="mb-1">
+            <i class="bi bi-megaphone"></i>
+            Lands, Housing & Planning Notices
+        </h4>
+
+        <p class="text-muted mb-0">
+            View published notices and important information relating to
+            land, housing and urban planning.
+        </p>
+
+    </div>
+
+
+    <!-- Search and filters -->
+    <div class="card border-0 shadow-sm mb-4">
+
+        <div class="card-body">
+
+            <form method="get">
+
+                <div class="row g-3">
+
+                    <div class="col-md-5">
+
+                        <label class="form-label">
+                            Search Notices
+                        </label>
+
+                        <input
+                            type="text"
+                            name="search"
+                            value="{{ search }}"
+                            class="form-control"
+                            placeholder="Search notices, districts or locations..."
+                        >
+
+                    </div>
+
+
+                    <div class="col-md-3">
+
+                        <label class="form-label">
+                            Notice Type
+                        </label>
+
+                        <select
+                            name="type"
+                            class="form-select"
+                        >
+
+                            <option value="">
+                                All notice types
+                            </option>
+
+                            {% for value, label in notice_types %}
+
+                                <option
+                                    value="{{ value }}"
+                                    {% if selected_type == value %}selected{% endif %}
+                                >
+                                    {{ label }}
+                                </option>
+
+                            {% endfor %}
+
+                        </select>
+
+                    </div>
+
+
+                    <div class="col-md-2">
+
+                        <label class="form-label">
+                            Priority
+                        </label>
+
+                        <select
+                            name="priority"
+                            class="form-select"
+                        >
+
+                            <option value="">
+                                All priorities
+                            </option>
+
+                            {% for value, label in priorities %}
+
+                                <option
+                                    value="{{ value }}"
+                                    {% if selected_priority == value %}selected{% endif %}
+                                >
+                                    {{ label }}
+                                </option>
+
+                            {% endfor %}
+
+                        </select>
+
+                    </div>
+
+
+                    <div class="col-md-2 d-flex align-items-end">
+
+                        <button
+                            type="submit"
+                            class="btn btn-success w-100"
+                        >
+                            <i class="bi bi-search"></i>
+                            Search
+                        </button>
+
+                    </div>
+
+                </div>
+
+            </form>
+
+        </div>
+
+    </div>
+
+
+    <!-- Notices -->
+    <div class="row g-4">
+
+        {% for notice in notices %}
+
+            <div class="col-12 col-md-6 col-xl-4">
+
+                <div class="card h-100 border-0 shadow-sm">
+
+                    {% if notice.image %}
+
+                        <img
+                            src="{{ notice.image.url }}"
+                            class="card-img-top"
+                            alt="{{ notice.title }}"
+                            style="height: 180px; object-fit: cover;"
+                        >
+
+                    {% endif %}
+
+
+                    <div class="card-body">
+
+                        <div class="d-flex flex-wrap gap-2 mb-2">
+
+                            <span class="badge bg-success-subtle text-success">
+                                {{ notice.get_notice_type_display }}
+                            </span>
+
+
+                            {% if notice.priority == "urgent" %}
+
+                                <span class="badge bg-danger">
+                                    Urgent
+                                </span>
+
+                            {% elif notice.priority == "high" %}
+
+                                <span class="badge bg-warning text-dark">
+                                    High Priority
+                                </span>
+
+                            {% elif notice.priority == "normal" %}
+
+                                <span class="badge bg-secondary">
+                                    Normal
+                                </span>
+
+                            {% else %}
+
+                                <span class="badge bg-light text-dark">
+                                    Low
+                                </span>
+
+                            {% endif %}
+
+                        </div>
+
+
+                        <h5 class="card-title">
+                            {{ notice.title }}
+                        </h5>
+
+
+                        {% if notice.location or notice.district %}
+
+                            <p class="small text-muted mb-2">
+
+                                <i class="bi bi-geo-alt"></i>
+
+                                {% if notice.location %}
+                                    {{ notice.location }}
+                                {% endif %}
+
+                                {% if notice.district %}
+                                    {% if notice.location %} · {% endif %}
+                                    {{ notice.district }}
+                                {% endif %}
+
+                            </p>
+
+                        {% endif %}
+
+
+                        <p class="card-text text-muted">
+
+                            {{ notice.summary|truncatechars:150 }}
+
+                        </p>
+
+
+                        {% if notice.important_date %}
+
+                            <p class="small mb-3">
+
+                                <i class="bi bi-calendar-event"></i>
+
+                                <strong>Important date:</strong>
+
+                                {{ notice.important_date|date:"d M Y" }}
+
+                            </p>
+
+                        {% endif %}
+
+
+                        <a
+                            href="{% url 'lands:planning_notice_detail' notice.id %}"
+                            class="btn btn-outline-success w-100"
+                        >
+                            <i class="bi bi-eye"></i>
+                            View Notice
+                        </a>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        {% empty %}
+
+            <div class="col-12">
+
+                <div class="card border-0 shadow-sm">
+
+                    <div class="card-body text-center py-5">
+
+                        <i class="bi bi-megaphone fs-1 text-muted"></i>
+
+                        <h5 class="mt-3">
+                            No notices found
+                        </h5>
+
+                        <p class="text-muted mb-0">
+                            There are currently no published notices
+                            matching your search.
+                        </p>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        {% endfor %}
+
+    </div>
+
+</div>
+
+{% endblock %}

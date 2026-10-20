@@ -1,0 +1,226 @@
+
+{% extends "city_admin/base.html" %}
+
+{% block title %}Database Management{% endblock %}
+{% block page_heading %}Database Management{% endblock %}
+
+{% block content %}
+<div class="container-fluid px-0">
+
+    <div class="d-flex flex-wrap justify-content-between align-items-center gap-3 mb-4">
+        <div>
+            <h2 class="h4 mb-1">Database Management</h2>
+            <p class="text-secondary mb-0">
+                Inspect the database configured for Smart City Uganda.
+            </p>
+        </div>
+
+<div class="d-flex flex-wrap gap-2">
+    <a href="{% url 'admin:login' %}?next={% url 'admin:index' %}"
+       class="btn btn-success">
+        <i class="bi bi-database-gear me-2"></i>
+        Access db management
+        <i class="bi bi-box-arrow-right ms-2"></i>
+    </a>
+</div>
+
+
+        <span class="badge text-bg-light border p-2">
+            Read-only inspection
+        </span>
+    </div>
+
+    {% if connection_error %}
+        <div class="alert alert-warning" role="alert">
+            {{ connection_error }}
+        </div>
+    {% endif %}
+
+    <div class="row g-3 mb-4">
+
+        <div class="col-12 col-md-6 col-xl-3">
+            <div class="card h-100 border-0 shadow-sm">
+                <div class="card-body">
+                    <div class="text-secondary small mb-2">
+                        Connection status
+                    </div>
+                    <h3 class="h5 mb-0">
+                        {% if connection_status == "Connected" %}
+                            <span class="text-success">
+                                <i class="bi bi-check-circle-fill me-1"></i>
+                                Connected
+                            </span>
+                        {% else %}
+                            <span class="text-danger">
+                                <i class="bi bi-exclamation-circle-fill me-1"></i>
+                                {{ connection_status }}
+                            </span>
+                        {% endif %}
+                    </h3>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-12 col-md-6 col-xl-3">
+            <div class="card h-100 border-0 shadow-sm">
+                <div class="card-body">
+                    <div class="text-secondary small mb-2">
+                        Database engine
+                    </div>
+                    <h3 class="h5 mb-0">
+                        {% if is_sqlite %}
+                            SQLite
+                        {% else %}
+                            {{ database_engine }}
+                        {% endif %}
+                    </h3>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-12 col-md-6 col-xl-3">
+            <div class="card h-100 border-0 shadow-sm">
+                <div class="card-body">
+                    <div class="text-secondary small mb-2">
+                        Database tables
+                    </div>
+                    <h3 class="h4 mb-0">{{ total_tables }}</h3>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-12 col-md-6 col-xl-3">
+            <div class="card h-100 border-0 shadow-sm">
+                <div class="card-body">
+                    <div class="text-secondary small mb-2">
+                        Records counted
+                    </div>
+                    <h3 class="h4 mb-0">{{ total_records }}</h3>
+                    <small class="text-secondary">
+                        Across listed model tables
+                    </small>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <div class="card border-0 shadow-sm mb-4">
+        <div class="card-header bg-white py-3">
+            <h3 class="h6 mb-0">
+                <i class="bi bi-database me-2 text-success"></i>
+                Database configuration
+            </h3>
+        </div>
+
+        <div class="card-body">
+            <div class="mb-3">
+                <div class="small text-secondary mb-1">
+                    Configured database name
+                </div>
+                <div class="fw-semibold text-break">
+                    {{ database_name }}
+                </div>
+            </div>
+
+            {% if is_sqlite %}
+                <div class="mb-3">
+                    <div class="small text-secondary mb-1">
+                        SQLite database file
+                    </div>
+                    <div class="font-monospace small text-break">
+                        {{ database_path }}
+                    </div>
+                </div>
+
+                <div>
+                    <div class="small text-secondary mb-1">
+                        Database file size
+                    </div>
+
+                    {% if database_size != None %}
+                        <div class="fw-semibold">
+                            {{ database_size|filesizeformat }}
+                        </div>
+                    {% else %}
+                        <div class="text-secondary">
+                            File size is unavailable.
+                        </div>
+                    {% endif %}
+                </div>
+            {% else %}
+                <p class="text-secondary mb-0">
+                    Your default Django database is not SQLite.
+                    The page displays the configured engine without
+                    changing your database configuration.
+                </p>
+            {% endif %}
+        </div>
+    </div>
+
+    <div class="card border-0 shadow-sm">
+        <div class="card-header bg-white py-3">
+            <div class="d-flex flex-wrap justify-content-between align-items-center gap-2">
+                <h3 class="h6 mb-0">
+                    <i class="bi bi-table me-2 text-success"></i>
+                    Application tables
+                </h3>
+                <span class="small text-secondary">
+                    {{ tables|length }} model tables listed
+                </span>
+            </div>
+        </div>
+
+        <div class="card-body p-0">
+            <div class="table-responsive">
+                <table class="table table-hover align-middle mb-0">
+                    <thead class="table-light">
+                        <tr>
+                            <th scope="col">Application</th>
+                            <th scope="col">Model</th>
+                            <th scope="col">Table name</th>
+                            <th scope="col" class="text-end">
+                                Records
+                            </th>
+                        </tr>
+                    </thead>
+
+                    <tbody>
+                        {% for table in tables %}
+                            <tr>
+                                <td>{{ table.app_label }}</td>
+                                <td>{{ table.model_name }}</td>
+                                <td>
+                                    <code>{{ table.table_name }}</code>
+                                </td>
+                                <td class="text-end">
+                                    {% if table.record_count != None %}
+                                        {{ table.record_count }}
+                                    {% else %}
+                                        <span class="text-secondary">Unavailable</span>
+                                    {% endif %}
+                                </td>
+                            </tr>
+                        {% empty %}
+                            <tr>
+                                <td colspan="4"
+                                    class="text-center py-5 text-secondary">
+                                    No application model tables were found.
+                                    Check the connection and migrations.
+                                </td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <div class="alert alert-info mt-4 mb-0">
+        <i class="bi bi-info-circle me-2"></i>
+        This page provides database inspection only. It does not expose
+        raw SQL execution, password values, or destructive database actions.
+    </div>
+
+</div>
+{% endblock %}

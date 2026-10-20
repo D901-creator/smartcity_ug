@@ -1,0 +1,239 @@
+{% extends "base.html" %}
+
+{% block title %}
+    {{ information.title }} | Smart City Uganda
+{% endblock %}
+
+{% block content %}
+
+<div class="container-fluid">
+
+    <div class="mb-4">
+
+        <a
+            href="{% url 'lands:urban_planning' %}"
+            class="btn btn-outline-success"
+        >
+
+            <i class="bi bi-arrow-left"></i>
+
+            Back to Urban Planning
+
+        </a>
+
+    </div>
+
+
+    <div class="row g-4">
+
+        <div class="col-lg-8">
+
+            <div class="card border-0 shadow-sm">
+
+                <div class="card-body p-4">
+
+                    <div class="d-flex
+                                align-items-start
+                                gap-3 mb-4">
+
+                        <div class="rounded-circle
+                                    bg-success-subtle
+                                    text-success
+                                    p-3">
+
+                            <i class="bi bi-buildings fs-3"></i>
+
+                        </div>
+
+
+                        <div>
+
+                            <h2 class="fw-bold mb-1">
+                                {{ information.title }}
+                            </h2>
+
+                            <span class="badge text-bg-success">
+
+                                {{ information.get_information_type_display }}
+
+                            </span>
+
+                        </div>
+
+                    </div>
+
+
+                    {% if information.location or information.district %}
+
+                        <div class="alert alert-light border">
+
+                            <i class="bi bi-geo-alt text-success"></i>
+
+                            {% if information.location %}
+                                <strong>Location:</strong>
+                                {{ information.location }}
+                            {% endif %}
+
+                            {% if information.district %}
+                                <br>
+                                <strong>District:</strong>
+                                {{ information.district }}
+                            {% endif %}
+
+                        </div>
+
+                    {% endif %}
+
+
+                    <h5 class="fw-bold">
+                        Overview
+                    </h5>
+
+                    <p>
+                        {{ information.description|linebreaksbr }}
+                    </p>
+
+
+                    {% if information.requirements %}
+
+                        <hr>
+
+                        <h5 class="fw-bold">
+                            Requirements
+                        </h5>
+
+                        <div class="bg-light rounded p-3">
+
+                            {{ information.requirements|linebreaksbr }}
+
+                        </div>
+
+                    {% endif %}
+
+
+                    {% if information.planning_process %}
+
+                        <hr>
+
+                        <h5 class="fw-bold">
+                            General Planning Process
+                        </h5>
+
+                        <div class="bg-light rounded p-3">
+
+                            {{ information.planning_process|linebreaksbr }}
+
+                        </div>
+
+                    {% endif %}
+
+
+                    {% if information.important_information %}
+
+                        <hr>
+
+                        <h5 class="fw-bold">
+                            Important Information
+                        </h5>
+
+                        <div class="alert alert-warning">
+
+                            {{ information.important_information|linebreaksbr }}
+
+                        </div>
+
+                    {% endif %}
+
+
+                    {% if information.contact_information %}
+
+                        <hr>
+
+                        <h5 class="fw-bold">
+                            Contact Information
+                        </h5>
+
+                        <div class="alert alert-success">
+
+                            {{ information.contact_information|linebreaksbr }}
+
+                        </div>
+
+                    {% endif %}
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <div class="col-lg-4">
+
+            <div class="card border-0 shadow-sm">
+
+                <div class="card-body">
+
+                    <h5 class="fw-bold">
+                        Urban Planning
+                    </h5>
+
+                    <p class="text-muted">
+
+                        Access planning information and guidance
+                        relevant to urban development and land use.
+
+                    </p>
+
+                    <hr>
+
+                    <a
+                        href="{% url 'lands:urban_planning' %}"
+                        class="btn btn-success w-100 mb-2"
+                    >
+
+                        <i class="bi bi-buildings"></i>
+
+                        Browse Planning Information
+
+                    </a>
+
+
+                    <a
+                        href="{% url 'lands:home' %}"
+                        class="btn btn-outline-secondary w-100"
+                    >
+
+                        <i class="bi bi-arrow-left"></i>
+
+                        Lands & Housing
+
+                    </a>
+
+                </div>
+
+            </div>
+
+
+            <div class="alert alert-warning mt-3">
+
+                <strong>Important:</strong>
+
+                <div class="small mt-1">
+
+                    Planning requirements, zoning information and
+                    development procedures should be confirmed with
+                    the responsible planning authority before taking
+                    official action.
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+{% endblock %}

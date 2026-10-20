@@ -1,0 +1,179 @@
+{% extends "base.html" %}
+
+{% block title %}
+Request {{ service.name }} | Smart City Uganda
+{% endblock %}
+
+{% block content %}
+
+<div class="service-request-page">
+
+    <a
+        href="{% url 'services:detail' service.id %}"
+        class="back-service-link"
+    >
+        <i class="bi bi-arrow-left"></i>
+        Back to service
+    </a>
+
+
+    <div class="service-request-card">
+
+        <div class="request-form-header">
+
+            <div class="service-icon service-green">
+
+                <i class="bi {{ service.icon }}"></i>
+
+            </div>
+
+            <div>
+
+                <span class="section-kicker">
+                    SERVICE REQUEST
+                </span>
+
+                <h1>
+                    {{ service.name }}
+                </h1>
+
+                <p>
+                    Complete the information below to submit your request.
+                </p>
+
+            </div>
+
+        </div>
+
+
+        {% if error %}
+
+            <div class="service-form-error">
+
+                <i class="bi bi-exclamation-circle"></i>
+
+                {{ error }}
+
+            </div>
+
+        {% endif %}
+
+
+        <form method="post">
+
+            {% csrf_token %}
+
+
+            <div class="form-section">
+
+                <h2>
+                    Citizen Information
+                </h2>
+
+
+                <div class="row g-3">
+
+                    <div class="col-md-6">
+
+                        <label>
+                            Full Name
+                        </label>
+
+                        <input
+                            type="text"
+                            name="citizen_name"
+                            value="Guest Citizen"
+                            required
+                        >
+
+                    </div>
+
+
+                    <div class="col-md-6">
+
+                        <label>
+                            Phone Number
+                        </label>
+
+                        <input
+                            type="text"
+                            name="citizen_phone"
+                            placeholder="+256 7XX XXX XXX"
+                        >
+
+                    </div>
+
+
+                    <div class="col-md-6">
+
+                        <label>
+                            District / City
+                        </label>
+
+                        <input
+                            type="text"
+                            name="citizen_district"
+                            value="Kampala"
+                            required
+                        >
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <div class="form-section">
+
+                <h2>
+                    Request Details
+                </h2>
+
+
+                <label>
+                    Describe what you need
+                </label>
+
+                <textarea
+                    name="description"
+                    rows="6"
+                    placeholder="Explain the service you are requesting..."
+                    required
+                ></textarea>
+
+                <small>
+                    Provide enough information to help the responsible
+                    department understand your request.
+                </small>
+
+            </div>
+
+
+            <div class="request-form-actions">
+
+                <a
+                    href="{% url 'services:detail' service.id %}"
+                    class="cancel-service-button"
+                >
+                    Cancel
+                </a>
+
+
+                <button
+                    type="submit"
+                    class="submit-service-button"
+                >
+                    Submit Request
+                    <i class="bi bi-send"></i>
+                </button>
+
+            </div>
+
+        </form>
+
+    </div>
+
+</div>
+
+{% endblock %}

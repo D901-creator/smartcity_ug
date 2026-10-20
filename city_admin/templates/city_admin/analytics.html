@@ -1,0 +1,219 @@
+
+{% extends "city_admin/base.html" %}
+
+{% block content %}
+<div class="container-fluid py-3">
+
+    <div class="d-flex flex-wrap justify-content-between align-items-center gap-3 mb-4">
+        <div>
+            <h2 class="fw-bold mb-1">Analytics & Reports</h2>
+            <p class="text-muted mb-0">
+                National overview of citizen requests and government service delivery.
+            </p>
+        </div>
+        <button class="btn btn-outline-secondary" onclick="window.print()">
+            <i class="bi bi-printer"></i> Print Report
+        </button>
+    </div>
+
+    <div class="alert alert-info">
+        <i class="bi bi-info-circle"></i>
+        Figures below are calculated from existing database records.
+        The three request systems are counted separately to avoid double-counting
+        within any individual workflow.
+    </div>
+
+    <div class="row g-3 mb-4">
+        <div class="col-12 col-sm-6 col-xl-3">
+            <div class="card border-0 shadow-sm h-100">
+                <div class="card-body">
+                    <div class="text-muted small">All Requests</div>
+                    <div class="display-6 fw-bold">{{ total_requests }}</div>
+                    <small class="text-muted">Across three request sources</small>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-12 col-sm-6 col-xl-3">
+            <div class="card border-0 shadow-sm h-100">
+                <div class="card-body">
+                    <div class="text-muted small">Open Requests</div>
+                    <div class="display-6 fw-bold text-warning">{{ open_requests }}</div>
+                    <small class="text-muted">Not in a terminal status</small>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-12 col-sm-6 col-xl-3">
+            <div class="card border-0 shadow-sm h-100">
+                <div class="card-body">
+                    <div class="text-muted small">Completed or Resolved</div>
+                    <div class="display-6 fw-bold text-success">{{ completed_requests }}</div>
+                    <small class="text-muted">Resolved, closed, or completed</small>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-12 col-sm-6 col-xl-3">
+            <div class="card border-0 shadow-sm h-100">
+                <div class="card-body">
+                    <div class="text-muted small">Active Government Services</div>
+                    <div class="display-6 fw-bold text-primary">{{ active_government_services }}</div>
+                    <small class="text-muted">Configured and marked active</small>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row g-3 mb-4">
+        <div class="col-12 col-lg-4">
+            <div class="card border-0 shadow-sm h-100">
+                <div class="card-header bg-white py-3">
+                    <h5 class="mb-0">Officer Requests</h5>
+                    <small class="text-muted">{{ officer_total }} total records</small>
+                </div>
+                <div class="card-body">
+                    {% for item in officer_status_rows %}
+                        <div class="mb-3">
+                            <div class="d-flex justify-content-between gap-2 mb-1">
+                                <span>{{ item.label }}</span>
+                                <strong>{{ item.count }}</strong>
+                            </div>
+                            <div class="progress" style="height: 8px;">
+                                <div class="progress-bar bg-success"
+                                     role="progressbar"
+                                     style="width: {{ item.percent }}%;"
+                                     aria-valuenow="{{ item.percent }}"
+                                     aria-valuemin="0"
+                                     aria-valuemax="100"></div>
+                            </div>
+                        </div>
+                    {% empty %}
+                        <p class="text-muted mb-0">No officer requests recorded yet.</p>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+
+        <div class="col-12 col-lg-4">
+            <div class="card border-0 shadow-sm h-100">
+                <div class="card-header bg-white py-3">
+                    <h5 class="mb-0">Citizen Service Requests</h5>
+                    <small class="text-muted">{{ citizen_service_total }} total records</small>
+                </div>
+                <div class="card-body">
+                    {% for item in citizen_service_status_rows %}
+                        <div class="mb-3">
+                            <div class="d-flex justify-content-between gap-2 mb-1">
+                                <span>{{ item.label }}</span>
+                                <strong>{{ item.count }}</strong>
+                            </div>
+                            <div class="progress" style="height: 8px;">
+                                <div class="progress-bar bg-primary"
+                                     role="progressbar"
+                                     style="width: {{ item.percent }}%;"
+                                     aria-valuenow="{{ item.percent }}"
+                                     aria-valuemin="0"
+                                     aria-valuemax="100"></div>
+                            </div>
+                        </div>
+                    {% empty %}
+                        <p class="text-muted mb-0">No citizen service requests recorded yet.</p>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+
+        <div class="col-12 col-lg-4">
+            <div class="card border-0 shadow-sm h-100">
+                <div class="card-header bg-white py-3">
+                    <h5 class="mb-0">Government Service Requests</h5>
+                    <small class="text-muted">{{ government_service_total }} total records</small>
+                </div>
+                <div class="card-body">
+                    {% for item in government_service_status_rows %}
+                        <div class="mb-3">
+                            <div class="d-flex justify-content-between gap-2 mb-1">
+                                <span>{{ item.label }}</span>
+                                <strong>{{ item.count }}</strong>
+                            </div>
+                            <div class="progress" style="height: 8px;">
+                                <div class="progress-bar bg-info"
+                                     role="progressbar"
+                                     style="width: {{ item.percent }}%;"
+                                     aria-valuenow="{{ item.percent }}"
+                                     aria-valuemin="0"
+                                     aria-valuemax="100"></div>
+                            </div>
+                        </div>
+                    {% empty %}
+                        <p class="text-muted mb-0">No government service requests recorded yet.</p>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="card border-0 shadow-sm mb-4">
+        <div class="card-header bg-white py-3">
+            <h5 class="mb-0">Government Services by Category</h5>
+        </div>
+        <div class="table-responsive">
+            <table class="table table-hover align-middle mb-0">
+                <thead class="table-light">
+                    <tr>
+                        <th>Category</th>
+                        <th class="text-end">Configured Services</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for category in service_categories %}
+                    <tr>
+                        <td>{{ category.label }}</td>
+                        <td class="text-end fw-semibold">{{ category.count }}</td>
+                    </tr>
+                    {% empty %}
+                    <tr>
+                        <td colspan="2" class="text-center text-muted py-4">
+                            No government service categories have been configured yet.
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <div class="d-flex flex-wrap gap-2">
+        <a href="{% url 'city_admin:dashboard' %}" class="btn btn-outline-secondary">
+            <i class="bi bi-arrow-left"></i> Back to Admin Dashboard
+        </a>
+        <a href="{% url 'city_admin:departments' %}" class="btn btn-outline-success">
+            <i class="bi bi-diagram-3"></i> Departments & Services
+        </a>
+    </div>
+
+</div>
+
+<style>
+@media print {
+    .sidebar,
+    .sidebar-link,
+    nav,
+    button,
+    .btn {
+        display: none !important;
+    }
+
+    body {
+        background: white !important;
+    }
+
+    .card {
+        box-shadow: none !important;
+        border: 1px solid #ddd !important;
+        break-inside: avoid;
+    }
+}
+</style>
+{% endblock %}

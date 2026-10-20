@@ -1,0 +1,178 @@
+{% extends "base.html" %}
+
+{% block title %}
+Register Farmer | Agriculture
+{% endblock %}
+
+{% block content %}
+
+<div class="container-fluid">
+
+    <div class="mb-4">
+
+        <h1 class="fw-bold">
+            <i class="bi bi-person-plus"></i>
+            Register Farmer
+        </h1>
+
+        <p class="text-muted">
+            Create a digital agricultural profile for a farmer.
+        </p>
+
+    </div>
+
+
+    <div class="card border-0 shadow-sm">
+
+        <div class="card-body p-4">
+
+            <form method="POST">
+
+                {% csrf_token %}
+
+                {% if form.errors %}
+
+                    <div class="alert alert-danger">
+
+                        Please correct the errors below.
+
+                    </div>
+
+                {% endif %}
+
+
+                <div class="row g-3">
+
+                    <div class="col-md-6">
+
+                        <label class="form-label">
+                            Farmer Name
+                        </label>
+
+                        {{ form.farmer_name }}
+
+                        {{ form.farmer_name.errors }}
+
+                    </div>
+
+
+                    <div class="col-md-6">
+
+                        <label class="form-label">
+                            Phone Number
+                        </label>
+
+                        {{ form.phone_number }}
+
+                        {{ form.phone_number.errors }}
+
+                    </div>
+
+
+                    <div class="col-md-4">
+
+                        <label class="form-label">
+                            District
+                        </label>
+
+                        {{ form.district }}
+
+                    </div>
+
+
+                    <div class="col-md-4">
+
+                        <label class="form-label">
+                            Subcounty
+                        </label>
+
+                        {{ form.subcounty }}
+
+                    </div>
+
+
+                    <div class="col-md-4">
+
+                        <label class="form-label">
+                            Village
+                        </label>
+
+                        {{ form.village }}
+
+                    </div>
+
+
+                    <div class="col-md-6">
+
+                        <label class="form-label">
+                            Farmer Type
+                        </label>
+
+                        {{ form.farmer_type }}
+
+                    </div>
+
+
+                    <div class="col-md-6">
+
+                        <label class="form-label">
+                            Farm Size (Acres)
+                        </label>
+
+                        {{ form.farm_size_acres }}
+
+                    </div>
+
+
+                    <div class="col-md-6">
+
+                        <label class="form-label">
+                            Main Crops
+                        </label>
+
+                        {{ form.crops }}
+
+                    </div>
+
+
+                    <div class="col-md-6">
+
+                        <label class="form-label">
+                            Livestock
+                        </label>
+
+                        {{ form.livestock }}
+
+                    </div>
+
+                </div>
+
+
+                <div class="mt-4">
+
+                    <button
+                        type="submit"
+                        class="btn btn-success"
+                    >
+                        <i class="bi bi-check-circle"></i>
+                        Register Farmer
+                    </button>
+
+                    <a
+                        href="{% url 'agriculture:farmers' %}"
+                        class="btn btn-secondary"
+                    >
+                        Cancel
+                    </a>
+
+                </div>
+
+            </form>
+
+        </div>
+
+    </div>
+
+</div>
+
+{% endblock %}

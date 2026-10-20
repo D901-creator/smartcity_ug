@@ -1,0 +1,233 @@
+{% extends "base.html" %}
+
+{% block title %}
+    {{ resource.name }} | Wetlands & Natural Resources
+{% endblock %}
+
+{% block content %}
+
+<div class="container-fluid py-3">
+
+    <div class="mb-3">
+
+        <a
+            href="{% url 'water:wetlands_natural_resources' %}"
+            class="btn btn-outline-secondary btn-sm"
+        >
+            <i class="bi bi-arrow-left me-1"></i>
+            Back to Natural Resources
+        </a>
+
+    </div>
+
+
+    <div class="row g-3">
+
+        <!-- Main Information -->
+        <div class="col-12 col-lg-8">
+
+            <div class="card border-0 shadow-sm">
+
+                <div class="card-body">
+
+                    <div class="d-flex justify-content-between
+                                align-items-start flex-wrap gap-2">
+
+                        <div>
+
+                            <div class="text-success mb-2">
+                                <i class="bi bi-water fs-2"></i>
+                            </div>
+
+                            <h4 class="fw-bold mb-1">
+                                {{ resource.name }}
+                            </h4>
+
+                            <p class="text-muted mb-0">
+                                {{ resource.get_resource_type_display }}
+                            </p>
+
+                        </div>
+
+
+                        <div>
+
+                            {% if resource.is_protected %}
+
+                                <span class="badge bg-success">
+                                    Protected
+                                </span>
+
+                            {% else %}
+
+                                <span class="badge bg-secondary">
+                                    Not Protected
+                                </span>
+
+                            {% endif %}
+
+                        </div>
+
+                    </div>
+
+
+                    <hr>
+
+
+                    <h6 class="fw-bold">
+                        Description
+                    </h6>
+
+                    <p class="text-muted">
+                        {{ resource.description }}
+                    </p>
+
+
+                    {% if resource.conservation_information %}
+
+                        <h6 class="fw-bold mt-4">
+                            Conservation Information
+                        </h6>
+
+                        <div class="alert alert-success">
+
+                            <i class="bi bi-shield-check me-2"></i>
+
+                            {{ resource.conservation_information }}
+
+                        </div>
+
+                    {% endif %}
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <!-- Details -->
+        <div class="col-12 col-lg-4">
+
+            <div class="card border-0 shadow-sm">
+
+                <div class="card-header bg-success text-white">
+                    <strong>
+                        Resource Information
+                    </strong>
+                </div>
+
+                <div class="list-group list-group-flush">
+
+                    <div class="list-group-item">
+
+                        <small class="text-muted d-block">
+                            Resource Type
+                        </small>
+
+                        <strong>
+                            {{ resource.get_resource_type_display }}
+                        </strong>
+
+                    </div>
+
+
+                    <div class="list-group-item">
+
+                        <small class="text-muted d-block">
+                            District / City
+                        </small>
+
+                        <strong>
+                            {{ resource.district }}
+                        </strong>
+
+                    </div>
+
+
+                    <div class="list-group-item">
+
+                        <small class="text-muted d-block">
+                            Location
+                        </small>
+
+                        <strong>
+                            {{ resource.location }}
+                        </strong>
+
+                    </div>
+
+
+                    <div class="list-group-item">
+
+                        <small class="text-muted d-block">
+                            Protection
+                        </small>
+
+                        {% if resource.is_protected %}
+
+                            <span class="badge bg-success">
+                                Protected
+                            </span>
+
+                        {% else %}
+
+                            <span class="badge bg-secondary">
+                                Not Protected
+                            </span>
+
+                        {% endif %}
+
+                    </div>
+
+
+                    <div class="list-group-item">
+
+                        <small class="text-muted d-block">
+                            Status
+                        </small>
+
+                        {% if resource.is_active %}
+
+                            <span class="badge bg-primary">
+                                Active
+                            </span>
+
+                        {% else %}
+
+                            <span class="badge bg-secondary">
+                                Inactive
+                            </span>
+
+                        {% endif %}
+
+                    </div>
+
+
+                    {% if resource.contact_phone %}
+
+                        <div class="list-group-item">
+
+                            <small class="text-muted d-block">
+                                Contact
+                            </small>
+
+                            <a href="tel:{{ resource.contact_phone }}">
+                                {{ resource.contact_phone }}
+                            </a>
+
+                        </div>
+
+                    {% endif %}
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+{% endblock %}

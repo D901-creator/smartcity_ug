@@ -1,0 +1,101 @@
+{% extends "base.html" %}
+
+{% block title %}
+Request Submitted | Smart City Uganda
+{% endblock %}
+
+{% block content %}
+
+<div class="request-success-page">
+
+    <div class="request-success-card">
+
+        <div class="success-icon">
+
+            <i class="bi bi-check-lg"></i>
+
+        </div>
+
+
+        <span class="section-kicker">
+            REQUEST SUBMITTED
+        </span>
+
+
+        <h1>
+            Your request has been received
+        </h1>
+
+
+        <p>
+            Your service request has been successfully recorded
+            in the Smart City Uganda system.
+        </p>
+
+
+        <div class="reference-box">
+
+            <span>
+                Your Reference Number
+            </span>
+
+            <strong>
+                {{ service_request.reference_number }}
+            </strong>
+
+            <small>
+                Keep this number so you can track your request later.
+            </small>
+
+        </div>
+
+
+        <div class="success-request-info">
+
+            <div>
+                <span>Service</span>
+                <strong>
+                    {{ service_request.service.name }}
+                </strong>
+            </div>
+
+            <div>
+                <span>Status</span>
+                <strong>
+                    {{ service_request.get_status_display }}
+                </strong>
+            </div>
+
+            <div>
+                <span>Submitted</span>
+                <strong>
+                    {{ service_request.submitted_at|date:"d M Y, H:i" }}
+                </strong>
+            </div>
+
+        </div>
+
+
+        <div class="success-actions">
+
+            <a
+                href="{% url 'services:list' %}"
+                class="start-service-button"
+            >
+                Browse Services
+            </a>
+
+            <a
+                href="/"
+                class="cancel-service-button"
+            >
+                Dashboard
+            </a>
+
+        </div>
+
+    </div>
+
+</div>
+
+{% endblock %}

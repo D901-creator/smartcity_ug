@@ -1,0 +1,71 @@
+
+from django.contrib import admin
+from django.urls import path, include
+from django.conf import settings
+from django.conf.urls.static import static
+
+from dashboard import views as dashboard_views
+
+
+urlpatterns = [
+    # Django's built-in administration site.
+    # Keep this route for internal maintenance.
+    path("admin/", admin.site.urls),
+
+    # Public website.
+    path("", dashboard_views.public_home, name="public_home"),
+
+    # Authentication and accounts.
+    path("accounts/", include("accounts.urls")),
+
+    # Citizen portal.
+    path("citizen/", include("citizen.urls")),
+
+    # City Admin portal.
+    path("city-admin/", include("city_admin.urls")),
+
+    # Government services.
+    path("services/", include("services.urls")),
+    path("health/", include("health.urls")),
+    path("education/", include("education.urls")),
+    path("agriculture/", include("agriculture.urls")),
+    path("water/", include("water.urls")),
+    path("public-works/", include("public_works.urls")),
+    path("energy/", include("energy.urls")),
+    path("security/", include("security.urls")),
+    path("lands/", include("lands.urls")),
+    path("economic/", include("economic_development.urls")),
+    path("tourism/", include("tourism.urls")),
+    path("ict/", include("ict.urls")),
+
+    # Employment, payments and reports.
+    path("jobs/", include("jobs.urls")),
+    path("payments/", include("payments.urls")),
+    path("reports/", include("reports.urls")),
+
+    # Requests and communication.
+    path("requests/", include("requests.urls")),
+    path("notifications/", include("notifications.urls")),
+    path("communications/", include("communications.urls")),
+
+    # Staff portals.
+    path("officer/", include("officer.urls")),
+    path("calendar/", include("calendar_app.urls")),
+    path("department-head/", include("department_head.urls")),
+    path(
+        "department-announcements/",
+        include("announcements.urls"),
+    ),
+
+    # Department and location management.
+    path("departments/", include("departments.urls")),
+    path("locations/", include("locations.urls")),
+]
+
+
+# Serve uploaded media files during local development only.
+if settings.DEBUG:
+    urlpatterns += static(
+        settings.MEDIA_URL,
+        document_root=settings.MEDIA_ROOT,
+    )

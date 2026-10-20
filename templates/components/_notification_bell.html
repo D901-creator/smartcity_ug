@@ -1,0 +1,111 @@
+<div class="dropdown">
+    <button
+        class="btn btn-link topbar-icon-button notification-button position-relative"
+        type="button"
+        id="notificationBell"
+        data-bs-toggle="dropdown"
+        aria-expanded="false"
+        title="Notifications"
+    >
+        <i class="bi bi-bell"></i>
+
+        {% if unread_notification_count > 0 %}
+            <span class="notification-badge">
+                {{ unread_notification_count }}
+            </span>
+        {% endif %}
+    </button>
+
+    <div
+        class="dropdown-menu dropdown-menu-end notification-dropdown shadow"
+        aria-labelledby="notificationBell"
+    >
+
+        <div class="notification-header">
+            <div>
+                <strong>Notifications</strong>
+                <div class="small text-muted">
+                    {% if unread_notification_count %}
+                        {{ unread_notification_count }} unread
+                    {% else %}
+                        No unread notifications
+                    {% endif %}
+                </div>
+            </div>
+
+            {% if unread_notification_count %}
+                <form
+                    method="post"
+                    action="{% url 'notifications:mark_all_read' %}"
+                >
+                    {% csrf_token %}
+                    <button
+                        type="submit"
+                        class="btn btn-sm btn-link text-decoration-none"
+                    >
+                        Mark all as read
+                    </button>
+                </form>
+            {% endif %}
+        </div>
+
+        {% for notification in nav_notifications %}
+
+            <a
+                href="{% url 'notifications:detail' notification.id %}"
+                class="notification-item text-decoration-none
+                {% if not notification.is_read %}unread{% endif %}"
+            >
+
+                <div class="notification-icon">
+                    {% if notification.notification_type == "request" %}
+                        <i class="bi bi-file-earmark-text"></i>
+                    {% elif notification.notification_type == "report" %}
+                        <i class="bi bi-flag"></i>
+                    {% elif notification.notification_type == "payment" %}
+                        <i class="bi bi-credit-card"></i>
+                    {% elif notification.notification_type == "job" %}
+                        <i class="bi bi-briefcase"></i>
+                    {% elif notification.notification_type == "message" %}
+                        <i class="bi bi-chat-dots"></i>
+                    {% else %}
+                        <i class="bi bi-bell"></i>
+                    {% endif %}
+                </div>
+
+                <div class="flex-grow-1">
+                    <strong>{{ notification.title }}</strong>
+
+                    <p class="mb-1">
+                        {{ notification.message|truncatechars:80 }}
+                    </p>
+
+                    <small class="text-muted">
+                        {{ notification.created_at|timesince }} ago
+                    </small>
+                </div>
+
+                {% if not notification.is_read %}
+                    <span class="badge bg-primary">New</span>
+                {% endif %}
+
+            </a>
+
+        {% empty %}
+
+            <div class="text-center text-muted py-4 px-3">
+                <i class="bi bi-bell-slash fs-3 d-block mb-2"></i>
+                <small>No notifications yet.</small>
+            </div>
+
+        {% endfor %}
+{% if request.user.is_authenticated %}
+        <div class="notification-footer">
+           <a href="/accounts/password-reset/">
+                View all notifications
+            </a>
+            {% endif %}
+        </div>
+
+    </div>
+</div>

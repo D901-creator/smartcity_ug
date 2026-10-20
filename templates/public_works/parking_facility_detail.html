@@ -1,0 +1,187 @@
+{% extends "base.html" %}
+
+{% block title %}
+    {{ facility.name }}
+{% endblock %}
+
+{% block content %}
+
+<div class="container-fluid py-3">
+
+    <div class="mb-3">
+
+        <a
+            href="{% url 'public_works:parking_services' %}"
+            class="btn btn-outline-secondary btn-sm"
+        >
+            <i class="bi bi-arrow-left me-1"></i>
+            Parking Services
+        </a>
+
+    </div>
+
+
+    <div class="row g-3">
+
+        <div class="col-12 col-lg-7">
+
+            <div class="card shadow-sm border-0">
+
+                <div class="card-body">
+
+                    <h4>
+                        {{ facility.name }}
+                    </h4>
+
+                    <p class="small text-muted">
+                        {{ facility.facility_code }}
+                    </p>
+
+                    <hr>
+
+                    <div class="row g-3 small">
+
+                        <div class="col-12 col-md-6">
+                            <strong>District / City</strong>
+                            <div class="text-muted">
+                                {{ facility.district }}
+                            </div>
+                        </div>
+
+                        <div class="col-12 col-md-6">
+                            <strong>Location</strong>
+                            <div class="text-muted">
+                                {{ facility.location }}
+                            </div>
+                        </div>
+
+                        <div class="col-12 col-md-6">
+                            <strong>Facility Type</strong>
+                            <div class="text-muted">
+                                {{ facility.get_facility_type_display }}
+                            </div>
+                        </div>
+
+                        <div class="col-12 col-md-6">
+                            <strong>Status</strong>
+                            <div class="text-muted">
+                                {{ facility.get_status_display }}
+                            </div>
+                        </div>
+
+                        <div class="col-12 col-md-6">
+                            <strong>Total Spaces</strong>
+                            <div class="text-muted">
+                                {{ facility.total_spaces }}
+                            </div>
+                        </div>
+
+                        <div class="col-12 col-md-6">
+                            <strong>Available Spaces</strong>
+                            <div class="text-muted">
+                                {{ facility.available_spaces }}
+                            </div>
+                        </div>
+
+                        <div class="col-12">
+                            <strong>Operating Hours</strong>
+                            <div class="text-muted">
+                                {{ facility.operating_hours|default:"Not provided" }}
+                            </div>
+                        </div>
+
+                    </div>
+
+
+                    {% if facility.description %}
+
+                    <hr>
+
+                    <h6>
+                        Description
+                    </h6>
+
+                    <p class="small text-muted">
+                        {{ facility.description }}
+                    </p>
+
+                    {% endif %}
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <div class="col-12 col-lg-5">
+
+            <div class="card shadow-sm border-0">
+
+                <div class="card-body">
+
+                    <h6 class="mb-3">
+                        <i class="bi bi-cash-coin me-1"></i>
+                        Parking Fees
+                    </h6>
+
+
+                    {% for fee in fees %}
+
+                    <div class="border rounded p-2 mb-2">
+
+                        <div class="d-flex justify-content-between">
+
+                            <strong class="small">
+                                {{ fee.name }}
+                            </strong>
+
+                            <span class="fw-semibold">
+                                UGX {{ fee.total_amount|floatformat:0 }}
+                            </span>
+
+                        </div>
+
+                        <div class="small text-muted">
+                            {{ fee.get_fee_type_display }}
+                        </div>
+
+                        {% if fee.tax_amount %}
+
+                        <div class="small text-muted">
+                            Tax:
+                            UGX {{ fee.tax_amount|floatformat:0 }}
+                        </div>
+
+                        {% endif %}
+
+
+                        <a
+                            href="{% url 'public_works:parking_payment' facility.id fee.id %}"
+                            class="btn btn-success btn-sm w-100 mt-2"
+                        >
+                            <i class="bi bi-credit-card me-1"></i>
+                            Pay Parking Fee
+                        </a>
+
+                    </div>
+
+                    {% empty %}
+
+                    <p class="small text-muted">
+                        No active parking fees are currently available.
+                    </p>
+
+                    {% endfor %}
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+{% endblock %}

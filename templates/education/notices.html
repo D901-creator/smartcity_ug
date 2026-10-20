@@ -1,0 +1,92 @@
+{% extends "base.html" %}
+
+{% block title %}
+Education Updates & Notices | Smart City Uganda
+{% endblock %}
+
+{% block content %}
+
+<div class="container-fluid education-module">
+
+    <div class="education-module-header">
+
+        <div class="education-module-icon">
+            <i class="bi bi-megaphone"></i>
+        </div>
+
+        <h1>Education Updates & Notices</h1>
+
+        <p>
+            Stay informed about published education notices and updates.
+        </p>
+
+    </div>
+
+
+    {% if notices %}
+
+    <div class="education-card-grid">
+
+        {% for notice in notices %}
+
+        <div class="education-card
+            {% if notice.is_important %}
+                education-notice-important
+            {% endif %}
+        ">
+
+            {% if notice.is_important %}
+            <span class="badge text-bg-danger">
+                Important
+            </span>
+            {% endif %}
+
+            <span class="education-badge mt-2">
+                {{ notice.get_notice_type_display }}
+            </span>
+
+            <h3 class="mt-2">
+                {{ notice.title }}
+            </h3>
+
+            <p>
+                {{ notice.summary }}
+            </p>
+
+            {% if notice.important_date %}
+            <div class="education-card-meta">
+                <i class="bi bi-calendar-event"></i>
+                {{ notice.important_date }}
+            </div>
+            {% endif %}
+
+            {% if notice.website %}
+            <a
+                href="{{ notice.website }}"
+                target="_blank"
+                class="education-button"
+            >
+                More Information
+                <i class="bi bi-box-arrow-up-right"></i>
+            </a>
+            {% endif %}
+
+        </div>
+
+        {% endfor %}
+
+    </div>
+
+    {% else %}
+
+    <div class="education-empty">
+        <i class="bi bi-megaphone"></i>
+        <h3>No education notices available</h3>
+        <p>Published updates will appear here.</p>
+    </div>
+
+    {% endif %}
+
+</div>
+
+{% endblock %}

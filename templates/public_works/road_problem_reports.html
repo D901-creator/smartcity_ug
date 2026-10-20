@@ -1,0 +1,248 @@
+{% extends "base.html" %}
+
+{% block title %}
+    Road Problem Reports | Smart City Uganda
+{% endblock %}
+
+{% block content %}
+
+<div class="container-fluid py-3">
+
+    <div class="d-flex flex-column flex-md-row
+                justify-content-between align-items-md-center mb-3">
+
+        <div>
+
+            <h4 class="fw-bold mb-1">
+                <i class="bi bi-list-check text-success me-2"></i>
+                Road Problem Reports
+            </h4>
+
+            <p class="text-muted small mb-0">
+                View submitted road problem reports.
+            </p>
+
+        </div>
+
+        <a href="{% url 'public_works:road_problem_report' %}"
+           class="btn btn-success btn-sm mt-2 mt-md-0">
+
+            <i class="bi bi-plus-circle me-1"></i>
+            Report Road Problem
+
+        </a>
+
+    </div>
+
+
+    <!-- Filters -->
+
+    <div class="card border-0 shadow-sm mb-3">
+
+        <div class="card-body p-3">
+
+            <form method="get">
+
+                <div class="row g-2">
+
+                    <div class="col-md-4">
+
+                        <label class="form-label small">
+                            District / City
+                        </label>
+
+                        <input
+                            type="text"
+                            name="district"
+                            value="{{ district }}"
+                            class="form-control form-control-sm"
+                            placeholder="Search district">
+
+                    </div>
+
+
+                    <div class="col-md-3">
+
+                        <label class="form-label small">
+                            Problem Type
+                        </label>
+
+                        <select
+                            name="problem_type"
+                            class="form-select form-select-sm">
+
+                            <option value="">
+                                All Problem Types
+                            </option>
+
+                            {% for value, label in problem_types %}
+
+                                <option
+                                    value="{{ value }}"
+                                    {% if problem_type == value %}
+                                        selected
+                                    {% endif %}>
+
+                                    {{ label }}
+
+                                </option>
+
+                            {% endfor %}
+
+                        </select>
+
+                    </div>
+
+
+                    <div class="col-md-3">
+
+                        <label class="form-label small">
+                            Status
+                        </label>
+
+                        <select
+                            name="status"
+                            class="form-select form-select-sm">
+
+                            <option value="">
+                                All Statuses
+                            </option>
+
+                            {% for value, label in status_choices %}
+
+                                <option
+                                    value="{{ value }}"
+                                    {% if status == value %}
+                                        selected
+                                    {% endif %}>
+
+                                    {{ label }}
+
+                                </option>
+
+                            {% endfor %}
+
+                        </select>
+
+                    </div>
+
+
+                    <div class="col-md-2 d-flex
+                                align-items-end">
+
+                        <button
+                            type="submit"
+                            class="btn btn-primary btn-sm w-100">
+
+                            <i class="bi bi-search me-1"></i>
+                            Filter
+
+                        </button>
+
+                    </div>
+
+                </div>
+
+            </form>
+
+        </div>
+
+    </div>
+
+
+    <div class="mb-3">
+
+        <span class="badge bg-light text-dark border">
+
+            {{ total_reports }} report{{ total_reports|pluralize }}
+
+        </span>
+
+    </div>
+
+
+    {% if reports %}
+
+        <div class="row g-3">
+
+            {% for report in reports %}
+
+                <div class="col-12 col-md-6 col-xl-4">
+
+                    <div class="card h-100 border-0 shadow-sm">
+
+                        <div class="card-body p-3">
+
+                            <div class="d-flex
+                                        justify-content-between
+                                        align-items-start">
+
+                                <h6 class="fw-bold mb-1">
+
+                                    {{ report.reference_number }}
+
+                                </h6>
+
+                                <span class="badge bg-secondary">
+
+                                    {{ report.get_status_display }}
+
+                                </span>
+
+                            </div>
+
+                            <p class="small mb-1">
+                                <strong>
+                                    {{ report.get_problem_type_display }}
+                                </strong>
+                            </p>
+
+                            <p class="text-muted small mb-1">
+
+                                <i class="bi bi-geo-alt me-1"></i>
+
+                                {{ report.district }} —
+                                {{ report.road_name }}
+
+                            </p>
+
+                            <p class="text-muted small mb-3">
+
+                                {{ report.description|truncatechars:100 }}
+
+                            </p>
+
+                            <a
+                                href="{% url 'public_works:road_problem_detail' report.id %}"
+                                class="btn btn-outline-primary btn-sm">
+
+                                <i class="bi bi-eye me-1"></i>
+                                View Details
+
+                            </a>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            {% endfor %}
+
+        </div>
+
+    {% else %}
+
+        <div class="alert alert-light border text-center">
+
+            <i class="bi bi-inbox fs-4 d-block mb-2"></i>
+
+            No road problem reports were found.
+
+        </div>
+
+    {% endif %}
+
+</div>
+
+{% endblock %}

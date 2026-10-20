@@ -1,0 +1,473 @@
+ {% extends "base.html" %}
+
+{% block title %}
+Smart City Uganda | Citizen Dashboard
+{% endblock %}
+
+{% block content %}
+
+<div class="citizen-dashboard">
+
+<!-- =========================
+     WELCOME SECTION
+========================== -->
+
+
+<section class="citizen-welcome mb-4">
+    <div>
+        <span class="dashboard-label">CITIZEN DASHBOARD</span>
+
+        <h1>{{ greeting }}, {{ citizen.name }}</h1>
+
+        <p>
+            Access digital government services, submit requests,
+            report problems and track your applications from one place.
+        </p>
+    </div>
+
+    <div class="citizen-location">
+        <i class="bi bi-geo-alt-fill"></i>
+
+        <div>
+            <small>Registered Location</small>
+
+            {% if citizen.location_type == "City" %}
+                <strong>{{ citizen.district }}</strong>
+                <span>City</span>
+            {% elif citizen.location_type == "District" %}
+                <strong>{{ citizen.district }}</strong>
+                <span>District</span>
+            {% else %}
+                <strong>Location not provided</strong>
+                <span>Please update your profile</span>
+            {% endif %}
+        </div>
+    </div>
+</section>
+
+
+    <!-- =========================
+         STATISTICS
+    ========================== -->
+    <section class="row g-3 mb-4">
+
+        <div class="col-xl-3 col-md-6">
+
+            <div class="citizen-stat-card">
+
+                <div class="stat-icon green">
+                    <i class="bi bi-file-earmark-text"></i>
+                </div>
+
+                <div>
+                    <span>Total Requests</span>
+                    <h3>{{ stats.total_requests }}</h3>
+                    <small>All submitted requests</small>
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <div class="col-xl-3 col-md-6">
+
+            <div class="citizen-stat-card">
+
+                <div class="stat-icon orange">
+                    <i class="bi bi-hourglass-split"></i>
+                </div>
+
+                <div>
+                    <span>Pending Requests</span>
+                    <h3>{{ stats.pending_requests }}</h3>
+                    <small>Awaiting action</small>
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <div class="col-xl-3 col-md-6">
+
+            <div class="citizen-stat-card">
+
+                <div class="stat-icon blue">
+                    <i class="bi bi-check-circle"></i>
+                </div>
+
+                <div>
+                    <span>Completed</span>
+                    <h3>{{ stats.completed_requests }}</h3>
+                    <small>Successfully completed</small>
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <div class="col-xl-3 col-md-6">
+
+            <div class="citizen-stat-card">
+
+                <div class="stat-icon purple">
+                    <i class="bi bi-bell"></i>
+                </div>
+
+                <div>
+                    <span>Notifications</span>
+                    <h3>{{ stats.notifications }}</h3>
+                    <small>Unread notifications</small>
+                </div>
+
+            </div>
+
+        </div>
+
+    </section>
+
+
+    <!-- =========================
+         QUICK ACTIONS
+    ========================== -->
+    <section class="dashboard-section mb-4">
+
+        <div class="section-heading">
+
+            <div>
+                <span class="section-kicker">
+                    QUICK ACTIONS
+                </span>
+
+                <h2>
+                    What would you like to do?
+                </h2>
+            </div>
+
+        </div>
+
+
+        <div class="quick-action-grid">
+
+            <a href="#" class="quick-action">
+
+                <div class="quick-action-icon">
+                    <i class="bi bi-plus-circle"></i>
+                </div>
+
+                <div>
+                    <strong>Submit a Request</strong>
+                    <span>Request a government service</span>
+                </div>
+
+                <i class="bi bi-arrow-right"></i>
+
+            </a>
+
+
+            <a href="#" class="quick-action">
+
+                <div class="quick-action-icon">
+                    <i class="bi bi-megaphone"></i>
+                </div>
+
+                <div>
+                    <strong>Report an Issue</strong>
+                    <span>Report a problem in your community</span>
+                </div>
+
+                <i class="bi bi-arrow-right"></i>
+
+            </a>
+
+
+            <a href="#" class="quick-action">
+
+                <div class="quick-action-icon">
+                    <i class="bi bi-search"></i>
+                </div>
+
+                <div>
+                    <strong>Track a Request</strong>
+                    <span>Check the status of your request</span>
+                </div>
+
+                <i class="bi bi-arrow-right"></i>
+
+            </a>
+
+        </div>
+
+    </section>
+
+
+    <!-- =========================
+         GOVERNMENT SERVICES
+    ========================== -->
+    <section class="dashboard-section mb-4">
+
+        <div class="section-heading">
+
+            <div>
+                <span class="section-kicker">
+                    GOVERNMENT SERVICES
+                </span>
+
+                <h2>
+                    Services available to citizens
+                </h2>
+
+                <p>
+                    Select a department to access its digital services.
+                </p>
+            </div>
+
+            <a href="#" class="view-all-link">
+                View all
+                <i class="bi bi-arrow-right"></i>
+            </a>
+
+        </div>
+
+
+        <div class="service-grid">
+
+            {% for service in services %}
+
+                <a href="#" class="citizen-service-card">
+
+                    <div class="service-card-top">
+
+                        <div class="service-icon {{ service.color }}">
+                            <i class="bi {{ service.icon }}"></i>
+                        </div>
+
+                        <i class="bi bi-arrow-up-right service-arrow"></i>
+
+                    </div>
+
+                    <h3>
+                        {{ service.name }}
+                    </h3>
+
+                    <p>
+                        {{ service.description }}
+                    </p>
+
+                    <span class="service-link">
+                        Access service
+                        <i class="bi bi-arrow-right"></i>
+                    </span>
+
+                </a>
+
+            {% endfor %}
+
+        </div>
+
+    </section>
+
+
+    <!-- =========================
+         RECENT REQUESTS + ANNOUNCEMENTS
+    ========================== -->
+    <div class="row g-4 mb-4">
+
+
+        <!-- RECENT REQUESTS -->
+        <div class="col-xl-8">
+
+            <section class="dashboard-panel">
+
+                <div class="panel-header">
+
+                    <div>
+                        <span class="section-kicker">
+                            MY ACTIVITY
+                        </span>
+
+                        <h2>
+                            Recent Requests
+                        </h2>
+                    </div>
+
+                    <a href="#">
+                        View all
+                    </a>
+
+                </div>
+
+
+                <div class="table-responsive">
+
+                    <table class="table citizen-request-table">
+
+                        <thead>
+
+                            <tr>
+                                <th>Reference</th>
+                                <th>Service</th>
+                                <th>Description</th>
+                                <th>Status</th>
+                                <th>Date</th>
+                            </tr>
+
+                        </thead>
+
+                        <tbody>
+
+                            {% for request in recent_requests %}
+
+                            <tr>
+
+                                <td>
+                                    <strong>
+                                        {{ request.reference }}
+                                    </strong>
+                                </td>
+
+                                <td>
+                                    {{ request.service }}
+                                </td>
+
+                                <td>
+                                    {{ request.description }}
+                                </td>
+
+                                <td>
+
+                                    {% if request.status == "Completed" %}
+
+                                        <span class="request-status completed">
+                                            <i class="bi bi-check-circle"></i>
+                                            Completed
+                                        </span>
+
+                                    {% elif request.status == "In Progress" %}
+
+                                        <span class="request-status progress">
+                                            <i class="bi bi-arrow-repeat"></i>
+                                            In Progress
+                                        </span>
+
+                                    {% else %}
+
+                                        <span class="request-status pending">
+                                            <i class="bi bi-clock"></i>
+                                            Pending
+                                        </span>
+
+                                    {% endif %}
+
+                                </td>
+
+                                <td>
+                                    {{ request.date }}
+                                </td>
+
+                            </tr>
+
+                            {% endfor %}
+
+                        </tbody>
+
+                    </table>
+
+                </div>
+
+            </section>
+
+        </div>
+
+
+        <!-- ANNOUNCEMENTS -->
+        <div class="col-xl-4">
+
+            <section class="dashboard-panel announcements-panel">
+
+                <div class="panel-header">
+
+                    <div>
+                        <span class="section-kicker">
+                            INFORMATION
+                        </span>
+
+                        <h2>
+                            Announcements
+                        </h2>
+                    </div>
+
+                    <i class="bi bi-megaphone"></i>
+
+                </div>
+
+
+                {% for announcement in announcements %}
+
+                <article class="announcement-item">
+
+                    <div class="announcement-icon">
+                        <i class="bi bi-info-circle"></i>
+                    </div>
+
+                    <div>
+
+                        <h3>
+                            {{ announcement.title }}
+                        </h3>
+
+                        <p>
+                            {{ announcement.message }}
+                        </p>
+
+                        <small>
+                            {{ announcement.date }}
+                        </small>
+
+                    </div>
+
+                </article>
+
+                {% endfor %}
+
+            </section>
+
+        </div>
+
+    </div>
+
+
+    <!-- =========================
+         CITIZEN HELP
+    ========================== -->
+    <section class="citizen-help">
+
+        <div class="help-icon">
+            <i class="bi bi-question-circle"></i>
+        </div>
+
+        <div>
+
+            <h3>
+                Need help using Smart City Uganda?
+            </h3>
+
+            <p>
+                Find information about government services,
+                submitting requests and tracking your applications.
+            </p>
+
+        </div>
+
+        <a href="#">
+            Help & Support
+            <i class="bi bi-arrow-right"></i>
+        </a>
+
+    </section>
+
+</div>
+
+{% endblock %}

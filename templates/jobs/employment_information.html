@@ -1,0 +1,116 @@
+
+{% extends "base.html" %}
+
+{% block title %}
+    Employment Information | Smart City Uganda
+{% endblock %}
+
+{% block content %}
+
+<div class="container-fluid py-4">
+
+    <div class="mb-4">
+
+        <h4 class="fw-bold mb-1">
+            <i class="bi bi-person-workspace me-2 text-success"></i>
+            Employment Information
+        </h4>
+
+        <p class="text-muted mb-0">
+            Employment, workplace, labour and career information
+            for citizens.
+        </p>
+
+    </div>
+
+
+    <div class="card border-0 shadow-sm mb-4">
+
+        <div class="card-body">
+
+            <form method="get">
+
+                <div class="input-group">
+
+                    <input
+                        type="text"
+                        name="search"
+                        value="{{ search }}"
+                        class="form-control"
+                        placeholder="Search employment information..."
+                    >
+
+                    <button class="btn btn-success">
+                        <i class="bi bi-search"></i>
+                    </button>
+
+                </div>
+
+            </form>
+
+        </div>
+
+    </div>
+
+
+    <div class="row g-3">
+
+        {% for item in information %}
+
+            <div class="col-12 col-md-6 col-xl-4">
+
+                <div class="card border-0 shadow-sm h-100">
+
+                    <div class="card-body p-3">
+
+                        <i class="bi bi-info-circle fs-4 text-success"></i>
+
+                        <h6 class="fw-bold mt-2">
+                            {{ item.title }}
+                        </h6>
+
+                        <span class="badge bg-light text-dark border mb-2">
+                            {{ item.get_information_type_display }}
+                        </span>
+
+                        <p class="text-muted small">
+                            {{ item.summary }}
+                        </p>
+
+                        {% if item.key_points %}
+
+                            <div class="small text-muted mb-3">
+                                {{ item.key_points|truncatewords:30 }}
+                            </div>
+
+                        {% endif %}
+
+                        <div class="small text-muted">
+                            {{ item.content|truncatewords:35 }}
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        {% empty %}
+
+            <div class="col-12">
+
+                <div class="alert alert-light border text-center">
+
+                    No employment information is currently published.
+
+                </div>
+
+            </div>
+
+        {% endfor %}
+
+    </div>
+
+</div>
+
+{% endblock %}

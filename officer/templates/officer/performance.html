@@ -1,0 +1,90 @@
+
+{% extends "officer/base.html" %}
+
+{% block content %}
+<div class="container py-4">
+    <h2>My Performance Report</h2>
+    <p class="text-muted">Report generated: {{ today|date:"d M Y" }}</p>
+
+    <div class="row g-3 mb-4">
+        <div class="col-6 col-lg-3">
+            <div class="card h-100"><div class="card-body">
+                <h6>Total Assigned</h6>
+                <h3>{{ total_requests }}</h3>
+            </div></div>
+        </div>
+        <div class="col-6 col-lg-3">
+            <div class="card h-100"><div class="card-body">
+                <h6>Resolved</h6>
+                <h3>{{ resolved_requests }}</h3>
+            </div></div>
+        </div>
+        <div class="col-6 col-lg-3">
+            <div class="card h-100"><div class="card-body">
+                <h6>Closed</h6>
+                <h3>{{ closed_requests }}</h3>
+            </div></div>
+        </div>
+        <div class="col-6 col-lg-3">
+            <div class="card h-100"><div class="card-body">
+                <h6>Active Workload</h6>
+                <h3>{{ active_requests }}</h3>
+            </div></div>
+        </div>
+    </div>
+
+    <div class="card mb-4">
+        <div class="card-body">
+            <h5>Request Completion Rate</h5>
+            <h3>{{ completion_rate }}%</h3>
+            <div class="progress" role="progressbar"
+                 aria-valuenow="{{ completion_rate }}"
+                 aria-valuemin="0" aria-valuemax="100">
+                <div class="progress-bar bg-success"
+                     style="width: {{ completion_rate }}%"></div>
+            </div>
+            <small class="text-muted">
+                Calculated as resolved plus closed requests divided by all assigned requests.
+            </small>
+        </div>
+    </div>
+
+    <h4>Attendance Summary</h4>
+    <div class="table-responsive mb-4">
+        <table class="table table-bordered">
+            <thead><tr><th>Status</th><th>Recorded days</th></tr></thead>
+            <tbody>
+                <tr><td>Present</td><td>{{ attendance_summary.present }}</td></tr>
+                <tr><td>Late</td><td>{{ attendance_summary.late }}</td></tr>
+                <tr><td>Absent</td><td>{{ attendance_summary.absent }}</td></tr>
+                <tr><td>On Leave</td><td>{{ attendance_summary.on_leave }}</td></tr>
+            </tbody>
+        </table>
+    </div>
+
+    <h4>Recently Updated Requests</h4>
+    <div class="table-responsive">
+        <table class="table table-striped table-bordered">
+            <thead>
+                <tr><th>Reference</th><th>Subject</th><th>Status</th><th>Last Updated</th></tr>
+            </thead>
+            <tbody>
+                {% for item in recent_requests %}
+                <tr>
+                    <td>{{ item.reference|truncatechars:12 }}</td>
+                    <td>{{ item.subject }}</td>
+                    <td>{{ item.get_status_display }}</td>
+                    <td>{{ item.updated_at|date:"d M Y H:i" }}</td>
+                </tr>
+                {% empty %}
+                <tr><td colspan="4">No requests have been assigned to you yet.</td></tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+    <a href="{% url 'officer:attendance' %}" class="btn btn-outline-success mt-3">
+        View Full Attendance History
+    </a>
+</div>
+{% endblock %}

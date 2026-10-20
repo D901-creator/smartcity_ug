@@ -1,0 +1,300 @@
+{% extends "base.html" %}
+
+{% block title %}
+    Energy Projects | Smart City Uganda
+{% endblock %}
+
+{% block content %}
+
+<div class="container-fluid py-3">
+
+    <div class="d-flex flex-wrap justify-content-between align-items-center mb-3">
+
+        <div>
+            <h4 class="mb-1">
+                <i class="bi bi-building-gear text-primary"></i>
+                Energy Projects
+            </h4>
+
+            <p class="text-muted mb-0">
+                View published electricity and energy development projects.
+            </p>
+        </div>
+
+        <a href="{% url 'energy:home' %}"
+           class="btn btn-outline-secondary btn-sm mt-2 mt-md-0">
+
+            <i class="bi bi-arrow-left"></i>
+            Back to Energy
+
+        </a>
+
+    </div>
+
+
+    <!-- Filters -->
+
+    <div class="card border-0 shadow-sm mb-3">
+
+        <div class="card-body">
+
+            <form method="get">
+
+                <div class="row g-2">
+
+                    <div class="col-12 col-md-4">
+
+                        <label class="form-label small">
+                            Project Type
+                        </label>
+
+                        <select name="project_type"
+                                class="form-select">
+
+                            <option value="">
+                                All Project Types
+                            </option>
+
+                            {% for value, label in project_types %}
+
+                                <option value="{{ value }}"
+                                    {% if project_type == value %}
+                                        selected
+                                    {% endif %}>
+
+                                    {{ label }}
+
+                                </option>
+
+                            {% endfor %}
+
+                        </select>
+
+                    </div>
+
+
+                    <div class="col-12 col-md-3">
+
+                        <label class="form-label small">
+                            Status
+                        </label>
+
+                        <select name="status"
+                                class="form-select">
+
+                            <option value="">
+                                All Statuses
+                            </option>
+
+                            {% for value, label in statuses %}
+
+                                <option value="{{ value }}"
+                                    {% if status == value %}
+                                        selected
+                                    {% endif %}>
+
+                                    {{ label }}
+
+                                </option>
+
+                            {% endfor %}
+
+                        </select>
+
+                    </div>
+
+
+                    <div class="col-12 col-md-3">
+
+                        <label class="form-label small">
+                            District / City
+                        </label>
+
+                        <input
+                            type="text"
+                            name="district"
+                            value="{{ district }}"
+                            class="form-control"
+                            placeholder="e.g. Kampala"
+                        >
+
+                    </div>
+
+
+                    <div class="col-12 col-md-2 d-flex align-items-end">
+
+                        <button
+                            type="submit"
+                            class="btn btn-primary w-100">
+
+                            <i class="bi bi-search"></i>
+                            Filter
+
+                        </button>
+
+                    </div>
+
+                </div>
+
+            </form>
+
+        </div>
+
+    </div>
+
+
+    <div class="d-flex justify-content-between align-items-center mb-2">
+
+        <h6 class="mb-0">
+            Energy Development Projects
+        </h6>
+
+        <span class="badge bg-primary">
+            {{ total_projects }}
+            project{{ total_projects|pluralize }}
+        </span>
+
+    </div>
+
+
+    {% if projects %}
+
+        <div class="row g-3">
+
+            {% for project in projects %}
+
+                <div class="col-12 col-md-6 col-xl-4">
+
+                    <div class="card h-100 border-0 shadow-sm">
+
+                        {% if project.project_image %}
+
+                            <img
+                                src="{{ project.project_image.url }}"
+                                class="card-img-top"
+                                alt="{{ project.name }}"
+                                style="height: 160px; object-fit: cover;"
+                            >
+
+                        {% endif %}
+
+
+                        <div class="card-body">
+
+                            {% if project.is_featured %}
+
+                                <span class="badge bg-warning text-dark mb-2">
+                                    Featured
+                                </span>
+
+                            {% endif %}
+
+
+                            <div class="mb-2">
+
+                                <span class="badge bg-primary">
+                                    {{ project.get_project_type_display }}
+                                </span>
+
+                            </div>
+
+
+                            <h6 class="fw-bold">
+                                {{ project.name }}
+                            </h6>
+
+
+                            <div class="small text-muted mb-2">
+
+                                <i class="bi bi-geo-alt"></i>
+
+                                {{ project.district }}
+
+                                {% if project.location %}
+                                    — {{ project.location }}
+                                {% endif %}
+
+                            </div>
+
+
+                            <p class="small text-muted">
+                                {{ project.description|truncatewords:25 }}
+                            </p>
+
+
+                            <div class="mb-3">
+
+                                {% if project.status == "completed" %}
+
+                                    <span class="badge bg-success">
+                                        {{ project.get_status_display }}
+                                    </span>
+
+                                {% elif project.status == "ongoing" %}
+
+                                    <span class="badge bg-primary">
+                                        {{ project.get_status_display }}
+                                    </span>
+
+                                {% elif project.status == "planned" %}
+
+                                    <span class="badge bg-warning text-dark">
+                                        {{ project.get_status_display }}
+                                    </span>
+
+                                {% else %}
+
+                                    <span class="badge bg-secondary">
+                                        {{ project.get_status_display }}
+                                    </span>
+
+                                {% endif %}
+
+                            </div>
+
+
+                            <a href="{% url 'energy:energy_project_detail' project.id %}"
+                               class="btn btn-primary btn-sm">
+
+                                <i class="bi bi-eye"></i>
+                                View Project
+
+                            </a>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            {% endfor %}
+
+        </div>
+
+    {% else %}
+
+        <div class="card border-0 shadow-sm">
+
+            <div class="card-body text-center py-5">
+
+                <i class="bi bi-building text-muted"
+                   style="font-size: 2.5rem;"></i>
+
+                <h6 class="mt-3">
+                    No energy projects found
+                </h6>
+
+                <p class="text-muted small mb-0">
+                    There are currently no published projects
+                    matching your selected filters.
+                </p>
+
+            </div>
+
+        </div>
+
+    {% endif %}
+
+</div>
+
+{% endblock %}

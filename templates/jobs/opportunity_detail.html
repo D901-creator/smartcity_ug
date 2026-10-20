@@ -1,0 +1,223 @@
+
+{% extends "base.html" %}
+
+{% block title %}
+    {{ job.title }} | Smart City Uganda
+{% endblock %}
+
+{% block content %}
+
+<div class="container-fluid py-4">
+
+    <a href="{% url 'jobs:opportunities' %}"
+       class="btn btn-light border btn-sm mb-3">
+
+        <i class="bi bi-arrow-left me-1"></i>
+        Back to Jobs
+
+    </a>
+
+
+    <div class="card border-0 shadow-sm">
+
+        <div class="card-body p-4">
+
+            <div class="d-flex justify-content-between flex-wrap gap-3">
+
+                <div>
+
+                    <h4 class="fw-bold mb-1">
+                        {{ job.title }}
+                    </h4>
+
+                    <p class="text-success mb-0">
+                        {{ job.organization }}
+                    </p>
+
+                </div>
+
+                <span class="badge bg-success-subtle text-success align-self-start">
+                    {{ job.get_status_display }}
+                </span>
+
+            </div>
+
+
+            <hr>
+
+
+            <div class="row g-3 mb-4">
+
+                <div class="col-12 col-md-4">
+
+                    <div class="small text-muted">
+                        Employment Type
+                    </div>
+
+                    <strong>
+                        {{ job.get_employment_type_display }}
+                    </strong>
+
+                </div>
+
+
+                <div class="col-12 col-md-4">
+
+                    <div class="small text-muted">
+                        Sector
+                    </div>
+
+                    <strong>
+                        {{ job.get_sector_display }}
+                    </strong>
+
+                </div>
+
+
+                <div class="col-12 col-md-4">
+
+                    <div class="small text-muted">
+                        Location
+                    </div>
+
+                    <strong>
+                        {{ job.location|default:job.district|default:"Uganda" }}
+                    </strong>
+
+                </div>
+
+
+                {% if job.deadline %}
+
+                    <div class="col-12 col-md-4">
+
+                        <div class="small text-muted">
+                            Application Deadline
+                        </div>
+
+                        <strong>
+                            {{ job.deadline }}
+                        </strong>
+
+                    </div>
+
+                {% endif %}
+
+            </div>
+
+
+            <h6 class="fw-bold">
+                Job Summary
+            </h6>
+
+            <p class="text-muted">
+                {{ job.summary }}
+            </p>
+
+
+            <h6 class="fw-bold mt-4">
+                Job Description
+            </h6>
+
+            <p class="text-muted">
+                {{ job.description|linebreaksbr }}
+            </p>
+
+
+            {% if job.responsibilities %}
+
+                <h6 class="fw-bold mt-4">
+                    Responsibilities
+                </h6>
+
+                <p class="text-muted">
+                    {{ job.responsibilities|linebreaksbr }}
+                </p>
+
+            {% endif %}
+
+
+            {% if job.requirements %}
+
+                <h6 class="fw-bold mt-4">
+                    Requirements
+                </h6>
+
+                <p class="text-muted">
+                    {{ job.requirements|linebreaksbr }}
+                </p>
+
+            {% endif %}
+
+
+            {% if job.salary_information %}
+
+                <h6 class="fw-bold mt-4">
+                    Salary Information
+                </h6>
+
+                <p class="text-muted">
+                    {{ job.salary_information }}
+                </p>
+
+            {% endif %}
+
+
+            {% if job.application_process %}
+
+                <h6 class="fw-bold mt-4">
+                    Application Process
+                </h6>
+
+                <p class="text-muted">
+                    {{ job.application_process|linebreaksbr }}
+                </p>
+
+            {% endif %}
+
+
+            {% if job.contact_information %}
+
+                <h6 class="fw-bold mt-4">
+                    Contact Information
+                </h6>
+
+                <p class="text-muted">
+                    {{ job.contact_information|linebreaksbr }}
+                </p>
+
+            {% endif %}
+
+
+            <div class="mt-4">
+
+                {% if job.application_url %}
+
+                    <a
+                        href="{{ job.application_url }}"
+                        target="_blank"
+                        rel="noopener"
+                        class="btn btn-success"
+                    >
+                        Apply / Visit Official Application
+                        <i class="bi bi-box-arrow-up-right ms-1"></i>
+                    </a>
+
+                {% else %}
+
+                    <div class="alert alert-light border mb-0">
+                        Application information is provided by the
+                        publishing organization.
+                    </div>
+
+                {% endif %}
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+{% endblock %}

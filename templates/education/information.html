@@ -1,0 +1,98 @@
+{% extends "base.html" %}
+
+{% block title %}
+Education Information & Guidance | Smart City Uganda
+{% endblock %}
+
+{% block content %}
+
+<div class="container-fluid education-module">
+
+    <div class="education-module-header">
+
+        <div class="education-module-icon">
+            <i class="bi bi-info-circle"></i>
+        </div>
+
+        <h1>Education Information & Guidance</h1>
+
+        <p>
+            Access published education information, guidance and
+            practical steps for citizens.
+        </p>
+
+    </div>
+
+
+    {% if information %}
+
+    <div class="education-card-grid">
+
+        {% for item in information %}
+
+        <div class="education-card">
+
+            {% if item.is_featured %}
+            <span class="education-badge">
+                Featured
+            </span>
+            {% endif %}
+
+            <h3 class="mt-2">
+                {{ item.title }}
+            </h3>
+
+            <p>
+                {{ item.summary }}
+            </p>
+
+            <p>
+                {{ item.description|truncatewords:40 }}
+            </p>
+
+            {% if item.practical_steps %}
+            <hr>
+
+            <h6>Practical Steps</h6>
+
+            <p>
+                {{ item.practical_steps|truncatewords:35 }}
+            </p>
+            {% endif %}
+
+            {% if item.website %}
+            <a
+                href="{{ item.website }}"
+                target="_blank"
+                class="education-button"
+            >
+                More Information
+                <i class="bi bi-box-arrow-up-right"></i>
+            </a>
+            {% endif %}
+
+        </div>
+
+        {% endfor %}
+
+    </div>
+
+    {% else %}
+
+    <div class="education-empty">
+
+        <i class="bi bi-info-circle"></i>
+
+        <h3>No education information available</h3>
+
+        <p>
+            Published education guidance will appear here.
+        </p>
+
+    </div>
+
+    {% endif %}
+
+</div>
+
+{% endblock %}

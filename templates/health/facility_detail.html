@@ -1,0 +1,185 @@
+{% extends "base.html" %}
+
+{% block title %}{{ facility.title }} | Smart City Uganda{% endblock %}
+
+{% block content %}
+
+<div class="container-fluid py-3">
+
+    <a href="{% url 'health:facilities' %}"
+       class="small text-decoration-none">
+        <i class="bi bi-arrow-left"></i>
+        Back to facilities
+    </a>
+
+    <div class="card border-0 shadow-sm mt-3 mb-4">
+
+        {% if facility.image %}
+        <img src="{{ facility.image.url }}"
+             class="card-img-top"
+             style="max-height:350px;object-fit:cover;"
+             alt="{{ facility.title }}">
+        {% endif %}
+
+        <div class="card-body p-4">
+
+            <div class="d-flex flex-column flex-md-row justify-content-between gap-3">
+
+                <div>
+                    <span class="badge text-bg-success mb-2">
+                        {{ facility.get_facility_type_display }}
+                    </span>
+
+                    <h3 class="fw-bold">
+                        {{ facility.title }}
+                    </h3>
+
+                    <p class="text-muted">
+                        {{ facility.description }}
+                    </p>
+                </div>
+
+                {% if facility.emergency_available %}
+                <div>
+                    <span class="badge text-bg-danger">
+                        <i class="bi bi-exclamation-triangle me-1"></i>
+                        Emergency Available
+                    </span>
+                </div>
+                {% endif %}
+
+            </div>
+
+            <hr>
+
+            <div class="row g-3">
+
+                <div class="col-md-6">
+                    <strong>Location</strong>
+                    <div class="small text-muted">
+                        {{ facility.location|default:"Not provided" }}
+                    </div>
+                </div>
+
+                <div class="col-md-6">
+                    <strong>District / City</strong>
+                    <div class="small text-muted">
+                        {{ facility.district|default:"Not provided" }}
+                        {% if facility.city %}, {{ facility.city }}{% endif %}
+                    </div>
+                </div>
+
+                <div class="col-md-6">
+                    <strong>Address</strong>
+                    <div class="small text-muted">
+                        {{ facility.address|default:"Not provided" }}
+                    </div>
+                </div>
+
+                <div class="col-md-6">
+                    <strong>Opening Hours</strong>
+                    <div class="small text-muted">
+                        {{ facility.opening_hours|default:"Not provided" }}
+                    </div>
+                </div>
+
+                <div class="col-md-6">
+                    <strong>Telephone</strong>
+                    <div class="small text-muted">
+                        {{ facility.telephone|default:"Not provided" }}
+                    </div>
+                </div>
+
+                <div class="col-md-6">
+                    <strong>Email</strong>
+                    <div class="small text-muted">
+                        {{ facility.email|default:"Not provided" }}
+                    </div>
+                </div>
+
+            </div>
+
+            {% if facility.services_information %}
+            <div class="mt-4">
+                <h6 class="fw-bold">Services Information</h6>
+                <div class="small text-muted">
+                    {{ facility.services_information|linebreaks }}
+                </div>
+            </div>
+            {% endif %}
+
+            <div class="mt-4 d-flex flex-wrap gap-2">
+
+                <a href="{% url 'health:request_create' %}"
+                   class="btn btn-success">
+                    <i class="bi bi-send me-1"></i>
+                    Submit Health Request
+                </a>
+
+                <a href="{% url 'health:facility_report_create' %}"
+                   class="btn btn-outline-danger">
+                    <i class="bi bi-flag me-1"></i>
+                    Report a Problem
+                </a>
+
+            </div>
+
+        </div>
+    </div>
+
+
+    {% if medicines %}
+    <div class="card border-0 shadow-sm mb-4">
+        <div class="card-body">
+            <h5 class="fw-bold">Medicine Information</h5>
+
+            <div class="list-group list-group-flush">
+
+                {% for medicine in medicines %}
+                <a href="{% url 'health:medicine_detail' medicine.id %}"
+                   class="list-group-item list-group-item-action px-0">
+                    <strong>{{ medicine.title }}</strong>
+                    <div class="small text-muted">
+                        {{ medicine.get_availability_status_display }}
+                    </div>
+                </a>
+                {% endfor %}
+
+            </div>
+        </div>
+    </div>
+    {% endif %}
+
+
+    {% if equipment %}
+    <div class="card border-0 shadow-sm mb-4">
+        <div class="card-body">
+            <h5 class="fw-bold">Medical Equipment</h5>
+
+            <div class="row g-2">
+
+                {% for item in equipment %}
+                <div class="col-md-6">
+                    <a href="{% url 'health:equipment_detail' item.id %}"
+                       class="text-decoration-none">
+                        <div class="border rounded p-3">
+                            <strong class="text-dark">
+                                {{ item.title }}
+                            </strong>
+
+                            <div class="small text-muted">
+                                {{ item.get_status_display }}
+                            </div>
+                        </div>
+                    </a>
+                </div>
+                {% endfor %}
+
+            </div>
+        </div>
+    </div>
+    {% endif %}
+
+</div>
+
+{% endblock %}

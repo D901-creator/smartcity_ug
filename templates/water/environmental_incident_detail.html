@@ -1,0 +1,225 @@
+{% extends "base.html" %}
+
+{% block title %}
+    {{ incident.reference_number }} | Environmental Incident
+{% endblock %}
+
+{% block content %}
+
+<div class="container-fluid py-3">
+
+    <div class="mb-3">
+
+        <a
+            href="{% url 'water:environmental_incidents' %}"
+            class="btn btn-outline-secondary btn-sm"
+        >
+            <i class="bi bi-arrow-left me-1"></i>
+            Back to Environmental Incidents
+        </a>
+
+    </div>
+
+
+    <div class="row g-3">
+
+        <div class="col-12 col-lg-8">
+
+            <div class="card border-0 shadow-sm">
+
+                <div class="card-body">
+
+                    <div class="d-flex justify-content-between
+                                align-items-start flex-wrap gap-2">
+
+                        <div>
+
+                            <span class="badge bg-warning text-dark mb-2">
+
+                                {{ incident.get_incident_type_display }}
+
+                            </span>
+
+                            <h4 class="fw-bold">
+
+                                Environmental Incident
+
+                            </h4>
+
+                            <p class="text-muted mb-0">
+
+                                Reference:
+                                {{ incident.reference_number }}
+
+                            </p>
+
+                        </div>
+
+
+                        {% if incident.status == "resolved" %}
+
+                            <span class="badge bg-success">
+                                Resolved
+                            </span>
+
+                        {% elif incident.status == "in_progress" %}
+
+                            <span class="badge bg-primary">
+                                In Progress
+                            </span>
+
+                        {% elif incident.status == "investigating" %}
+
+                            <span class="badge bg-warning text-dark">
+                                Investigating
+                            </span>
+
+                        {% else %}
+
+                            <span class="badge bg-secondary">
+                                {{ incident.get_status_display }}
+                            </span>
+
+                        {% endif %}
+
+                    </div>
+
+
+                    <hr>
+
+
+                    <h6 class="fw-bold">
+                        Description
+                    </h6>
+
+                    <p class="text-muted">
+
+                        {{ incident.description }}
+
+                    </p>
+
+
+                    {% if incident.photo %}
+
+                        <h6 class="fw-bold mt-4">
+                            Photo Evidence
+                        </h6>
+
+                        <img
+                            src="{{ incident.photo.url }}"
+                            alt="Environmental incident evidence"
+                            class="img-fluid rounded border"
+                        >
+
+                    {% endif %}
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <div class="col-12 col-lg-4">
+
+            <div class="card border-0 shadow-sm">
+
+                <div class="card-header bg-success text-white">
+
+                    <strong>
+                        Incident Information
+                    </strong>
+
+                </div>
+
+
+                <div class="list-group list-group-flush">
+
+                    <div class="list-group-item">
+
+                        <small class="text-muted d-block">
+                            Reporter
+                        </small>
+
+                        <strong>
+                            {{ incident.citizen_name }}
+                        </strong>
+
+                    </div>
+
+
+                    <div class="list-group-item">
+
+                        <small class="text-muted d-block">
+                            Phone
+                        </small>
+
+                        <strong>
+                            {{ incident.phone_number }}
+                        </strong>
+
+                    </div>
+
+
+                    <div class="list-group-item">
+
+                        <small class="text-muted d-block">
+                            District / City
+                        </small>
+
+                        <strong>
+                            {{ incident.district }}
+                        </strong>
+
+                    </div>
+
+
+                    <div class="list-group-item">
+
+                        <small class="text-muted d-block">
+                            Location
+                        </small>
+
+                        <strong>
+                            {{ incident.location }}
+                        </strong>
+
+                    </div>
+
+
+                    <div class="list-group-item">
+
+                        <small class="text-muted d-block">
+                            Urgency
+                        </small>
+
+                        <strong>
+                            {{ incident.get_urgency_display }}
+                        </strong>
+
+                    </div>
+
+
+                    <div class="list-group-item">
+
+                        <small class="text-muted d-block">
+                            Submitted
+                        </small>
+
+                        <strong>
+                            {{ incident.created_at|date:"d M Y H:i" }}
+                        </strong>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+{% endblock %}

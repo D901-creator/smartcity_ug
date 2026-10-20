@@ -1,0 +1,246 @@
+{% extends "base.html" %}
+
+{% block title %}
+    Report Environmental Incident | Smart City Uganda
+{% endblock %}
+
+{% block content %}
+
+<div class="container-fluid py-3">
+
+    <div class="mb-3">
+
+        <a
+            href="{% url 'water:environmental_incidents' %}"
+            class="btn btn-outline-secondary btn-sm"
+        >
+            <i class="bi bi-arrow-left me-1"></i>
+            Back to Environmental Incidents
+        </a>
+
+    </div>
+
+
+    <div class="row justify-content-center">
+
+        <div class="col-12 col-lg-8 col-xl-7">
+
+            <div class="card border-0 shadow-sm">
+
+                <div class="card-header bg-success text-white">
+
+                    <h5 class="mb-0">
+                        <i class="bi bi-exclamation-triangle me-2"></i>
+                        Report Environmental Incident
+                    </h5>
+
+                </div>
+
+
+                <div class="card-body">
+
+                    <div class="alert alert-warning">
+
+                        <i class="bi bi-info-circle me-2"></i>
+
+                        Provide accurate information about the
+                        environmental incident and its location.
+
+                    </div>
+
+
+                    <form
+                        method="post"
+                        enctype="multipart/form-data"
+                    >
+
+                        {% csrf_token %}
+
+
+                        {% if form.non_field_errors %}
+
+                            <div class="alert alert-danger">
+
+                                {{ form.non_field_errors }}
+
+                            </div>
+
+                        {% endif %}
+
+
+                        <div class="row g-3">
+
+                            <div class="col-12 col-md-6">
+
+                                <label class="form-label fw-semibold">
+                                    {{ form.citizen_name.label }}
+                                </label>
+
+                                {{ form.citizen_name }}
+
+                                {% for error in form.citizen_name.errors %}
+                                    <div class="text-danger small">
+                                        {{ error }}
+                                    </div>
+                                {% endfor %}
+
+                            </div>
+
+
+                            <div class="col-12 col-md-6">
+
+                                <label class="form-label fw-semibold">
+                                    {{ form.phone_number.label }}
+                                </label>
+
+                                {{ form.phone_number }}
+
+                                {% for error in form.phone_number.errors %}
+                                    <div class="text-danger small">
+                                        {{ error }}
+                                    </div>
+                                {% endfor %}
+
+                            </div>
+
+
+                            <div class="col-12 col-md-6">
+
+                                <label class="form-label fw-semibold">
+                                    {{ form.incident_type.label }}
+                                </label>
+
+                                {{ form.incident_type }}
+
+                                {% for error in form.incident_type.errors %}
+                                    <div class="text-danger small">
+                                        {{ error }}
+                                    </div>
+                                {% endfor %}
+
+                            </div>
+
+
+                            <div class="col-12 col-md-6">
+
+                                <label class="form-label fw-semibold">
+                                    {{ form.urgency.label }}
+                                </label>
+
+                                {{ form.urgency }}
+
+                                {% for error in form.urgency.errors %}
+                                    <div class="text-danger small">
+                                        {{ error }}
+                                    </div>
+                                {% endfor %}
+
+                            </div>
+
+
+                            <div class="col-12 col-md-6">
+
+                                <label class="form-label fw-semibold">
+                                    {{ form.district.label }}
+                                </label>
+
+                                {{ form.district }}
+
+                                {% for error in form.district.errors %}
+                                    <div class="text-danger small">
+                                        {{ error }}
+                                    </div>
+                                {% endfor %}
+
+                            </div>
+
+
+                            <div class="col-12 col-md-6">
+
+                                <label class="form-label fw-semibold">
+                                    {{ form.location.label }}
+                                </label>
+
+                                {{ form.location }}
+
+                                {% for error in form.location.errors %}
+                                    <div class="text-danger small">
+                                        {{ error }}
+                                    </div>
+                                {% endfor %}
+
+                            </div>
+
+
+                            <div class="col-12">
+
+                                <label class="form-label fw-semibold">
+                                    {{ form.description.label }}
+                                </label>
+
+                                {{ form.description }}
+
+                                {% for error in form.description.errors %}
+                                    <div class="text-danger small">
+                                        {{ error }}
+                                    </div>
+                                {% endfor %}
+
+                            </div>
+
+
+                            <div class="col-12">
+
+                                <label class="form-label fw-semibold">
+                                    {{ form.photo.label }}
+                                </label>
+
+                                {{ form.photo }}
+
+                                <div class="form-text">
+                                    Optional photo evidence of the incident.
+                                </div>
+
+                                {% for error in form.photo.errors %}
+                                    <div class="text-danger small">
+                                        {{ error }}
+                                    </div>
+                                {% endfor %}
+
+                            </div>
+
+
+                            <div class="col-12">
+
+                                <button
+                                    type="submit"
+                                    class="btn btn-success"
+                                >
+                                    <i class="bi bi-send me-1"></i>
+                                    Submit Environmental Report
+                                </button>
+
+                                <a
+                                    href="{% url 'water:environmental_incidents' %}"
+                                    class="btn btn-outline-secondary ms-2"
+                                >
+                                    Cancel
+                                </a>
+
+                            </div>
+
+                        </div>
+
+                    </form>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+{% endblock %}

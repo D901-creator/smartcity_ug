@@ -1,0 +1,577 @@
+{% extends "base.html" %}
+
+{% block title %}
+Learning Sources & Materials | Smart City Uganda
+{% endblock %}
+
+{% block content %}
+
+<div class="learning-page">
+
+    <!-- HERO -->
+    <section class="learning-hero">
+
+        <div class="learning-hero-content">
+
+            <span class="learning-badge">
+                <i class="bi bi-book"></i>
+                LEARNING SOURCES & MATERIALS
+            </span>
+
+            <h1>
+                Learn, Revise and Discover
+            </h1>
+
+            <p>
+                Access learning materials and educational resources
+                for primary school, secondary school, TVET, university,
+                tertiary education and teachers.
+            </p>
+
+        </div>
+
+        <div class="learning-hero-icon">
+            <i class="bi bi-mortarboard"></i>
+        </div>
+
+    </section>
+
+
+    <!-- QUICK LEVELS -->
+    <section class="learning-level-section">
+
+        <div class="learning-section-heading">
+
+            <div>
+                <h2>Choose Your Learning Level</h2>
+
+                <p>
+                    Find resources according to your education level.
+                </p>
+            </div>
+
+        </div>
+
+
+        <div class="learning-level-grid">
+
+            <a
+                href="?education_level=primary"
+                class="learning-level-card"
+            >
+                <div class="learning-level-icon">
+                    <i class="bi bi-backpack"></i>
+                </div>
+
+                <div>
+                    <h3>Primary School</h3>
+
+                    <p>
+                        P1 to P7 learning materials.
+                    </p>
+                </div>
+            </a>
+
+
+            <a
+                href="?education_level=secondary"
+                class="learning-level-card"
+            >
+                <div class="learning-level-icon">
+                    <i class="bi bi-building"></i>
+                </div>
+
+                <div>
+                    <h3>Secondary School</h3>
+
+                    <p>
+                        S1 to S6 learning materials.
+                    </p>
+                </div>
+            </a>
+
+
+            <a
+                href="?education_level=tvet"
+                class="learning-level-card"
+            >
+                <div class="learning-level-icon">
+                    <i class="bi bi-tools"></i>
+                </div>
+
+                <div>
+                    <h3>TVET & Vocational</h3>
+
+                    <p>
+                        Technical and practical learning resources.
+                    </p>
+                </div>
+            </a>
+
+
+            <a
+                href="?education_level=tertiary"
+                class="learning-level-card"
+            >
+                <div class="learning-level-icon">
+                    <i class="bi bi-mortarboard"></i>
+                </div>
+
+                <div>
+                    <h3>University & Tertiary</h3>
+
+                    <p>
+                        Higher education and academic resources.
+                    </p>
+                </div>
+            </a>
+
+
+            <a
+                href="?education_level=teacher"
+                class="learning-level-card"
+            >
+                <div class="learning-level-icon">
+                    <i class="bi bi-person-workspace"></i>
+                </div>
+
+                <div>
+                    <h3>Teacher Resources</h3>
+
+                    <p>
+                        Teaching and assessment resources.
+                    </p>
+                </div>
+            </a>
+
+
+            <a
+                href="?education_level=general"
+                class="learning-level-card"
+            >
+                <div class="learning-level-icon">
+                    <i class="bi bi-globe2"></i>
+                </div>
+
+                <div>
+                    <h3>General Learning</h3>
+
+                    <p>
+                        Resources for general learning and development.
+                    </p>
+                </div>
+            </a>
+
+        </div>
+
+    </section>
+
+
+    <!-- SEARCH -->
+    <section class="learning-search-panel">
+
+        <div class="learning-search-heading">
+
+            <div>
+                <h2>Find Learning Resources</h2>
+
+                <p>
+                    Search by subject, topic, class, level or resource type.
+                </p>
+            </div>
+
+            <span class="learning-result-count">
+                {{ resources|length }} resource{{ resources|length|pluralize }}
+            </span>
+
+        </div>
+
+
+        <form method="get">
+
+            <div class="learning-search-grid">
+
+                <!-- SEARCH -->
+                <div class="learning-field">
+
+                    <label for="learning-search">
+                        Search
+                    </label>
+
+                    <input
+                        id="learning-search"
+                        type="text"
+                        name="search"
+                        value="{{ search }}"
+                        placeholder="Search mathematics, science, grammar..."
+                    >
+
+                </div>
+
+
+                <!-- EDUCATION LEVEL -->
+                <div class="learning-field">
+
+                    <label for="education-level">
+                        Education Level
+                    </label>
+
+                    <select
+                        id="education-level"
+                        name="education_level"
+                    >
+
+                        <option value="">
+                            All Levels
+                        </option>
+
+                        {% for value, label in education_levels %}
+
+                            <option
+                                value="{{ value }}"
+                                {% if selected_education_level == value %}
+                                    selected
+                                {% endif %}
+                            >
+                                {{ label }}
+                            </option>
+
+                        {% endfor %}
+
+                    </select>
+
+                </div>
+
+
+                <!-- CLASS -->
+                <div class="learning-field">
+
+                    <label for="class-level">
+                        Class / Form
+                    </label>
+
+                    <input
+                        id="class-level"
+                        type="text"
+                        name="class_level"
+                        value="{{ selected_class_level }}"
+                        placeholder="P5, P7, S1, S4, S6..."
+                    >
+
+                </div>
+
+
+                <!-- SUBJECT -->
+                <div class="learning-field">
+
+                    <label for="subject">
+                        Subject
+                    </label>
+
+                    <select
+                        id="subject"
+                        name="subject"
+                    >
+
+                        <option value="">
+                            All Subjects
+                        </option>
+
+                        {% for item in subjects %}
+
+                            <option
+                                value="{{ item }}"
+                                {% if selected_subject == item %}
+                                    selected
+                                {% endif %}
+                            >
+                                {{ item }}
+                            </option>
+
+                        {% endfor %}
+
+                    </select>
+
+                </div>
+
+
+                <!-- RESOURCE TYPE -->
+                <div class="learning-field">
+
+                    <label for="resource-type">
+                        Resource Type
+                    </label>
+
+                    <select
+                        id="resource-type"
+                        name="resource_type"
+                    >
+
+                        <option value="">
+                            All Resource Types
+                        </option>
+
+                        {% for value, label in resource_types %}
+
+                            <option
+                                value="{{ value }}"
+                                {% if selected_resource_type == value %}
+                                    selected
+                                {% endif %}
+                            >
+                                {{ label }}
+                            </option>
+
+                        {% endfor %}
+
+                    </select>
+
+                </div>
+
+
+                <!-- BUTTON -->
+                <div class="learning-search-button">
+
+                    <button type="submit">
+
+                        <i class="bi bi-search"></i>
+
+                        Search Resources
+
+                    </button>
+
+                </div>
+
+            </div>
+
+        </form>
+
+    </section>
+
+
+    <!-- FEATURED -->
+    {% if resources %}
+
+        <section class="learning-resources-section">
+
+            <div class="learning-section-heading">
+
+                <div>
+
+                    <h2>
+                        Available Learning Resources
+                    </h2>
+
+                    <p>
+                        Explore published educational materials available
+                        through Smart City Uganda.
+                    </p>
+
+                </div>
+
+            </div>
+
+
+            <div class="learning-resource-grid">
+
+                {% for resource in resources %}
+
+                    <article class="learning-resource-card">
+
+                        <!-- IMAGE / ICON -->
+
+                        <div class="learning-resource-image">
+
+                            {% if resource.thumbnail %}
+
+                                <img
+                                    src="{{ resource.thumbnail.url }}"
+                                    alt="{{ resource.title }}"
+                                >
+
+                            {% else %}
+
+                                <i class="bi bi-book-half"></i>
+
+                            {% endif %}
+
+                        </div>
+
+
+                        <div class="learning-resource-content">
+
+                            <!-- BADGES -->
+
+                            <div class="learning-resource-badges">
+
+                                <span class="learning-resource-level">
+
+                                    {{ resource.get_education_level_display }}
+
+                                </span>
+
+                                <span class="learning-resource-type">
+
+                                    {{ resource.get_resource_type_display }}
+
+                                </span>
+
+                            </div>
+
+
+                            <!-- TITLE -->
+
+                            <h3>
+                                {{ resource.title }}
+                            </h3>
+
+
+                            <!-- CLASS / SUBJECT -->
+
+                            <div class="learning-resource-meta">
+
+                                {% if resource.class_level %}
+
+                                    <span>
+                                        <i class="bi bi-mortarboard"></i>
+                                        {{ resource.class_level }}
+                                    </span>
+
+                                {% endif %}
+
+
+                                {% if resource.subject %}
+
+                                    <span>
+                                        <i class="bi bi-book"></i>
+                                        {{ resource.subject }}
+                                    </span>
+
+                                {% endif %}
+
+                            </div>
+
+
+                            <!-- TOPIC -->
+
+                            {% if resource.topic %}
+
+                                <p class="learning-resource-topic">
+
+                                    <strong>Topic:</strong>
+                                    {{ resource.topic }}
+
+                                </p>
+
+                            {% endif %}
+
+
+                            <!-- DESCRIPTION -->
+
+                            <p class="learning-resource-description">
+
+                                {{ resource.description|truncatewords:28 }}
+
+                            </p>
+
+
+                            <!-- SOURCE -->
+
+                            {% if resource.source_organization %}
+
+                                <div class="learning-resource-source">
+
+                                    <i class="bi bi-building"></i>
+
+                                    <span>
+                                        {{ resource.source_organization }}
+                                    </span>
+
+                                </div>
+
+                            {% endif %}
+
+
+                            <!-- ACTION -->
+
+                            <a
+                                href="{% url 'education:learning_resource_detail' resource.id %}"
+                                class="learning-resource-button"
+                            >
+
+                                View Resource
+
+                                <i class="bi bi-arrow-right"></i>
+
+                            </a>
+
+                        </div>
+
+                    </article>
+
+                {% endfor %}
+
+            </div>
+
+        </section>
+
+
+    {% else %}
+
+        <!-- EMPTY STATE -->
+
+        <section class="learning-empty">
+
+            <div class="learning-empty-icon">
+
+                <i class="bi bi-search"></i>
+
+            </div>
+
+            <h2>
+                No learning resources found
+            </h2>
+
+            <p>
+                Try changing your search or filters.
+            </p>
+
+            <a
+                href="{% url 'education:learning_sources' %}"
+                class="learning-reset-button"
+            >
+                View All Resources
+            </a>
+
+        </section>
+
+    {% endif %}
+
+
+    <!-- HELP -->
+
+    <section class="learning-help">
+
+        <div class="learning-help-icon">
+            <i class="bi bi-info-circle"></i>
+        </div>
+
+        <div>
+
+            <h3>
+                How to use learning resources
+            </h3>
+
+            <p>
+                Select your education level, search for your subject,
+                choose a resource and follow the access instructions
+                provided by the resource provider.
+            </p>
+
+        </div>
+
+    </section>
+
+</div>
+
+{% endblock %}

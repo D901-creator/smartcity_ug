@@ -1,0 +1,199 @@
+
+{% extends "city_admin/base.html" %}
+
+{% block content %}
+<div class="container-fluid py-3">
+
+    <!-- Page heading -->
+    <div class="d-flex flex-wrap justify-content-between align-items-center gap-2 mb-4">
+        <div>
+            <h2 class="fw-bold mb-1">User Management</h2>
+            <p class="text-muted mb-0">
+                Browse registered Smart City Uganda accounts.
+            </p>
+        </div>
+
+        <span class="badge text-bg-primary fs-6">
+            {{ total_users }} matching users
+        </span>
+    </div>
+
+    <!-- Search and role filter -->
+    <form method="get" class="card border-0 shadow-sm mb-4">
+        <div class="card-body">
+            <div class="row g-3">
+
+                <div class="col-md-7">
+                    <label for="user-search" class="form-label">
+                        Search accounts
+                    </label>
+
+                    <input
+                        id="user-search"
+                        type="search"
+                        name="q"
+                        value="{{ search_query }}"
+                        class="form-control"
+                        placeholder="Name, username, email or phone"
+                    >
+                </div>
+
+                <div class="col-md-3">
+                    <label for="role-filter" class="form-label">
+                        Filter by role
+                    </label>
+
+                    <select id="role-filter" name="role" class="form-select">
+                        <option value="">All roles</option>
+
+                        <option value="citizen"
+                            {% if selected_role == "citizen" %}selected{% endif %}>
+                            Citizen
+                        </option>
+
+                        <option value="officer"
+                            {% if selected_role == "officer" %}selected{% endif %}>
+                            Government Officer
+                        </option>
+
+                        <option value="department_head"
+                            {% if selected_role == "department_head" %}selected{% endif %}>
+                            Department Head
+                        </option>
+                    </select>
+                </div>
+
+                <div class="col-md-2 d-flex align-items-end">
+                    <button type="submit" class="btn btn-primary w-100">
+                        <i class="bi bi-search"></i>
+                        Search
+                    </button>
+                </div>
+
+            </div>
+        </div>
+    </form>
+
+    <!-- User accounts table -->
+    <div class="card border-0 shadow-sm">
+
+        <div class="table-responsive">
+            <table class="table table-hover align-middle mb-0">
+
+                <thead class="table-light">
+                    <tr>
+                        <th>Full name</th>
+                        <th>Username</th>
+                        <th>Email</th>
+                        <th>Phone</th>
+                        <th>Role</th>
+                        <th>Verification</th>
+                        <th class="text-center">Actions</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+                    {% for profile in page_obj %}
+                    <tr>
+                        <!-- Full name -->
+                        <td>
+                            <a href="{% url 'city_admin:user_detail' profile.pk %}"
+                               class="fw-semibold text-decoration-none">
+                                {{ profile.full_name|default:profile.user.username }}
+                            </a>
+                        </td>
+
+                        <!-- Username -->
+                        <td>{{ profile.user.username }}</td>
+
+                        <!-- Email -->
+                        <td>{{ profile.user.email|default:"—" }}</td>
+
+                        <!-- Phone -->
+                        <td>{{ profile.phone_number|default:"—" }}</td>
+
+                        <!-- Role -->
+                        <td>
+                            <span class="badge text-bg-secondary">
+                                {{ profile.get_role_display }}
+                            </span>
+                        </td>
+
+                        <!-- Verification -->
+                        <td>
+                            {{ profile.verification_status|default:"Not specified" }}
+                        </td>
+
+                        <!-- Update and Delete actions -->
+                        <td>
+                            <div class="d-flex flex-wrap justify-content-center gap-2">
+
+                                <a href="{% url 'city_admin:user_update' profile.user.pk %}"
+                                   class="btn btn-sm btn-outline-primary">
+                                    <i class="bi bi-pencil-square"></i>
+                                    Update
+                                </a>
+
+                                <form method="post"
+                                      action="{% url 'city_admin:user_delete' profile.user.pk %}"
+                                      onsubmit="return confirm('Are you sure you want to permanently delete this user? This action cannot be undone.');">
+
+                                    {% csrf_token %}
+
+                                    <button type="submit"
+                                            class="btn btn-sm btn-outline-danger">
+                                        <i class="bi bi-trash"></i>
+                                        Delete
+                                    </button>
+                                </form>
+
+                            </div>
+                        </td>
+                    </tr>
+
+                    {% empty %}
+                    <tr>
+                        <td colspan="7" class="text-center py-5 text-muted">
+                            <i class="bi bi-people fs-2 d-block mb-2"></i>
+                            No matching accounts found.
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+
+            </table>
+        </div>
+
+        <!-- Pagination -->
+        {% if page_obj.has_other_pages %}
+        <div class="card-body border-top d-flex flex-wrap justify-content-between align-items-center gap-3">
+
+            <span class="text-muted small">
+                Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}
+            </span>
+
+            <div class="d-flex gap-2">
+
+                {% if page_obj.has_previous %}
+                <a class="btn btn-outline-primary btn-sm"
+                   href="?q={{ search_query|urlencode }}&amp;role={{ selected_role|urlencode }}&amp;page={{ page_obj.previous_page_number }}">
+                    <i class="bi bi-arrow-left"></i>
+                    Previous
+                </a>
+                {% endif %}
+
+                {% if page_obj.has_next %}
+                <a class="btn btn-outline-primary btn-sm"
+                   href="?q={{ search_query|urlencode }}&amp;role={{ selected_role|urlencode }}&amp;page={{ page_obj.next_page_number }}">
+                    Next
+                    <i class="bi bi-arrow-right"></i>
+                </a>
+                {% endif %}
+
+            </div>
+        </div>
+        {% endif %}
+
+    </div>
+</div>
+{% endblock %}

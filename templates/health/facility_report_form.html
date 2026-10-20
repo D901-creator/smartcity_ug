@@ -1,0 +1,285 @@
+{% extends "base.html" %}
+
+{% block title %}Report Health Facility Problem | Smart City Uganda{% endblock %}
+
+{% block content %}
+
+<div class="container-fluid py-3">
+
+    <div class="row justify-content-center">
+
+        <div class="col-lg-9 col-xl-8">
+
+            <a href="{% url 'health:home' %}"
+               class="small text-decoration-none">
+                <i class="bi bi-arrow-left"></i>
+                Back to Health Services
+            </a>
+
+            <div class="card border-0 shadow-sm mt-3">
+
+                <div class="card-body p-4">
+
+                    <div class="d-flex align-items-start mb-3">
+
+                        <div class="bg-danger-subtle text-danger rounded-3 p-2 me-3">
+                            <i class="bi bi-megaphone fs-4"></i>
+                        </div>
+
+                        <div>
+                            <h4 class="fw-bold mb-1">
+                                Report a Hospital or Health Facility Problem
+                            </h4>
+
+                            <p class="text-muted small mb-0">
+                                Tell the responsible health authorities about
+                                a service or facility issue that needs review.
+                            </p>
+                        </div>
+
+                    </div>
+
+
+                    <div class="alert alert-warning small">
+
+                        <strong>Important:</strong>
+
+                        This is a citizen report for review. Please describe
+                        what you observed accurately. Do not use this form
+                        to publish confidential patient information or make
+                        unsupported accusations against individuals.
+
+                    </div>
+
+
+                    <form method="post"
+                          enctype="multipart/form-data">
+
+                        {% csrf_token %}
+
+                        {% if form.non_field_errors %}
+                        <div class="alert alert-danger">
+                            {{ form.non_field_errors }}
+                        </div>
+                        {% endif %}
+
+
+                        <div class="row g-3">
+
+                            <div class="col-md-6">
+
+                                <label class="form-label fw-semibold">
+                                    Your Full Name
+                                </label>
+
+                                {{ form.reporter_name }}
+
+                                {% for error in form.reporter_name.errors %}
+                                <div class="text-danger small">
+                                    {{ error }}
+                                </div>
+                                {% endfor %}
+
+                            </div>
+
+
+                            <div class="col-md-6">
+
+                                <label class="form-label fw-semibold">
+                                    Email
+                                </label>
+
+                                {{ form.reporter_email }}
+
+                                {% for error in form.reporter_email.errors %}
+                                <div class="text-danger small">
+                                    {{ error }}
+                                </div>
+                                {% endfor %}
+
+                            </div>
+
+
+                            <div class="col-md-6">
+
+                                <label class="form-label fw-semibold">
+                                    Phone
+                                </label>
+
+                                {{ form.reporter_phone }}
+
+                                {% for error in form.reporter_phone.errors %}
+                                <div class="text-danger small">
+                                    {{ error }}
+                                </div>
+                                {% endfor %}
+
+                            </div>
+
+
+                            <div class="col-md-6">
+
+                                <label class="form-label fw-semibold">
+                                    Health Facility
+                                </label>
+
+                                {{ form.facility }}
+
+                                {% for error in form.facility.errors %}
+                                <div class="text-danger small">
+                                    {{ error }}
+                                </div>
+                                {% endfor %}
+
+                            </div>
+
+
+                            <div class="col-md-6">
+
+                                <label class="form-label fw-semibold">
+                                    Problem Type
+                                </label>
+
+                                {{ form.report_type }}
+
+                                {% for error in form.report_type.errors %}
+                                <div class="text-danger small">
+                                    {{ error }}
+                                </div>
+                                {% endfor %}
+
+                            </div>
+
+
+                            <div class="col-md-6">
+
+                                <label class="form-label fw-semibold">
+                                    District / City
+                                </label>
+
+                                {{ form.district }}
+
+                                {% for error in form.district.errors %}
+                                <div class="text-danger small">
+                                    {{ error }}
+                                </div>
+                                {% endfor %}
+
+                            </div>
+
+
+                            <div class="col-12">
+
+                                <label class="form-label fw-semibold">
+                                    Subject
+                                </label>
+
+                                {{ form.subject }}
+
+                                {% for error in form.subject.errors %}
+                                <div class="text-danger small">
+                                    {{ error }}
+                                </div>
+                                {% endfor %}
+
+                            </div>
+
+
+                            <div class="col-12">
+
+                                <label class="form-label fw-semibold">
+                                    What happened?
+                                </label>
+
+                                {{ form.description }}
+
+                                <div class="form-text">
+                                    Explain what you observed, where it
+                                    happened and when relevant.
+                                </div>
+
+                                {% for error in form.description.errors %}
+                                <div class="text-danger small">
+                                    {{ error }}
+                                </div>
+                                {% endfor %}
+
+                            </div>
+
+
+                            <div class="col-md-6">
+
+                                <label class="form-label fw-semibold">
+                                    Specific Location
+                                </label>
+
+                                {{ form.location }}
+
+                                <div class="form-text">
+                                    Example: outpatient department,
+                                    pharmacy, maternity area.
+                                </div>
+
+                            </div>
+
+
+                            <div class="col-md-6">
+
+                                <label class="form-label fw-semibold">
+                                    Incident Date
+                                </label>
+
+                                {{ form.incident_date }}
+
+                            </div>
+
+
+                            <div class="col-12">
+
+                                <label class="form-label fw-semibold">
+                                    Evidence Image
+                                </label>
+
+                                {{ form.evidence }}
+
+                                <div class="form-text">
+                                    Optional. Upload only an appropriate
+                                    image that does not expose confidential
+                                    patient information.
+                                </div>
+
+                            </div>
+
+                        </div>
+
+
+                        <div class="mt-4 d-flex flex-wrap gap-2">
+
+                            <button type="submit"
+                                    class="btn btn-danger">
+
+                                <i class="bi bi-send me-1"></i>
+                                Submit Report
+
+                            </button>
+
+                            <a href="{% url 'health:home' %}"
+                               class="btn btn-outline-secondary">
+                                Cancel
+                            </a>
+
+                        </div>
+
+                    </form>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+{% endblock %}

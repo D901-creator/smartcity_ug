@@ -1,0 +1,502 @@
+
+{% extends "base.html" %}
+
+{% block title %}
+    Jobs & Employment Statistics | Smart City Uganda
+{% endblock %}
+
+{% block content %}
+
+<div class="container-fluid py-4">
+
+    <div class="mb-4">
+
+        <h4 class="fw-bold mb-1">
+            <i class="bi bi-bar-chart-line me-2 text-success"></i>
+            Jobs & Employment Statistics
+        </h4>
+
+        <p class="text-muted mb-0">
+            Database-generated information about employment
+            opportunities, skills and training.
+        </p>
+
+    </div>
+
+
+    <!-- Summary -->
+    <div class="row g-3 mb-4">
+
+        <div class="col-6 col-md-4 col-xl-3">
+
+            <div class="card border-0 shadow-sm h-100">
+
+                <div class="card-body p-3">
+
+                    <i class="bi bi-briefcase text-success fs-4"></i>
+
+                    <div class="text-muted small mt-2">
+                        Published Jobs
+                    </div>
+
+                    <h4 class="fw-bold mb-0">
+                        {{ total_jobs }}
+                    </h4>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <div class="col-6 col-md-4 col-xl-3">
+
+            <div class="card border-0 shadow-sm h-100">
+
+                <div class="card-body p-3">
+
+                    <i class="bi bi-check-circle text-success fs-4"></i>
+
+                    <div class="text-muted small mt-2">
+                        Open Jobs
+                    </div>
+
+                    <h4 class="fw-bold mb-0">
+                        {{ open_jobs }}
+                    </h4>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <div class="col-6 col-md-4 col-xl-3">
+
+            <div class="card border-0 shadow-sm h-100">
+
+                <div class="card-body p-3">
+
+                    <i class="bi bi-clock text-warning fs-4"></i>
+
+                    <div class="text-muted small mt-2">
+                        Closing Soon
+                    </div>
+
+                    <h4 class="fw-bold mb-0">
+                        {{ closing_soon }}
+                    </h4>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <div class="col-6 col-md-4 col-xl-3">
+
+            <div class="card border-0 shadow-sm h-100">
+
+                <div class="card-body p-3">
+
+                    <i class="bi bi-mortarboard text-success fs-4"></i>
+
+                    <div class="text-muted small mt-2">
+                        Internships
+                    </div>
+
+                    <h4 class="fw-bold mb-0">
+                        {{ internships }}
+                    </h4>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <div class="col-6 col-md-4 col-xl-3">
+
+            <div class="card border-0 shadow-sm h-100">
+
+                <div class="card-body p-3">
+
+                    <i class="bi bi-tools text-success fs-4"></i>
+
+                    <div class="text-muted small mt-2">
+                        Skills Opportunities
+                    </div>
+
+                    <h4 class="fw-bold mb-0">
+                        {{ total_skills }}
+                    </h4>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <div class="col-6 col-md-4 col-xl-3">
+
+            <div class="card border-0 shadow-sm h-100">
+
+                <div class="card-body p-3">
+
+                    <i class="bi bi-lightning text-success fs-4"></i>
+
+                    <div class="text-muted small mt-2">
+                        Open Skills Opportunities
+                    </div>
+
+                    <h4 class="fw-bold mb-0">
+                        {{ open_skills }}
+                    </h4>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <div class="col-6 col-md-4 col-xl-3">
+
+            <div class="card border-0 shadow-sm h-100">
+
+                <div class="card-body p-3">
+
+                    <i class="bi bi-person-check text-success fs-4"></i>
+
+                    <div class="text-muted small mt-2">
+                        Apprenticeships
+                    </div>
+
+                    <h4 class="fw-bold mb-0">
+                        {{ apprenticeships }}
+                    </h4>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <div class="col-6 col-md-4 col-xl-3">
+
+            <div class="card border-0 shadow-sm h-100">
+
+                <div class="card-body p-3">
+
+                    <i class="bi bi-info-circle text-success fs-4"></i>
+
+                    <div class="text-muted small mt-2">
+                        Employment Information
+                    </div>
+
+                    <h4 class="fw-bold mb-0">
+                        {{ total_information }}
+                    </h4>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- Jobs by Sector -->
+    <div class="card border-0 shadow-sm mb-4">
+
+        <div class="card-body">
+
+            <h6 class="fw-bold mb-3">
+                Jobs by Sector
+            </h6>
+
+            <div class="table-responsive">
+
+                <table class="table table-sm align-middle">
+
+                    <thead>
+                        <tr>
+                            <th>Sector</th>
+                            <th class="text-end">Jobs</th>
+                        </tr>
+                    </thead>
+
+                    <tbody>
+
+                        {% for item in jobs_by_sector %}
+
+                            <tr>
+
+                                <td>
+                                    {{ item.sector|title }}
+                                </td>
+
+                                <td class="text-end">
+                                    {{ item.total }}
+                                </td>
+
+                            </tr>
+
+                        {% empty %}
+
+                            <tr>
+                                <td colspan="2"
+                                    class="text-muted text-center">
+                                    No data available.
+                                </td>
+                            </tr>
+
+                        {% endfor %}
+
+                    </tbody>
+
+                </table>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- Employment Types -->
+    <div class="card border-0 shadow-sm mb-4">
+
+        <div class="card-body">
+
+            <h6 class="fw-bold mb-3">
+                Jobs by Employment Type
+            </h6>
+
+            <div class="table-responsive">
+
+                <table class="table table-sm align-middle">
+
+                    <thead>
+                        <tr>
+                            <th>Employment Type</th>
+                            <th class="text-end">Jobs</th>
+                        </tr>
+                    </thead>
+
+                    <tbody>
+
+                        {% for item in jobs_by_employment_type %}
+
+                            <tr>
+
+                                <td>
+                                    {{ item.employment_type|title }}
+                                </td>
+
+                                <td class="text-end">
+                                    {{ item.total }}
+                                </td>
+
+                            </tr>
+
+                        {% empty %}
+
+                            <tr>
+                                <td colspan="2"
+                                    class="text-muted text-center">
+                                    No data available.
+                                </td>
+                            </tr>
+
+                        {% endfor %}
+
+                    </tbody>
+
+                </table>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- Jobs by District -->
+    <div class="card border-0 shadow-sm mb-4">
+
+        <div class="card-body">
+
+            <h6 class="fw-bold mb-3">
+                Jobs by District
+            </h6>
+
+            <div class="table-responsive">
+
+                <table class="table table-sm">
+
+                    <thead>
+                        <tr>
+                            <th>District</th>
+                            <th class="text-end">Jobs</th>
+                        </tr>
+                    </thead>
+
+                    <tbody>
+
+                        {% for item in jobs_by_district %}
+
+                            <tr>
+
+                                <td>
+                                    {{ item.district }}
+                                </td>
+
+                                <td class="text-end">
+                                    {{ item.total }}
+                                </td>
+
+                            </tr>
+
+                        {% empty %}
+
+                            <tr>
+                                <td colspan="2"
+                                    class="text-muted text-center">
+                                    No district data available.
+                                </td>
+                            </tr>
+
+                        {% endfor %}
+
+                    </tbody>
+
+                </table>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- Skills Statistics -->
+    <div class="row g-3">
+
+        <div class="col-12 col-lg-6">
+
+            <div class="card border-0 shadow-sm h-100">
+
+                <div class="card-body">
+
+                    <h6 class="fw-bold mb-3">
+                        Skills Opportunities by Type
+                    </h6>
+
+                    <div class="table-responsive">
+
+                        <table class="table table-sm">
+
+                            <tbody>
+
+                                {% for item in skills_by_type %}
+
+                                    <tr>
+
+                                        <td>
+                                            {{ item.opportunity_type|title }}
+                                        </td>
+
+                                        <td class="text-end">
+                                            {{ item.total }}
+                                        </td>
+
+                                    </tr>
+
+                                {% empty %}
+
+                                    <tr>
+                                        <td class="text-muted">
+                                            No data available.
+                                        </td>
+                                    </tr>
+
+                                {% endfor %}
+
+                            </tbody>
+
+                        </table>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <div class="col-12 col-lg-6">
+
+            <div class="card border-0 shadow-sm h-100">
+
+                <div class="card-body">
+
+                    <h6 class="fw-bold mb-3">
+                        Skills Opportunities by Status
+                    </h6>
+
+                    <div class="table-responsive">
+
+                        <table class="table table-sm">
+
+                            <tbody>
+
+                                {% for item in skills_by_status %}
+
+                                    <tr>
+
+                                        <td>
+                                            {{ item.status|title }}
+                                        </td>
+
+                                        <td class="text-end">
+                                            {{ item.total }}
+                                        </td>
+
+                                    </tr>
+
+                                {% empty %}
+
+                                    <tr>
+                                        <td class="text-muted">
+                                            No data available.
+                                        </td>
+                                    </tr>
+
+                                {% endfor %}
+
+                            </tbody>
+
+                        </table>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+{% endblock %}

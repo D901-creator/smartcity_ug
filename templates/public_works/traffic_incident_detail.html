@@ -1,0 +1,229 @@
+{% extends "base.html" %}
+
+{% block title %}
+    {{ incident.reference_number }}
+{% endblock %}
+
+{% block content %}
+
+<div class="container-fluid py-3">
+
+    <div class="mb-3">
+
+        <a
+            href="{% url 'public_works:traffic_incident_reports' %}"
+            class="btn btn-outline-secondary btn-sm"
+        >
+            <i class="bi bi-arrow-left me-1"></i>
+            Back to Reports
+        </a>
+
+    </div>
+
+
+    <div class="row g-3">
+
+        <div class="col-12 col-lg-8">
+
+            <div class="card shadow-sm border-0">
+
+                <div class="card-body">
+
+                    <div class="d-flex flex-wrap justify-content-between">
+
+                        <div>
+
+                            <h4 class="mb-1">
+                                {{ incident.get_incident_type_display }}
+                            </h4>
+
+                            <p class="small text-muted">
+                                {{ incident.reference_number }}
+                            </p>
+
+                        </div>
+
+
+                        <span class="badge text-bg-warning align-self-start">
+                            {{ incident.get_status_display }}
+                        </span>
+
+                    </div>
+
+
+                    <hr>
+
+
+                    <div class="row g-3 small">
+
+                        <div class="col-12 col-md-6">
+
+                            <strong>Citizen</strong>
+
+                            <div class="text-muted">
+                                {{ incident.citizen_name }}
+                            </div>
+
+                        </div>
+
+
+                        <div class="col-12 col-md-6">
+
+                            <strong>Phone</strong>
+
+                            <div class="text-muted">
+                                {{ incident.phone_number }}
+                            </div>
+
+                        </div>
+
+
+                        <div class="col-12 col-md-6">
+
+                            <strong>District / City</strong>
+
+                            <div class="text-muted">
+                                {{ incident.district }}
+                            </div>
+
+                        </div>
+
+
+                        <div class="col-12 col-md-6">
+
+                            <strong>Road</strong>
+
+                            <div class="text-muted">
+                                {{ incident.road_name }}
+                            </div>
+
+                        </div>
+
+
+                        <div class="col-12">
+
+                            <strong>Location</strong>
+
+                            <div class="text-muted">
+                                {{ incident.location }}
+                            </div>
+
+                        </div>
+
+
+                        <div class="col-12 col-md-6">
+
+                            <strong>Urgency</strong>
+
+                            <div class="text-muted">
+                                {{ incident.get_urgency_display }}
+                            </div>
+
+                        </div>
+
+
+                        <div class="col-12 col-md-6">
+
+                            <strong>Reported</strong>
+
+                            <div class="text-muted">
+                                {{ incident.created_at|date:"d M Y, H:i" }}
+                            </div>
+
+                        </div>
+
+                    </div>
+
+
+                    <hr>
+
+
+                    <h6>
+                        Incident Description
+                    </h6>
+
+                    <p class="small text-muted">
+                        {{ incident.description|linebreaks }}
+                    </p>
+
+
+                    {% if incident.photo %}
+
+                    <hr>
+
+                    <h6>
+                        Photo Evidence
+                    </h6>
+
+                    <img
+                        src="{{ incident.photo.url }}"
+                        alt="Traffic incident evidence"
+                        class="img-fluid rounded"
+                        style="max-height: 400px;"
+                    >
+
+                    {% endif %}
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <div class="col-12 col-lg-4">
+
+            <div class="card shadow-sm border-0">
+
+                <div class="card-body">
+
+                    <h6>
+                        <i class="bi bi-upc me-1"></i>
+                        Reference Number
+                    </h6>
+
+                    <div class="alert alert-light border mb-0">
+
+                        <strong>
+                            {{ incident.reference_number }}
+                        </strong>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <div class="card shadow-sm border-0 mt-3">
+
+                <div class="card-body">
+
+                    <h6>
+                        <i class="bi bi-shield-check me-1"></i>
+                        Traffic Safety
+                    </h6>
+
+                    <p class="small text-muted">
+                        View traffic and road safety information
+                        available through Smart City Uganda.
+                    </p>
+
+                    <a
+                        href="{% url 'public_works:traffic_road_safety' %}"
+                        class="btn btn-success btn-sm w-100"
+                    >
+                        View Safety Information
+                    </a>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+{% endblock %}

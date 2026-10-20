@@ -1,0 +1,250 @@
+{% extends "base.html" %}
+
+{% block title %}
+    {{ advisory.title }} | Smart City Uganda
+{% endblock %}
+
+{% block content %}
+
+<div class="container-fluid">
+
+    <div class="mb-3">
+
+        <a
+            href="{% url 'public_works:transport_information' %}"
+            class="btn btn-outline-secondary btn-sm"
+        >
+            <i class="bi bi-arrow-left me-1"></i>
+            Back to Advisories
+        </a>
+
+    </div>
+
+
+    <div class="row g-3">
+
+        <!-- Main Information -->
+        <div class="col-12 col-lg-8">
+
+            <div class="card border-0 shadow-sm">
+
+                <div class="card-body">
+
+                    <div class="d-flex justify-content-between align-items-start mb-3">
+
+                        <div>
+
+                            <h4 class="mb-1">
+                                {{ advisory.title }}
+                            </h4>
+
+                            <small class="text-muted">
+                                {{ advisory.advisory_code }}
+                            </small>
+
+                        </div>
+
+
+                        {% if advisory.priority == "urgent" %}
+
+                            <span class="badge text-bg-danger">
+                                Urgent
+                            </span>
+
+                        {% elif advisory.priority == "high" %}
+
+                            <span class="badge text-bg-warning">
+                                High Priority
+                            </span>
+
+                        {% else %}
+
+                            <span class="badge text-bg-primary">
+                                {{ advisory.get_priority_display }}
+                            </span>
+
+                        {% endif %}
+
+                    </div>
+
+
+                    <div class="mb-3">
+
+                        <span class="badge text-bg-light border">
+
+                            <i class="bi bi-tag me-1"></i>
+
+                            {{ advisory.get_category_display }}
+
+                        </span>
+
+                    </div>
+
+
+                    <h6>
+                        Summary
+                    </h6>
+
+                    <p class="text-muted">
+                        {{ advisory.summary }}
+                    </p>
+
+
+                    <h6 class="mt-4">
+                        Information
+                    </h6>
+
+                    <div class="small">
+
+                        {{ advisory.information|linebreaks }}
+
+                    </div>
+
+
+                    {% if advisory.recommended_action %}
+
+                        <div class="alert alert-warning mt-4 small">
+
+                            <strong>
+                                <i class="bi bi-shield-check me-1"></i>
+                                Recommended Action
+                            </strong>
+
+                            <div class="mt-1">
+                                {{ advisory.recommended_action|linebreaks }}
+                            </div>
+
+                        </div>
+
+                    {% endif %}
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <!-- Information Panel -->
+        <div class="col-12 col-lg-4">
+
+            <div class="card border-0 shadow-sm">
+
+                <div class="card-header bg-white">
+
+                    <strong>
+                        Advisory Details
+                    </strong>
+
+                </div>
+
+                <div class="card-body">
+
+                    {% if advisory.district %}
+
+                        <div class="small mb-3">
+
+                            <div class="text-muted">
+                                District / City
+                            </div>
+
+                            <strong>
+                                {{ advisory.district }}
+                            </strong>
+
+                        </div>
+
+                    {% endif %}
+
+
+                    {% if advisory.affected_location %}
+
+                        <div class="small mb-3">
+
+                            <div class="text-muted">
+                                Affected Location
+                            </div>
+
+                            <strong>
+                                {{ advisory.affected_location }}
+                            </strong>
+
+                        </div>
+
+                    {% endif %}
+
+
+                    {% if advisory.source_organization %}
+
+                        <div class="small mb-3">
+
+                            <div class="text-muted">
+                                Source Organization
+                            </div>
+
+                            <strong>
+                                {{ advisory.source_organization }}
+                            </strong>
+
+                        </div>
+
+                    {% endif %}
+
+
+                    {% if advisory.contact_phone %}
+
+                        <div class="small mb-3">
+
+                            <div class="text-muted">
+                                Contact
+                            </div>
+
+                            <strong>
+                                {{ advisory.contact_phone }}
+                            </strong>
+
+                        </div>
+
+                    {% endif %}
+
+
+                    {% if advisory.published_at %}
+
+                        <div class="small mb-3">
+
+                            <div class="text-muted">
+                                Published
+                            </div>
+
+                            {{ advisory.published_at|date:"d M Y, H:i" }}
+
+                        </div>
+
+                    {% endif %}
+
+
+                    {% if advisory.expires_at %}
+
+                        <div class="small">
+
+                            <div class="text-muted">
+                                Expires
+                            </div>
+
+                            {{ advisory.expires_at|date:"d M Y, H:i" }}
+
+                        </div>
+
+                    {% endif %}
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+{% endblock %}

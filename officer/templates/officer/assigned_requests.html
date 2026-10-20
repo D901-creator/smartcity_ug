@@ -1,0 +1,201 @@
+
+{% extends "officer/base.html" %}
+
+{% block title %}Citizen Requests{% endblock %}
+{% block header_title %}Citizen Requests{% endblock %}
+
+{% block content %}
+<div class="d-flex flex-wrap align-items-center justify-content-between gap-2 mb-3">
+    <div>
+        <h2 class="page-title mb-1">Citizen Requests</h2>
+        <p class="text-secondary small mb-0">
+            Review requests submitted by citizens and track their progress.
+        </p>
+    </div>
+
+    <span class="badge text-bg-light border">
+        {{ requests_list|length }} request{{ requests_list|length|pluralize }}
+    </span>
+</div>
+
+<!-- Search and filters -->
+<div class="card compact-card mb-3">
+    <div class="card-body p-3">
+        <form method="get" class="row g-2 align-items-end">
+            <div class="col-12 col-md-5">
+                <label for="requestSearch" class="form-label small fw-semibold">
+                    Search requests
+                </label>
+                <input
+                    type="search"
+                    name="q"
+                    id="requestSearch"
+                    class="form-control form-control-sm"
+                    placeholder="Subject, citizen, department or reference"
+                    value="{{ search_query }}"
+                >
+            </div>
+
+            <div class="col-12 col-sm-6 col-md-3">
+                <label for="requestStatus" class="form-label small fw-semibold">
+                    Status
+                </label>
+                <select name="status" id="requestStatus"
+                        class="form-select form-select-sm">
+                    <option value="">All statuses</option>
+                    {% for value, label in status_choices %}
+                        <option value="{{ value }}"
+                            {% if selected_status == value %}selected{% endif %}>
+                            {{ label }}
+                        </option>
+                    {% endfor %}
+                </select>
+            </div>
+
+            <div class="col-12 col-sm-6 col-md-2">
+                <label for="requestDepartment" class="form-label small fw-semibold">
+                    Department
+                </label>
+                <select name="department" id="requestDepartment"
+                        class="form-select form-select-sm">
+                    <option value="">All departments</option>
+                    {% for department in departments %}
+                        {% if department %}
+                            <option value="{{ department }}"
+                                {% if selected_department == department %}selected{% endif %}>
+                                {{ department }}
+                            </option>
+                        {% endif %}
+                    {% endfor %}
+                </select>
+            </div>
+
+            <div class="col-6 col-md-1 d-grid">
+                <button type="submit" class="btn btn-success btn-sm">
+                    <i class="bi bi-search"></i>
+                    <span class="d-md-none ms-1">Search</span>
+                </button>
+            </div>
+
+            <div class="col-6 col-md-1 d-grid">
+                <a href="{% url 'officer:assigned_requests' %}"
+                   class="btn btn-outline-secondary btn-sm">
+                    Reset
+                </a>
+            </div>
+        </form>
+    </div>
+</div>
+
+<!-- Requests table -->
+<div class="card compact-card">
+    <div class="card-header bg-white d-flex align-items-center justify-content-between py-3">
+        <h3 class="section-title mb-0">Request register</h3>
+        <span class="small text-secondary">Newest first</span>
+    </div>
+
+    <div class="table-responsive">
+        <table class="table table-hover align-middle mb-0">
+            <thead class="table-light">
+                <tr>
+                    <th class="ps-3">Reference</th>
+                    <th>Request</th>
+                    <th>Citizen</th>
+                    <th>Department</th>
+                    <th>Priority</th>
+                    <th>Status</th>
+                    <th>Date submitted</th>
+                    <th class="text-end pe-3">Action</th>
+                </tr>
+            </thead>
+
+            <tbody>
+                {% for item in requests_list %}
+                    <tr>
+                        <td class="ps-3">
+                            <span class="small font-monospace"
+                                  title="{{ item.reference }}">
+                                {{ item.reference|stringformat:".8s" }}
+                            </span>
+                        </td>
+
+                        <td>
+                            <div class="fw-semibold small">{{ item.subject }}</div>
+                            <div class="text-secondary small">
+                                {{ item.service|default:"General request" }}
+                            </div>
+                        </td>
+
+                        <td>
+                            <span class="small">
+                                {{ item.citizen.get_full_name|default:item.citizen.username }}
+                            </span>
+                        </td>
+
+                        <td>
+                            <span class="small">{{ item.department }}</span>
+                        </td>
+
+                        <td>
+                            {% if item.priority == "urgent" %}
+                                <span class="badge text-bg-danger">Urgent</span>
+                            {% elif item.priority == "high" %}
+                                <span class="badge text-bg-warning">High</span>
+                            {% elif item.priority == "low" %}
+                                <span class="badge text-bg-light border">Low</span>
+                            {% else %}
+                                <span class="badge text-bg-secondary">Normal</span>
+                            {% endif %}
+                        </td>
+
+                        <td>
+                            {% if item.status == "resolved" %}
+                                <span class="badge text-bg-success">Resolved</span>
+                            {% elif item.status == "in_progress" %}
+                                <span class="badge text-bg-primary">In progress</span>
+                            {% elif item.status == "closed" %}
+                                <span class="badge text-bg-dark">Closed</span>
+                            {% elif item.status == "waiting" %}
+                                <span class="badge text-bg-warning">Awaiting information</span>
+                            {% elif item.status == "acknowledged" %}
+                                <span class="badge text-bg-info">Acknowledged</span>
+                            {% else %}
+                                <span class="badge text-bg-secondary">Pending</span>
+                            {% endif %}
+                        </td>
+
+                        <td>
+                            <span class="small text-secondary">
+                                {{ item.created_at|date:"d M Y" }}
+                            </span>
+                        </td>
+
+                        <td class="text-end pe-3">
+                            <a href="{% url 'officer:request_detail' item.pk %}"
+                               class="btn btn-outline-success btn-sm">
+                                View
+                            </a>
+                        </td>
+                    </tr>
+                {% empty %}
+                    <tr>
+                        <td colspan="8" class="text-center py-5">
+                            <i class="bi bi-inbox fs-3 text-secondary"></i>
+                            <p class="fw-semibold mt-2 mb-1">No requests found</p>
+                            <p class="small text-secondary mb-0">
+                                Try changing your search or filters.
+                            </p>
+                        </td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+    <div class="card-footer bg-white py-2">
+        <span class="small text-secondary">
+            Showing {{ requests_list|length }} request{{ requests_list|length|pluralize }}
+        </span>
+    </div>
+</div>
+{% endblock %}

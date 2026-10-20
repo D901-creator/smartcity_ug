@@ -1,0 +1,143 @@
+{% extends "base.html" %}
+
+{% block title %}Medical Equipment | Smart City Uganda{% endblock %}
+
+{% block content %}
+
+<div class="container-fluid py-3">
+
+    <h4 class="fw-bold mb-1">Medical Equipment</h4>
+
+    <p class="text-muted small mb-4">
+        View published information about medical equipment and availability.
+    </p>
+
+    <div class="card border-0 shadow-sm mb-4">
+        <div class="card-body">
+
+            <form method="get">
+
+                <div class="row g-2">
+
+                    <div class="col-md-5">
+                        <input type="text"
+                               name="search"
+                               value="{{ search }}"
+                               class="form-control"
+                               placeholder="Equipment or facility">
+                    </div>
+
+                    <div class="col-md-4">
+                        <select name="status"
+                                class="form-select">
+
+                            <option value="">All statuses</option>
+
+                            {% for value, label in status_choices %}
+                            <option value="{{ value }}"
+                                {% if status == value %}selected{% endif %}>
+                                {{ label }}
+                            </option>
+                            {% endfor %}
+
+                        </select>
+                    </div>
+
+                    <div class="col-md-3">
+                        <input type="text"
+                               name="district"
+                               value="{{ district }}"
+                               class="form-control"
+                               placeholder="District">
+                    </div>
+
+                </div>
+
+                <div class="mt-3">
+
+                    <button class="btn btn-success">
+                        <i class="bi bi-search me-1"></i>
+                        Search
+                    </button>
+
+                    <a href="{% url 'health:equipment' %}"
+                       class="btn btn-outline-secondary">
+                        Reset
+                    </a>
+
+                </div>
+
+            </form>
+
+        </div>
+    </div>
+
+
+    <div class="row g-3">
+
+        {% for item in equipment %}
+
+        <div class="col-md-6 col-xl-4">
+
+            <div class="card border-0 shadow-sm h-100">
+
+                {% if item.image %}
+                <img src="{{ item.image.url }}"
+                     class="card-img-top"
+                     style="height:180px;object-fit:cover;"
+                     alt="{{ item.title }}">
+                {% endif %}
+
+                <div class="card-body">
+
+                    <span class="badge text-bg-light border mb-2">
+                        {{ item.get_status_display }}
+                    </span>
+
+                    <h6 class="fw-bold">
+                        {{ item.title }}
+                    </h6>
+
+                    {% if item.equipment_type %}
+                    <div class="small text-muted mb-2">
+                        {{ item.equipment_type }}
+                    </div>
+                    {% endif %}
+
+                    <p class="small text-muted">
+                        {{ item.description|truncatewords:25 }}
+                    </p>
+
+                    {% if item.facility %}
+                    <div class="small mb-2">
+                        <i class="bi bi-hospital text-success"></i>
+                        {{ item.facility.title }}
+                    </div>
+                    {% endif %}
+
+                    <a href="{% url 'health:equipment_detail' item.id %}"
+                       class="btn btn-sm btn-outline-success">
+                        View Details
+                    </a>
+
+                </div>
+
+            </div>
+
+        </div>
+
+        {% empty %}
+
+        <div class="col-12">
+            <div class="alert alert-light border">
+                No medical equipment information found.
+            </div>
+        </div>
+
+        {% endfor %}
+
+    </div>
+
+</div>
+
+{% endblock %}

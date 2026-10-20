@@ -1,0 +1,183 @@
+{% extends "base.html" %}
+
+{% block title %}
+    Parking Payment
+{% endblock %}
+
+{% block content %}
+
+<div class="container-fluid py-3">
+
+    <div class="row justify-content-center">
+
+        <div class="col-12 col-lg-7">
+
+            <div class="card shadow-sm border-0">
+
+                <div class="card-body">
+
+                    <h4 class="mb-1">
+                        <i class="bi bi-credit-card text-success me-2"></i>
+                        Parking Payment
+                    </h4>
+
+                    <p class="small text-muted">
+                        {{ facility.name }}
+                    </p>
+
+                    <hr>
+
+
+                    <div class="alert alert-light border">
+
+                        <div class="small text-muted">
+                            Parking Fee
+                        </div>
+
+                        <strong>
+                            {{ fee.name }}
+                        </strong>
+
+                        <div class="mt-1">
+                            Total:
+                            <strong>
+                                UGX {{ fee.total_amount|floatformat:0 }}
+                            </strong>
+                        </div>
+
+                    </div>
+
+
+                    <form method="post">
+
+                        {% csrf_token %}
+
+
+                        <div class="row g-3">
+
+                            <div class="col-12 col-md-6">
+
+                                <label class="form-label">
+                                    Your Name
+                                </label>
+
+                                <input
+                                    type="text"
+                                    name="citizen_name"
+                                    class="form-control"
+                                    required
+                                >
+
+                            </div>
+
+
+                            <div class="col-12 col-md-6">
+
+                                <label class="form-label">
+                                    Phone Number
+                                </label>
+
+                                <input
+                                    type="text"
+                                    name="phone_number"
+                                    class="form-control"
+                                    placeholder="+256 7XX XXX XXX"
+                                    required
+                                >
+
+                            </div>
+
+
+                            <div class="col-12">
+
+                                <label class="form-label">
+                                    Vehicle Registration
+                                </label>
+
+                                <input
+                                    type="text"
+                                    name="vehicle_registration"
+                                    class="form-control"
+                                    placeholder="e.g. UXX 123X"
+                                    required
+                                >
+
+                            </div>
+
+
+                            <div class="col-12">
+
+                                <label class="form-label">
+                                    Payment Method
+                                </label>
+
+                                <select
+                                    name="payment_method"
+                                    class="form-select"
+                                    required
+                                >
+
+                                    <option value="">
+                                        Select payment method
+                                    </option>
+
+                                    {% for value, label in payment_methods %}
+
+                                    <option value="{{ value }}">
+                                        {{ label }}
+                                    </option>
+
+                                    {% endfor %}
+
+                                </select>
+
+                            </div>
+
+                        </div>
+
+
+                        <div class="alert alert-info small mt-3">
+
+                            <i class="bi bi-info-circle me-1"></i>
+
+                            A payment reference will be generated after
+                            you submit this payment request.
+
+                            Actual payment gateway processing can be
+                            connected later.
+
+                        </div>
+
+
+                        <div class="d-flex gap-2 mt-3">
+
+                            <button
+                                type="submit"
+                                class="btn btn-success btn-sm"
+                            >
+                                <i class="bi bi-send me-1"></i>
+                                Create Payment
+                            </button>
+
+                            <a
+                                href="{% url 'public_works:parking_facility_detail' facility.id %}"
+                                class="btn btn-outline-secondary btn-sm"
+                            >
+                                Cancel
+                            </a>
+
+                        </div>
+
+                    </form>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+{% endblock %}

@@ -1,0 +1,324 @@
+
+{% extends "officer/base.html" %}
+
+{% block title %}Request Details{% endblock %}
+{% block header_title %}Request Details{% endblock %}
+
+{% block content %}
+<div class="d-flex flex-wrap justify-content-between align-items-center gap-2 mb-3">
+    <div>
+        <a href="{% url 'officer:assigned_requests' %}"
+           class="text-decoration-none small text-secondary">
+            <i class="bi bi-arrow-left me-1"></i>
+            Back to Citizen Requests
+        </a>
+
+        <h2 class="page-title mt-2 mb-1">Request Details</h2>
+        <p class="small text-secondary mb-0">
+            Review the submission, communicate with the citizen and update progress.
+        </p>
+    </div>
+
+    <span class="badge text-bg-light border font-monospace">
+        {{ citizen_request.reference|stringformat:".8s" }}
+    </span>
+</div>
+
+<div class="row g-3">
+
+    <!-- Main content -->
+    <div class="col-12 col-xl-8">
+
+        <!-- Request information -->
+        <div class="card compact-card mb-3">
+            <div class="card-header bg-white py-3">
+                <h3 class="section-title mb-0">
+                    <i class="bi bi-file-earmark-text me-1"></i>
+                    Submission Information
+                </h3>
+            </div>
+
+            <div class="card-body">
+                <h4 class="fs-6 fw-semibold mb-2">
+                    {{ citizen_request.subject }}
+                </h4>
+
+                <div class="d-flex flex-wrap gap-2 mb-3">
+                    <span class="badge text-bg-light border">
+                        {{ citizen_request.get_status_display }}
+                    </span>
+
+                    <span class="badge text-bg-secondary">
+                        {{ citizen_request.get_priority_display }} Priority
+                    </span>
+                </div>
+
+                <div class="small mb-3"
+                     style="white-space: pre-line; overflow-wrap: anywhere;">{{ citizen_request.description }}</div>
+
+                <hr>
+
+                <div class="row g-3">
+                    <div class="col-6 col-md-4">
+                        <div class="small text-secondary">Department</div>
+                        <div class="small fw-semibold">
+                            {{ citizen_request.department|default:"Not specified" }}
+                        </div>
+                    </div>
+
+                    <div class="col-6 col-md-4">
+                        <div class="small text-secondary">Service</div>
+                        <div class="small fw-semibold">
+                            {{ citizen_request.service|default:"General request" }}
+                        </div>
+                    </div>
+
+                    <div class="col-6 col-md-4">
+                        <div class="small text-secondary">District</div>
+                        <div class="small fw-semibold">
+                            {{ citizen_request.district|default:"Not specified" }}
+                        </div>
+                    </div>
+
+                    <div class="col-6 col-md-4">
+                        <div class="small text-secondary">City</div>
+                        <div class="small fw-semibold">
+                            {{ citizen_request.city|default:"Not specified" }}
+                        </div>
+                    </div>
+
+                    <div class="col-6 col-md-4">
+                        <div class="small text-secondary">Date Submitted</div>
+                        <div class="small fw-semibold">
+                            {{ citizen_request.created_at|date:"d M Y, H:i" }}
+                        </div>
+                    </div>
+
+                    <div class="col-6 col-md-4">
+                        <div class="small text-secondary">Last Updated</div>
+                        <div class="small fw-semibold">
+                            {{ citizen_request.updated_at|date:"d M Y, H:i" }}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Citizen conversation -->
+        <div class="card compact-card mb-3">
+            <div class="card-header bg-white py-3">
+                <h3 class="section-title mb-0">
+                    <i class="bi bi-chat-dots me-1"></i>
+                    Citizen Conversation
+                </h3>
+            </div>
+
+            <div class="card-body">
+                <div class="mb-3">
+                    {% for reply in citizen_request.replies.all %}
+                        <div class="border rounded p-3 mb-2">
+                            <div class="d-flex justify-content-between align-items-start flex-wrap gap-1 mb-2">
+                                <span class="small fw-semibold">
+                                    {{ reply.sender.get_full_name|default:reply.sender.username }}
+                                </span>
+
+                                <span class="small text-secondary">
+                                    {{ reply.created_at|date:"d M Y, H:i" }}
+                                </span>
+                            </div>
+
+                            <p class="small mb-0"
+                               style="white-space: pre-line; overflow-wrap: anywhere;">{{ reply.message }}</p>
+
+                            {% if reply.attachment %}
+                                <a href="{{ reply.attachment.url }}"
+                                   class="small d-inline-block mt-2"
+                                   target="_blank"
+                                   rel="noopener noreferrer">
+                                    <i class="bi bi-paperclip me-1"></i>
+                                    View Attachment
+                                </a>
+                            {% endif %}
+                        </div>
+                    {% empty %}
+                        <p class="small text-secondary mb-0">
+                            No replies have been recorded yet.
+                        </p>
+                    {% endfor %}
+                </div>
+
+                <hr>
+
+                <h4 class="section-title mb-3">Reply to Citizen</h4>
+
+                <form method="post"
+                      enctype="multipart/form-data"
+                      action="">
+                    {% csrf_token %}
+                    <input type="hidden" name="action" value="reply">
+
+                    {{ reply_form.non_field_errors }}
+
+                    <div class="mb-2">
+                        <label for="{{ reply_form.message.id_for_label }}"
+                               class="form-label small">
+                            Message
+                        </label>
+
+                        {{ reply_form.message }}
+
+                        {% for error in reply_form.message.errors %}
+                            <div class="small text-danger mt-1">{{ error }}</div>
+                        {% endfor %}
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="{{ reply_form.attachment.id_for_label }}"
+                               class="form-label small">
+                            Attachment (Optional)
+                        </label>
+
+                        {{ reply_form.attachment }}
+
+                        {% for error in reply_form.attachment.errors %}
+                            <div class="small text-danger mt-1">{{ error }}</div>
+                        {% endfor %}
+                    </div>
+
+                    <button type="submit" class="btn btn-success btn-sm">
+                        <i class="bi bi-send me-1"></i>
+                        Send Reply
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Right sidebar -->
+    <div class="col-12 col-xl-4">
+
+        <!-- Citizen information -->
+        <div class="card compact-card mb-3">
+            <div class="card-header bg-white py-3">
+                <h3 class="section-title mb-0">
+                    <i class="bi bi-person me-1"></i>
+                    Citizen Information
+                </h3>
+            </div>
+
+            <div class="card-body">
+                <div class="small text-secondary mb-1">Full Name</div>
+                <div class="small fw-semibold mb-3">
+                    {{ citizen_request.citizen.get_full_name|default:citizen_request.citizen.username }}
+                </div>
+
+                <div class="small text-secondary mb-1">Username</div>
+                <div class="small fw-semibold mb-3">
+                    {{ citizen_request.citizen.username }}
+                </div>
+
+                <div class="small text-secondary mb-1">Assigned Officer</div>
+                <div class="small fw-semibold">
+                    {% if citizen_request.assigned_officer %}
+                        {{ citizen_request.assigned_officer.get_full_name|default:citizen_request.assigned_officer.username }}
+                    {% else %}
+                        Awaiting Assignment
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+
+        <!-- Update request status -->
+        <div class="card compact-card mb-3">
+            <div class="card-header bg-white py-3">
+                <h3 class="section-title mb-0">
+                    <i class="bi bi-arrow-repeat me-1"></i>
+                    Update Request Status
+                </h3>
+            </div>
+
+            <div class="card-body">
+                <form method="post" action="">
+                    {% csrf_token %}
+                    <input type="hidden" name="action" value="status">
+
+                    {{ status_form.non_field_errors }}
+
+                    <div class="mb-2">
+                        <label for="{{ status_form.new_status.id_for_label }}"
+                               class="form-label small">
+                            New Status
+                        </label>
+
+                        {{ status_form.new_status }}
+
+                        {% for error in status_form.new_status.errors %}
+                            <div class="small text-danger mt-1">{{ error }}</div>
+                        {% endfor %}
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="{{ status_form.note.id_for_label }}"
+                               class="form-label small">
+                            Update Note
+                        </label>
+
+                        {{ status_form.note }}
+
+                        {% for error in status_form.note.errors %}
+                            <div class="small text-danger mt-1">{{ error }}</div>
+                        {% endfor %}
+                    </div>
+
+                    <button type="submit" class="btn btn-outline-success btn-sm">
+                        <i class="bi bi-check2-circle me-1"></i>
+                        Save Status
+                    </button>
+                </form>
+            </div>
+        </div>
+
+        <!-- Status history -->
+        <div class="card compact-card">
+            <div class="card-header bg-white py-3">
+                <h3 class="section-title mb-0">
+                    <i class="bi bi-clock-history me-1"></i>
+                    Status History
+                </h3>
+            </div>
+
+            <div class="card-body">
+                {% for entry in citizen_request.status_history.all %}
+                    <div class="border-start border-2 ps-3 pb-3 mb-2">
+                        <div class="small fw-semibold">
+                            {{ entry.get_new_status_display }}
+                        </div>
+
+                        <div class="small text-secondary">
+                            {{ entry.changed_at|date:"d M Y, H:i" }}
+                        </div>
+
+                        {% if entry.note %}
+                            <p class="small mt-1 mb-0"
+                               style="overflow-wrap: anywhere;">
+                                {{ entry.note }}
+                            </p>
+                        {% endif %}
+
+                        {% if entry.changed_by %}
+                            <div class="small text-secondary mt-1">
+                                Updated by
+                                {{ entry.changed_by.get_full_name|default:entry.changed_by.username }}
+                            </div>
+                        {% endif %}
+                    </div>
+                {% empty %}
+                    <p class="small text-secondary mb-0">
+                        No status changes have been recorded.
+                    </p>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,474 @@
+{% extends "city_admin/base.html" %}
+
+{% block title %}System Settings{% endblock %}
+{% block page_heading %}System Settings{% endblock %}
+
+{% block content %}
+<div class="container-fluid px-0">
+
+    <div class="mb-4">
+        <h1 class="h3">System Settings</h1>
+        <p class="text-muted">
+            Configure Smart City Uganda and manage all four system portals.
+        </p>
+    </div>
+
+    {% if messages %}
+        {% for message in messages %}
+            <div class="alert alert-{{ message.tags|default:'info' }} alert-dismissible fade show">
+                {{ message }}
+                <button type="button" class="btn-close"
+                        data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+        {% endfor %}
+    {% endif %}
+
+    <ul class="nav nav-tabs mb-4" role="tablist">
+        <li class="nav-item" role="presentation">
+            <a class="nav-link active" href="#general-settings">
+                <i class="bi bi-gear me-1"></i> General Settings
+            </a>
+        </li>
+        <li class="nav-item" role="presentation">
+            <a class="nav-link" href="#portal-management">
+                <i class="bi bi-window-stack me-1"></i> Portal Management
+            </a>
+        </li>
+        <li class="nav-item" role="presentation">
+            <a class="nav-link" href="#configuration-audit">
+                <i class="bi bi-clock-history me-1"></i> Audit History
+            </a>
+        </li>
+    </ul>
+
+    <!-- GENERAL SYSTEM SETTINGS -->
+    <section id="general-settings" class="mb-5">
+        <div class="card border-0 shadow-sm">
+            <div class="card-header bg-white py-3">
+                <h2 class="h5 mb-0">General System Settings</h2>
+            </div>
+
+            <div class="card-body p-4">
+                <form method="post">
+                    {% csrf_token %}
+                    <input type="hidden" name="action"
+                           value="save_system_settings">
+
+                    {% if system_form.non_field_errors %}
+                        <div class="alert alert-danger">
+                            {{ system_form.non_field_errors }}
+                        </div>
+                    {% endif %}
+
+                    {% for field in system_form %}
+                        <div class="mb-3">
+                            {% if field.field.widget.input_type == "checkbox" %}
+                                <div class="form-check form-switch">
+                                    {{ field }}
+                                    <label class="form-check-label"
+                                           for="{{ field.id_for_label }}">
+                                        {{ field.label }}
+                                    </label>
+                                </div>
+                            {% else %}
+                                <label class="form-label"
+                                       for="{{ field.id_for_label }}">
+                                    {{ field.label }}
+                                </label>
+                                {{ field }}
+                            {% endif %}
+
+                            {% for error in field.errors %}
+                                <div class="text-danger small">{{ error }}</div>
+                            {% endfor %}
+                        </div>
+                    {% endfor %}
+
+                    <button type="submit" class="btn btn-success">
+                        <i class="bi bi-save me-1"></i>
+                        Save General Settings
+                    </button>
+                </form>
+            </div>
+        </div>
+    </section>
+
+    <!-- PORTAL MANAGEMENT -->
+    <section id="portal-management" class="mb-5">
+        <div class="mb-3">
+            <h2 class="h4">Portal Management</h2>
+            <p class="text-muted">
+                Select a portal to manage its information, modules and menu.
+            </p>
+        </div>
+
+        <div class="card border-0 shadow-sm mb-4">
+            <div class="card-body">
+                <label for="portalSelector" class="form-label fw-semibold">
+                    Choose portal
+                </label>
+
+                <select id="portalSelector" class="form-select">
+                    {% for key, label in portals %}
+                        <option value="{{ key }}"
+                            {% if selected_portal.portal_key == key %}
+                                selected
+                            {% endif %}>
+                            {{ label }}
+                        </option>
+                    {% endfor %}
+                </select>
+
+                <div class="small text-muted mt-2">
+                    The selected portal's settings appear below.
+                </div>
+            </div>
+        </div>
+
+        <!-- PORTAL INFORMATION -->
+        <div class="card border-0 shadow-sm mb-4">
+            <div class="card-header bg-white py-3">
+                <h3 class="h5 mb-0">Portal Information</h3>
+            </div>
+
+            <div class="card-body p-4">
+                <form method="post">
+                    {% csrf_token %}
+                    <input type="hidden" name="action" value="save_portal">
+                    <input type="hidden" name="portal_key"
+                           value="{{ selected_portal.portal_key }}">
+
+                    {% for field in portal_form %}
+                        <div class="mb-3">
+                            {% if field.field.widget.input_type == "checkbox" %}
+                                <div class="form-check form-switch">
+                                    {{ field }}
+                                    <label class="form-check-label"
+                                           for="{{ field.id_for_label }}">
+                                        {{ field.label }}
+                                    </label>
+                                </div>
+                            {% else %}
+                                <label class="form-label"
+                                       for="{{ field.id_for_label }}">
+                                    {{ field.label }}
+                                </label>
+                                {{ field }}
+                            {% endif %}
+
+                            {% for error in field.errors %}
+                                <div class="text-danger small">{{ error }}</div>
+                            {% endfor %}
+                        </div>
+                    {% endfor %}
+
+                    <button type="submit" class="btn btn-success">
+                        <i class="bi bi-save me-1"></i>
+                        Save Portal Settings
+                    </button>
+                </form>
+            </div>
+        </div>
+
+        <!-- MODULE MANAGEMENT -->
+        <div class="card border-0 shadow-sm mb-4">
+            <div class="card-header bg-white py-3">
+                <h3 class="h5 mb-0">Modules</h3>
+            </div>
+
+            <div class="card-body">
+                {% if modules %}
+                    <div class="table-responsive mb-4">
+                        <table class="table table-hover align-middle">
+                            <thead>
+                                <tr>
+                                    <th>Module</th>
+                                    <th>Code</th>
+                                    <th>Order</th>
+                                    <th>Status</th>
+                                    <th>Action</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for module in modules %}
+                                    <tr>
+                                        <td>
+                                            <strong>{{ module.name }}</strong>
+                                            {% if module.description %}
+                                                <div class="small text-muted">
+                                                    {{ module.description }}
+                                                </div>
+                                            {% endif %}
+                                        </td>
+                                        <td><code>{{ module.code }}</code></td>
+                                        <td>{{ module.display_order }}</td>
+                                        <td>
+                                            {% if module.is_enabled %}
+                                                <span class="badge text-bg-success">
+                                                    Enabled
+                                                </span>
+                                            {% else %}
+                                                <span class="badge text-bg-secondary">
+                                                    Disabled
+                                                </span>
+                                            {% endif %}
+                                        </td>
+                                        <td>
+                                            <form method="post"
+                                                  action="{% url 'city_admin:portal_module_toggle' module.id %}">
+                                                {% csrf_token %}
+                                                <button type="submit"
+                                                        class="btn btn-sm btn-outline-primary">
+                                                    {% if module.is_enabled %}
+                                                        Disable
+                                                    {% else %}
+                                                        Enable
+                                                    {% endif %}
+                                                </button>
+                                            </form>
+                                        </td>
+                                    </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                {% else %}
+                    <p class="text-muted">
+                        No modules have been configured yet.
+                    </p>
+                {% endif %}
+
+                <hr>
+
+                <h4 class="h6 mb-3">Add a Module</h4>
+
+                <form method="post">
+                    {% csrf_token %}
+                    <input type="hidden" name="action" value="add_module">
+                    <input type="hidden" name="portal_key"
+                           value="{{ selected_portal.portal_key }}">
+
+                    {% for field in module_form %}
+                        <div class="mb-3">
+                            {% if field.field.widget.input_type == "checkbox" %}
+                                <div class="form-check">
+                                    {{ field }}
+                                    <label class="form-check-label"
+                                           for="{{ field.id_for_label }}">
+                                        {{ field.label }}
+                                    </label>
+                                </div>
+                            {% else %}
+                                <label class="form-label"
+                                       for="{{ field.id_for_label }}">
+                                    {{ field.label }}
+                                </label>
+                                {{ field }}
+                            {% endif %}
+
+                            {% for error in field.errors %}
+                                <div class="text-danger small">{{ error }}</div>
+                            {% endfor %}
+                        </div>
+                    {% endfor %}
+
+                    <button type="submit" class="btn btn-success">
+                        <i class="bi bi-plus-circle me-1"></i> Add Module
+                    </button>
+                </form>
+            </div>
+        </div>
+
+        <!-- MENU MANAGEMENT -->
+        <div class="card border-0 shadow-sm mb-4">
+            <div class="card-header bg-white py-3">
+                <h3 class="h5 mb-0">Navigation Menu</h3>
+            </div>
+
+            <div class="card-body">
+                {% if menu_items %}
+                    <div class="table-responsive mb-4">
+                        <table class="table table-hover align-middle">
+                            <thead>
+                                <tr>
+                                    <th>Menu Label</th>
+                                    <th>Icon</th>
+                                    <th>URL Name</th>
+                                    <th>Order</th>
+                                    <th>Visibility</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for item in menu_items %}
+                                    <tr>
+                                        <td>{{ item.label }}</td>
+                                        <td>
+                                            <i class="bi {{ item.icon }}"></i>
+                                            {{ item.icon }}
+                                        </td>
+                                        <td>
+                                            {{ item.url_name|default:"Not assigned" }}
+                                        </td>
+                                        <td>{{ item.display_order }}</td>
+                                        <td>
+                                            {% if item.is_visible %}
+                                                <span class="badge text-bg-success">
+                                                    Visible
+                                                </span>
+                                            {% else %}
+                                                <span class="badge text-bg-secondary">
+                                                    Hidden
+                                                </span>
+                                            {% endif %}
+                                        </td>
+                                        <td>
+                                            <div class="d-flex flex-wrap gap-2">
+                                                <form method="post"
+                                                      action="{% url 'city_admin:portal_menu_toggle' item.id %}">
+                                                    {% csrf_token %}
+                                                    <button type="submit"
+                                                            class="btn btn-sm btn-outline-primary">
+                                                        {% if item.is_visible %}
+                                                            Hide
+                                                        {% else %}
+                                                            Show
+                                                        {% endif %}
+                                                    </button>
+                                                </form>
+
+                                                <form method="post"
+                                                      action="{% url 'city_admin:portal_menu_delete' item.id %}">
+                                                    {% csrf_token %}
+                                                    <button type="submit"
+                                                            class="btn btn-sm btn-outline-danger"
+                                                            onclick="return confirm('Delete this menu entry?');">
+                                                        Delete
+                                                    </button>
+                                                </form>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                {% else %}
+                    <p class="text-muted">
+                        No navigation menu entries have been configured yet.
+                    </p>
+                {% endif %}
+
+                <hr>
+
+                <h4 class="h6 mb-3">Add a Menu Item</h4>
+
+                <form method="post">
+                    {% csrf_token %}
+                    <input type="hidden" name="action" value="add_menu">
+                    <input type="hidden" name="portal_key"
+                           value="{{ selected_portal.portal_key }}">
+
+                    {% for field in menu_form %}
+                        <div class="mb-3">
+                            {% if field.field.widget.input_type == "checkbox" %}
+                                <div class="form-check">
+                                    {{ field }}
+                                    <label class="form-check-label"
+                                           for="{{ field.id_for_label }}">
+                                        {{ field.label }}
+                                    </label>
+                                </div>
+                            {% else %}
+                                <label class="form-label"
+                                       for="{{ field.id_for_label }}">
+                                    {{ field.label }}
+                                </label>
+                                {{ field }}
+                            {% endif %}
+
+                            {% for error in field.errors %}
+                                <div class="text-danger small">{{ error }}</div>
+                            {% endfor %}
+                        </div>
+                    {% endfor %}
+
+                    <button type="submit" class="btn btn-success">
+                        <i class="bi bi-plus-circle me-1"></i> Add Menu Item
+                    </button>
+                </form>
+            </div>
+        </div>
+    </section>
+
+    <!-- AUDIT HISTORY -->
+    <section id="configuration-audit" class="mb-4">
+        <div class="card border-0 shadow-sm">
+            <div class="card-header bg-white py-3">
+                <h2 class="h5 mb-0">Portal Configuration Audit History</h2>
+            </div>
+
+            <div class="card-body">
+                {% if audit_entries %}
+                    <div class="table-responsive">
+                        <table class="table table-sm align-middle">
+                            <thead>
+                                <tr>
+                                    <th>Date</th>
+                                    <th>Administrator</th>
+                                    <th>Portal</th>
+                                    <th>Action</th>
+                                    <th>Details</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for entry in audit_entries %}
+                                    <tr>
+                                        <td>{{ entry.created_at|date:"d M Y H:i" }}</td>
+                                        <td>
+                                            {% if entry.actor %}
+                                                {{ entry.actor.get_username }}
+                                            {% else %}
+                                                Unavailable
+                                            {% endif %}
+                                        </td>
+                                        <td>
+                                            {% if entry.portal %}
+                                                {{ entry.portal.display_name }}
+                                            {% else %}
+                                                General
+                                            {% endif %}
+                                        </td>
+                                        <td>{{ entry.action }}</td>
+                                        <td>{{ entry.details }}</td>
+                                    </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                {% else %}
+                    <p class="text-muted mb-0">
+                        No portal configuration changes have been recorded yet.
+                    </p>
+                {% endif %}
+            </div>
+        </div>
+    </section>
+
+</div>
+
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+    const portalSelector = document.getElementById("portalSelector");
+
+    if (portalSelector) {
+        portalSelector.addEventListener("change", function () {
+            const url = new URL(window.location.href);
+            url.searchParams.set("portal", this.value);
+            url.hash = "portal-management";
+            window.location.href = url.toString();
+        });
+    }
+});
+</script>
+{% endblock %}

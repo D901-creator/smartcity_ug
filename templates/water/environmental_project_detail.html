@@ -1,0 +1,353 @@
+{% extends "base.html" %}
+
+{% block title %}
+    {{ project.name }} | Smart City Uganda
+{% endblock %}
+
+{% block content %}
+
+<div class="container-fluid py-3">
+
+    <!-- Header -->
+    <div class="d-flex flex-column flex-md-row
+                justify-content-between
+                align-items-md-center
+                gap-3 mb-4">
+
+        <div>
+
+            <div class="d-flex align-items-center gap-2 mb-2">
+
+                <div class="bg-success-subtle
+                            text-success
+                            rounded p-2">
+
+                    <i class="bi bi-kanban fs-4"></i>
+
+                </div>
+
+                <h2 class="fw-bold mb-0">
+                    {{ project.name }}
+                </h2>
+
+            </div>
+
+            <p class="text-muted mb-0">
+                Environmental project information
+            </p>
+
+        </div>
+
+        <a
+            href="{% url 'water:environmental_projects' %}"
+            class="btn btn-outline-success"
+        >
+            <i class="bi bi-arrow-left me-1"></i>
+            Back to Projects
+        </a>
+
+    </div>
+
+
+    <div class="row g-4">
+
+        <!-- Main -->
+        <div class="col-12 col-lg-8">
+
+            <div class="card border-0 shadow-sm">
+
+                <div class="card-body p-4">
+
+                    <div class="d-flex
+                                justify-content-between
+                                align-items-start
+                                gap-3 mb-4">
+
+                        <div>
+
+                            <span class="badge text-bg-success mb-2">
+                                {{ project.get_project_type_display }}
+                            </span>
+
+                            <h3 class="fw-bold">
+                                {{ project.name }}
+                            </h3>
+
+                            <div class="text-muted small">
+                                Project Code:
+                                <strong>
+                                    {{ project.project_code }}
+                                </strong>
+                            </div>
+
+                        </div>
+
+
+                        {% if project.status == "completed" %}
+
+                            <span class="badge text-bg-success">
+                                Completed
+                            </span>
+
+                        {% elif project.status == "ongoing" %}
+
+                            <span class="badge text-bg-primary">
+                                Ongoing
+                            </span>
+
+                        {% elif project.status == "suspended" %}
+
+                            <span class="badge text-bg-danger">
+                                Suspended
+                            </span>
+
+                        {% else %}
+
+                            <span class="badge text-bg-secondary">
+                                Planned
+                            </span>
+
+                        {% endif %}
+
+                    </div>
+
+
+                    <!-- Location -->
+                    <div class="row g-3 mb-4">
+
+                        <div class="col-12 col-md-6">
+
+                            <div class="border rounded p-3 h-100">
+
+                                <div class="text-muted small mb-1">
+                                    District / City
+                                </div>
+
+                                <div class="fw-semibold">
+
+                                    <i class="bi bi-geo-alt me-1"></i>
+
+                                    {{ project.district }}
+
+                                </div>
+
+                            </div>
+
+                        </div>
+
+
+                        <div class="col-12 col-md-6">
+
+                            <div class="border rounded p-3 h-100">
+
+                                <div class="text-muted small mb-1">
+                                    Location
+                                </div>
+
+                                <div class="fw-semibold">
+
+                                    <i class="bi bi-pin-map me-1"></i>
+
+                                    {{ project.location }}
+
+                                </div>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+
+                    <!-- Progress -->
+                    <div class="mb-4">
+
+                        <div class="d-flex
+                                    justify-content-between
+                                    align-items-center
+                                    mb-2">
+
+                            <h5 class="fw-bold mb-0">
+                                Project Progress
+                            </h5>
+
+                            <strong>
+                                {{ project.completion_percentage }}%
+                            </strong>
+
+                        </div>
+
+                        <div
+                            class="progress"
+                            style="height: 12px;"
+                        >
+
+                            <div
+                                class="progress-bar bg-success"
+                                style="width: {{ project.completion_percentage }}%;"
+                            ></div>
+
+                        </div>
+
+                    </div>
+
+
+                    <!-- Description -->
+                    <div class="mb-4">
+
+                        <h5 class="fw-bold">
+                            Project Description
+                        </h5>
+
+                        <p class="text-muted mb-0">
+                            {{ project.description }}
+                        </p>
+
+                    </div>
+
+
+                    <!-- Dates -->
+                    <div class="row g-3 mb-4">
+
+                        {% if project.start_date %}
+
+                            <div class="col-12 col-md-6">
+
+                                <div class="border rounded p-3">
+
+                                    <div class="text-muted small">
+                                        Start Date
+                                    </div>
+
+                                    <div class="fw-semibold">
+                                        {{ project.start_date|date:"d M Y" }}
+                                    </div>
+
+                                </div>
+
+                            </div>
+
+                        {% endif %}
+
+
+                        {% if project.expected_completion_date %}
+
+                            <div class="col-12 col-md-6">
+
+                                <div class="border rounded p-3">
+
+                                    <div class="text-muted small">
+                                        Expected Completion
+                                    </div>
+
+                                    <div class="fw-semibold">
+                                        {{ project.expected_completion_date|date:"d M Y" }}
+                                    </div>
+
+                                </div>
+
+                            </div>
+
+                        {% endif %}
+
+                    </div>
+
+
+                    {% if project.implementing_agency %}
+
+                        <div class="alert alert-light border mb-0">
+
+                            <div class="small text-muted">
+                                Implementing Agency
+                            </div>
+
+                            <div class="fw-semibold">
+                                {{ project.implementing_agency }}
+                            </div>
+
+                        </div>
+
+                    {% endif %}
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <!-- Side -->
+        <div class="col-12 col-lg-4">
+
+            <div class="card border-0 shadow-sm">
+
+                <div class="card-body p-3">
+
+                    <h5 class="fw-bold mb-3">
+                        Environmental Services
+                    </h5>
+
+                    <a
+                        href="{% url 'water:environmental_services' %}"
+                        class="btn btn-outline-success w-100 mb-3"
+                    >
+                        <i class="bi bi-tree me-1"></i>
+                        Environmental Services
+                    </a>
+
+                    <a
+                        href="{% url 'water:trees_forests' %}"
+                        class="btn btn-outline-success w-100 mb-3"
+                    >
+                        <i class="bi bi-tree-fill me-1"></i>
+                        Trees & Forests
+                    </a>
+
+                    {% if project.contact_phone %}
+
+                        <div class="border rounded p-3 mt-3">
+
+                            <div class="text-muted small mb-1">
+                                Project Contact
+                            </div>
+
+                            <div class="fw-semibold">
+
+                                <i class="bi bi-telephone me-1"></i>
+
+                                {{ project.contact_phone }}
+
+                            </div>
+
+                        </div>
+
+                    {% endif %}
+
+                </div>
+
+            </div>
+
+
+            <div class="alert alert-success mt-3">
+
+                <i class="bi bi-info-circle me-1"></i>
+
+                <strong>Citizen Information</strong>
+
+                <p class="small mb-0 mt-2">
+                    This page provides citizens with
+                    environmental project information.
+                    Official project management will be
+                    handled through the future government
+                    management portals.
+                </p>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+{% endblock %}

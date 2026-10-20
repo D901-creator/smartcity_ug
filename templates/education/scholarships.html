@@ -1,0 +1,96 @@
+{% extends "base.html" %}
+
+{% block title %}
+Scholarships & Student Opportunities | Smart City Uganda
+{% endblock %}
+
+{% block content %}
+
+<div class="container-fluid education-module">
+
+    <div class="education-module-header">
+
+        <div class="education-module-icon">
+            <i class="bi bi-award"></i>
+        </div>
+
+        <h1>Scholarships, Bursaries & Student Opportunities</h1>
+
+        <p>
+            Find published scholarship, bursary and student opportunity
+            information.
+        </p>
+
+    </div>
+
+
+    {% if scholarships %}
+
+    <div class="education-card-grid">
+
+        {% for item in scholarships %}
+
+        <div class="education-card">
+
+            {% if item.is_featured %}
+                <span class="education-badge">
+                    Featured
+                </span>
+            {% endif %}
+
+            <h3 class="mt-2">
+                {{ item.title }}
+            </h3>
+
+            <div class="education-card-meta">
+                <i class="bi bi-building"></i>
+                {{ item.provider }}
+            </div>
+
+            <p>
+                {{ item.description|truncatewords:35 }}
+            </p>
+
+            <p>
+                <strong>Target group:</strong>
+                {{ item.target_group }}
+            </p>
+
+            {% if item.closing_date %}
+            <div class="education-card-meta">
+                <i class="bi bi-calendar-event"></i>
+                Closing:
+                {{ item.closing_date }}
+            </div>
+            {% endif %}
+
+            {% if item.application_url %}
+            <a
+                href="{{ item.application_url }}"
+                target="_blank"
+                class="education-button"
+            >
+                Application Information
+                <i class="bi bi-box-arrow-up-right"></i>
+            </a>
+            {% endif %}
+
+        </div>
+
+        {% endfor %}
+
+    </div>
+
+    {% else %}
+
+    <div class="education-empty">
+        <i class="bi bi-award"></i>
+        <h3>No opportunities available</h3>
+        <p>Published opportunities will appear here.</p>
+    </div>
+
+    {% endif %}
+
+</div>
+
+{% endblock %}

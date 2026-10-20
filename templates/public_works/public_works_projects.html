@@ -1,0 +1,395 @@
+{% extends "base.html" %}
+
+{% block title %}
+    Public Works Projects | Smart City Uganda
+{% endblock %}
+
+{% block content %}
+
+<div class="container-fluid">
+
+    <!-- Header -->
+    <div class="d-flex flex-wrap justify-content-between align-items-center mb-3">
+
+        <div>
+
+            <h4 class="mb-1">
+                <i class="bi bi-kanban text-success me-2"></i>
+                Public Works Projects
+            </h4>
+
+            <p class="text-muted small mb-0">
+                View public works and infrastructure projects
+                across Uganda.
+            </p>
+
+        </div>
+
+        <div class="mt-2 mt-md-0">
+
+            <a
+                href="{% url 'public_works:home' %}"
+                class="btn btn-outline-secondary btn-sm"
+            >
+                <i class="bi bi-arrow-left me-1"></i>
+                Public Works
+            </a>
+
+        </div>
+
+    </div>
+
+
+    <!-- Filters -->
+    <div class="card border-0 shadow-sm mb-3">
+
+        <div class="card-body">
+
+            <form method="get">
+
+                <div class="row g-2">
+
+                    <!-- District -->
+                    <div class="col-12 col-md-4">
+
+                        <label class="form-label small fw-semibold">
+                            District / City
+                        </label>
+
+                        <input
+                            type="text"
+                            name="district"
+                            value="{{ district }}"
+                            class="form-control form-control-sm"
+                            placeholder="e.g. Kampala"
+                        >
+
+                    </div>
+
+
+                    <!-- Project Type -->
+                    <div class="col-12 col-md-3">
+
+                        <label class="form-label small fw-semibold">
+                            Project Type
+                        </label>
+
+                        <select
+                            name="project_type"
+                            class="form-select form-select-sm"
+                        >
+
+                            <option value="">
+                                All Project Types
+                            </option>
+
+                            {% for value, label in project_types %}
+
+                                <option
+                                    value="{{ value }}"
+                                    {% if project_type == value %}
+                                        selected
+                                    {% endif %}
+                                >
+                                    {{ label }}
+                                </option>
+
+                            {% endfor %}
+
+                        </select>
+
+                    </div>
+
+
+                    <!-- Status -->
+                    <div class="col-12 col-md-3">
+
+                        <label class="form-label small fw-semibold">
+                            Project Status
+                        </label>
+
+                        <select
+                            name="status"
+                            class="form-select form-select-sm"
+                        >
+
+                            <option value="">
+                                All Statuses
+                            </option>
+
+                            {% for value, label in status_choices %}
+
+                                <option
+                                    value="{{ value }}"
+                                    {% if status == value %}
+                                        selected
+                                    {% endif %}
+                                >
+                                    {{ label }}
+                                </option>
+
+                            {% endfor %}
+
+                        </select>
+
+                    </div>
+
+
+                    <!-- Search -->
+                    <div class="col-12 col-md-2 d-flex align-items-end">
+
+                        <div class="d-flex gap-2 w-100">
+
+                            <button
+                                type="submit"
+                                class="btn btn-success btn-sm flex-grow-1"
+                            >
+                                <i class="bi bi-search me-1"></i>
+                                Search
+                            </button>
+
+                            <a
+                                href="{% url 'public_works:public_works_projects' %}"
+                                class="btn btn-outline-secondary btn-sm"
+                                title="Clear filters"
+                            >
+                                <i class="bi bi-x-lg"></i>
+                            </a>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </form>
+
+        </div>
+
+    </div>
+
+
+    <!-- Result Count -->
+    <div class="small text-muted mb-2">
+
+        <i class="bi bi-kanban me-1"></i>
+
+        {{ total_projects }}
+        project{{ total_projects|pluralize }} found
+
+    </div>
+
+
+    <!-- Projects -->
+    {% if projects %}
+
+        <div class="row g-3">
+
+            {% for project in projects %}
+
+                <div class="col-12 col-md-6 col-xl-4">
+
+                    <div class="card h-100 border-0 shadow-sm">
+
+                        <div class="card-body">
+
+                            <!-- Project heading -->
+                            <div class="d-flex justify-content-between align-items-start mb-2">
+
+                                <div>
+
+                                    <h6 class="mb-1">
+                                        {{ project.name }}
+                                    </h6>
+
+                                    <small class="text-muted">
+                                        {{ project.project_code }}
+                                    </small>
+
+                                </div>
+
+
+                                {% if project.status == "ongoing" %}
+
+                                    <span class="badge text-bg-primary">
+                                        Ongoing
+                                    </span>
+
+                                {% elif project.status == "completed" %}
+
+                                    <span class="badge text-bg-success">
+                                        Completed
+                                    </span>
+
+                                {% elif project.status == "planned" %}
+
+                                    <span class="badge text-bg-info">
+                                        Planned
+                                    </span>
+
+                                {% elif project.status == "suspended" %}
+
+                                    <span class="badge text-bg-warning">
+                                        Suspended
+                                    </span>
+
+                                {% else %}
+
+                                    <span class="badge text-bg-secondary">
+                                        Cancelled
+                                    </span>
+
+                                {% endif %}
+
+                            </div>
+
+
+                            <!-- Type -->
+                            <div class="small mb-2">
+
+                                <i class="bi bi-diagram-3 text-muted me-1"></i>
+
+                                <strong>Type:</strong>
+
+                                {{ project.get_project_type_display }}
+
+                            </div>
+
+
+                            <!-- Location -->
+                            <div class="small mb-2">
+
+                                <i class="bi bi-geo-alt text-muted me-1"></i>
+
+                                <strong>District:</strong>
+
+                                {{ project.district }}
+
+                            </div>
+
+
+                            <div class="small mb-2">
+
+                                <i class="bi bi-pin-map text-muted me-1"></i>
+
+                                <strong>Location:</strong>
+
+                                {{ project.location }}
+
+                            </div>
+
+
+                            <!-- Progress -->
+                            <div class="mt-3 mb-3">
+
+                                <div class="d-flex justify-content-between">
+
+                                    <span class="small">
+                                        Progress
+                                    </span>
+
+                                    <span class="small fw-semibold">
+                                        {{ project.completion_percentage }}%
+                                    </span>
+
+                                </div>
+
+                                <div
+                                    class="progress"
+                                    role="progressbar"
+                                    aria-valuenow="{{ project.completion_percentage }}"
+                                    aria-valuemin="0"
+                                    aria-valuemax="100"
+                                    style="height: 6px;"
+                                >
+
+                                    <div
+                                        class="progress-bar"
+                                        style="width: {{ project.completion_percentage }}%;"
+                                    ></div>
+
+                                </div>
+
+                            </div>
+
+
+                            <!-- Agency -->
+                            {% if project.implementing_agency %}
+
+                                <div class="small mb-2">
+
+                                    <i class="bi bi-building text-muted me-1"></i>
+
+                                    <strong>Agency:</strong>
+
+                                    {{ project.implementing_agency }}
+
+                                </div>
+
+                            {% endif %}
+
+
+                            <!-- Description -->
+                            <p class="small text-muted">
+
+                                {{ project.description|truncatechars:120 }}
+
+                            </p>
+
+
+                            <a
+                                href="{% url 'public_works:public_works_project_detail' project.id %}"
+                                class="btn btn-outline-success btn-sm w-100"
+                            >
+
+                                <i class="bi bi-eye me-1"></i>
+                                View Project
+
+                            </a>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            {% endfor %}
+
+        </div>
+
+    {% else %}
+
+        <div class="card border-0 shadow-sm">
+
+            <div class="card-body text-center py-5">
+
+                <i class="bi bi-kanban display-6 text-muted"></i>
+
+                <h6 class="mt-3">
+                    No public works projects found
+                </h6>
+
+                <p class="text-muted small mb-0">
+                    Try changing your filters or check again later.
+                </p>
+
+            </div>
+
+        </div>
+
+    {% endif %}
+
+
+    <div class="alert alert-info small mt-4">
+
+        <i class="bi bi-info-circle me-1"></i>
+
+        Project information displayed here is intended to help
+        citizens understand public works activities, locations,
+        progress and expected completion.
+
+    </div>
+
+</div>
+
+{% endblock %}

@@ -1,0 +1,243 @@
+{% extends "base.html" %}
+
+{% block title %}
+    {{ information.title }} | Electricity Services
+{% endblock %}
+
+{% block content %}
+
+<div class="container-fluid px-0">
+
+    <nav aria-label="breadcrumb" class="mb-3">
+
+        <ol class="breadcrumb mb-0">
+
+            <li class="breadcrumb-item">
+
+                <a
+                    href="{% url 'energy:home' %}"
+                    class="text-decoration-none"
+                >
+                    Energy & Mineral Development
+                </a>
+
+            </li>
+
+            <li class="breadcrumb-item">
+
+                <a
+                    href="{% url 'energy:electricity_services' %}"
+                    class="text-decoration-none"
+                >
+                    Electricity Services
+                </a>
+
+            </li>
+
+            <li class="breadcrumb-item active">
+
+                {{ information.title }}
+
+            </li>
+
+        </ol>
+
+    </nav>
+
+
+    <!-- Main Information -->
+
+    <div class="card border-0 shadow-sm mb-3">
+
+        <div class="card-body">
+
+            <div class="d-flex align-items-start gap-3">
+
+                <div class="bg-warning bg-opacity-10 rounded-3 p-3">
+
+                    <i class="bi bi-lightning-charge-fill
+                              text-warning fs-3"></i>
+
+                </div>
+
+                <div class="flex-grow-1">
+
+                    <div class="d-flex flex-wrap
+                                justify-content-between gap-2">
+
+                        <div>
+
+                            <h3 class="mb-1">
+                                {{ information.title }}
+                            </h3>
+
+                            <span class="badge text-bg-light border">
+                                {{ information.get_category_display }}
+                            </span>
+
+                        </div>
+
+                        {% if information.is_featured %}
+
+                        <span class="badge text-bg-warning align-self-start">
+
+                            Featured
+
+                        </span>
+
+                        {% endif %}
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- Summary -->
+
+    <div class="card border-0 shadow-sm mb-3">
+
+        <div class="card-body">
+
+            <h5 class="mb-2">
+
+                <i class="bi bi-info-circle text-warning me-2"></i>
+
+                Summary
+
+            </h5>
+
+            <p class="text-muted mb-0">
+
+                {{ information.summary }}
+
+            </p>
+
+        </div>
+
+    </div>
+
+
+    <!-- Full Information -->
+
+    <div class="card border-0 shadow-sm mb-3">
+
+        <div class="card-body">
+
+            <h5 class="mb-3">
+
+                <i class="bi bi-file-text text-warning me-2"></i>
+
+                Information
+
+            </h5>
+
+            <div style="white-space: pre-line;">
+
+                {{ information.information }}
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- Contact -->
+
+    {% if information.contact_phone or information.contact_email or information.source_organization %}
+
+    <div class="card border-0 shadow-sm mb-3">
+
+        <div class="card-body">
+
+            <h5 class="mb-3">
+
+                <i class="bi bi-telephone text-warning me-2"></i>
+
+                Service Contact
+
+            </h5>
+
+
+            {% if information.source_organization %}
+
+            <div class="small mb-2">
+
+                <strong>Source Organization:</strong>
+
+                {{ information.source_organization }}
+
+            </div>
+
+            {% endif %}
+
+
+            {% if information.contact_phone %}
+
+            <div class="small mb-2">
+
+                <strong>Phone:</strong>
+
+                {{ information.contact_phone }}
+
+            </div>
+
+            {% endif %}
+
+
+            {% if information.contact_email %}
+
+            <div class="small">
+
+                <strong>Email:</strong>
+
+                {{ information.contact_email }}
+
+            </div>
+
+            {% endif %}
+
+        </div>
+
+    </div>
+
+    {% endif %}
+
+
+    <!-- Navigation -->
+
+    <div class="d-flex flex-wrap gap-2">
+
+        <a
+            href="{% url 'energy:electricity_services' %}"
+            class="btn btn-outline-secondary btn-sm"
+        >
+
+            <i class="bi bi-arrow-left me-1"></i>
+
+            Back to Electricity Services
+
+        </a>
+
+        <a
+            href="{% url 'energy:home' %}"
+            class="btn btn-warning btn-sm"
+        >
+
+            <i class="bi bi-lightning-charge me-1"></i>
+
+            Energy Home
+
+        </a>
+
+    </div>
+
+</div>
+
+{% endblock %}

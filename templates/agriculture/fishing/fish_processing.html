@@ -1,0 +1,202 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<div class="container-fluid py-4">
+
+    <div class="d-flex flex-wrap justify-content-between align-items-center mb-4">
+
+        <div>
+
+            <h2 class="fw-bold mb-1">
+                <i class="bi bi-box-seam"></i>
+                Fish Processing & Value Addition
+            </h2>
+
+            <p class="text-muted mb-0">
+                Manage fish processing, drying, smoking,
+                cold storage and value-addition facilities.
+            </p>
+
+        </div>
+
+        <a href="{% url 'agriculture:home' %}"
+           class="btn btn-outline-secondary mt-2 mt-md-0">
+
+            <i class="bi bi-arrow-left"></i>
+            Back to Agriculture
+
+        </a>
+
+    </div>
+
+
+    <div class="row g-4">
+
+        <!-- FORM -->
+        <div class="col-lg-4">
+
+            <div class="card border-0 shadow-sm">
+
+                <div class="card-header bg-white">
+
+                    <h5 class="fw-bold mb-0">
+                        Register Processing Facility
+                    </h5>
+
+                </div>
+
+                <div class="card-body">
+
+                    <form method="POST">
+
+                        {% csrf_token %}
+
+                        {% for field in form %}
+
+                            <div class="mb-3">
+
+                                <label class="form-label fw-semibold">
+                                    {{ field.label }}
+                                </label>
+
+                                {{ field }}
+
+                                {% for error in field.errors %}
+                                    <div class="text-danger small">
+                                        {{ error }}
+                                    </div>
+                                {% endfor %}
+
+                            </div>
+
+                        {% endfor %}
+
+                        <button type="submit"
+                                class="btn btn-success w-100">
+
+                            <i class="bi bi-plus-circle"></i>
+                            Register Facility
+
+                        </button>
+
+                    </form>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <!-- FACILITIES -->
+        <div class="col-lg-8">
+
+            <div class="card border-0 shadow-sm">
+
+                <div class="card-header bg-white">
+
+                    <h5 class="fw-bold mb-0">
+                        Processing Facilities
+                    </h5>
+
+                </div>
+
+                <div class="card-body">
+
+                    <div class="table-responsive">
+
+                        <table class="table table-hover align-middle">
+
+                            <thead>
+
+                                <tr>
+                                    <th>Name</th>
+                                    <th>Type</th>
+                                    <th>Organization</th>
+                                    <th>District</th>
+                                    <th>Capacity</th>
+                                    <th>Status</th>
+                                </tr>
+
+                            </thead>
+
+                            <tbody>
+
+                                {% for facility in facilities %}
+
+                                <tr>
+
+                                    <td class="fw-semibold">
+                                        {{ facility.name }}
+                                    </td>
+
+                                    <td>
+                                        {{ facility.get_facility_type_display }}
+                                    </td>
+
+                                    <td>
+                                        {{ facility.owner_or_organization|default:"—" }}
+                                    </td>
+
+                                    <td>
+                                        {{ facility.district }}
+                                    </td>
+
+                                    <td>
+                                        {{ facility.processing_capacity }}
+                                        {{ facility.capacity_unit }}
+                                    </td>
+
+                                    <td>
+
+                                        {% if facility.active %}
+
+                                            <span class="badge bg-success">
+                                                Active
+                                            </span>
+
+                                        {% else %}
+
+                                            <span class="badge bg-secondary">
+                                                Inactive
+                                            </span>
+
+                                        {% endif %}
+
+                                    </td>
+
+                                </tr>
+
+                                {% empty %}
+
+                                <tr>
+
+                                    <td colspan="6"
+                                        class="text-center text-muted py-4">
+
+                                        No processing facilities registered yet.
+
+                                    </td>
+
+                                </tr>
+
+                                {% endfor %}
+
+                            </tbody>
+
+                        </table>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+{% endblock %}

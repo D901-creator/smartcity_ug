@@ -1,0 +1,203 @@
+{% extends "base.html" %}
+
+{% block title %}Submit Health Request | Smart City Uganda{% endblock %}
+
+{% block content %}
+
+<div class="container-fluid py-3">
+
+    <div class="row justify-content-center">
+
+        <div class="col-lg-9 col-xl-8">
+
+            <a href="{% url 'health:requests' %}"
+               class="small text-decoration-none">
+                <i class="bi bi-arrow-left"></i>
+                Back to requests
+            </a>
+
+            <div class="card border-0 shadow-sm mt-3">
+
+                <div class="card-body p-4">
+
+                    <h4 class="fw-bold">
+                        Submit Health Request
+                    </h4>
+
+                    <p class="text-muted small">
+                        Use this form to submit a health-service request,
+                        appointment inquiry, referral inquiry or request
+                        for health information.
+                    </p>
+
+                    <div class="alert alert-info small">
+                        <i class="bi bi-info-circle me-1"></i>
+                        Please do not include confidential medical records,
+                        diagnoses, prescriptions or other private clinical
+                        information.
+                    </div>
+
+
+                    <form method="post">
+
+                        {% csrf_token %}
+
+                        {% if form.non_field_errors %}
+                        <div class="alert alert-danger">
+                            {{ form.non_field_errors }}
+                        </div>
+                        {% endif %}
+
+
+                        <div class="row g-3">
+
+                            <div class="col-md-6">
+                                <label class="form-label fw-semibold">
+                                    Full Name
+                                </label>
+
+                                {{ form.citizen_name }}
+
+                                {% for error in form.citizen_name.errors %}
+                                <div class="text-danger small">
+                                    {{ error }}
+                                </div>
+                                {% endfor %}
+                            </div>
+
+
+                            <div class="col-md-6">
+                                <label class="form-label fw-semibold">
+                                    Email
+                                </label>
+
+                                {{ form.citizen_email }}
+
+                                {% for error in form.citizen_email.errors %}
+                                <div class="text-danger small">
+                                    {{ error }}
+                                </div>
+                                {% endfor %}
+                            </div>
+
+
+                            <div class="col-md-6">
+                                <label class="form-label fw-semibold">
+                                    Phone
+                                </label>
+
+                                {{ form.citizen_phone }}
+
+                                {% for error in form.citizen_phone.errors %}
+                                <div class="text-danger small">
+                                    {{ error }}
+                                </div>
+                                {% endfor %}
+                            </div>
+
+
+                            <div class="col-md-6">
+                                <label class="form-label fw-semibold">
+                                    Request Type
+                                </label>
+
+                                {{ form.request_type }}
+
+                                {% for error in form.request_type.errors %}
+                                <div class="text-danger small">
+                                    {{ error }}
+                                </div>
+                                {% endfor %}
+                            </div>
+
+
+                            <div class="col-md-6">
+                                <label class="form-label fw-semibold">
+                                    Health Facility
+                                </label>
+
+                                {{ form.facility }}
+
+                                {% for error in form.facility.errors %}
+                                <div class="text-danger small">
+                                    {{ error }}
+                                </div>
+                            {% endfor %}
+                            </div>
+
+
+                            <div class="col-md-6">
+                                <label class="form-label fw-semibold">
+                                    District / City
+                                </label>
+
+                                {{ form.district }}
+
+                                {% for error in form.district.errors %}
+                                <div class="text-danger small">
+                                    {{ error }}
+                                </div>
+                                {% endfor %}
+                            </div>
+
+
+                            <div class="col-12">
+                                <label class="form-label fw-semibold">
+                                    Subject
+                                </label>
+
+                                {{ form.subject }}
+
+                                {% for error in form.subject.errors %}
+                                <div class="text-danger small">
+                                    {{ error }}
+                                </div>
+                                {% endfor %}
+                            </div>
+
+
+                            <div class="col-12">
+                                <label class="form-label fw-semibold">
+                                    Description
+                                </label>
+
+                                {{ form.description }}
+
+                                {% for error in form.description.errors %}
+                                <div class="text-danger small">
+                                    {{ error }}
+                                </div>
+                                {% endfor %}
+                            </div>
+
+                        </div>
+
+
+                        <div class="mt-4 d-flex flex-wrap gap-2">
+
+                            <button type="submit"
+                                    class="btn btn-success">
+                                <i class="bi bi-send me-1"></i>
+                                Submit Request
+                            </button>
+
+                            <a href="{% url 'health:requests' %}"
+                               class="btn btn-outline-secondary">
+                                Cancel
+                            </a>
+
+                        </div>
+
+                    </form>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+{% endblock %}

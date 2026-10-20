@@ -1,0 +1,725 @@
+
+{% extends "auth_base.html" %}
+
+{% block title %}Account Verification | Smart City Uganda{% endblock %}
+
+{% block content %}
+<div class="verification-page">
+
+    <div class="verification-hero">
+        <div class="verification-icon">
+            <i class="bi bi-shield-check"></i>
+        </div>
+
+        <span class="verification-label">ACCOUNT SECURITY</span>
+
+        <h1>Verify Your Account</h1>
+
+        <p>
+            Welcome to Smart City Uganda. Complete account verification
+            to help us protect your account and provide access to the
+            appropriate citizen or staff services.
+        </p>
+
+        <div class="verification-status">
+            {% if profile.verification_status == "approved" %}
+                <i class="bi bi-check-circle-fill"></i>
+            {% elif profile.verification_status == "rejected" %}
+                <i class="bi bi-x-circle-fill"></i>
+            {% else %}
+                <i class="bi bi-clock-history"></i>
+            {% endif %}
+
+            Current status:
+            <strong>
+                {{ profile.get_verification_status_display }}
+            </strong>
+        </div>
+    </div>
+
+    {% if messages %}
+        {% for message in messages %}
+            <div class="alert
+                {% if message.tags == 'error' %}
+                    alert-danger
+                {% elif message.tags == 'success' %}
+                    alert-success
+                {% elif message.tags == 'warning' %}
+                    alert-warning
+                {% else %}
+                    alert-info
+                {% endif %}
+                alert-dismissible fade show"
+                role="alert">
+
+                {{ message }}
+
+                <button type="button"
+                        class="btn-close"
+                        data-bs-dismiss="alert"
+                        aria-label="Close"></button>
+            </div>
+        {% endfor %}
+    {% endif %}
+
+    <div class="verification-card">
+
+        <!-- SECTION 1: BENEFITS -->
+        <div class="section-heading">
+            <div>
+                <span class="section-number">01</span>
+                <h2>Why verification matters</h2>
+            </div>
+        </div>
+
+        <p class="section-description">
+            Verification helps Smart City Uganda confirm that accounts
+            belong to the appropriate people. It supports safer access
+            to public services, responsible handling of requests, and
+            reliable communication between citizens and authorised staff.
+        </p>
+
+        <div class="benefit-list">
+            <div class="benefit-item">
+                <div class="benefit-icon">
+                    <i class="bi bi-shield-lock"></i>
+                </div>
+                <div>
+                    <h3>Account protection</h3>
+                    <p>
+                        Helps reduce impersonation and unauthorised access.
+                    </p>
+                </div>
+            </div>
+
+            <div class="benefit-item">
+                <div class="benefit-icon">
+                    <i class="bi bi-person-check"></i>
+                </div>
+                <div>
+                    <h3>Identity confirmation</h3>
+                    <p>
+                        Allows the verification team to review your submitted
+                        information.
+                    </p>
+                </div>
+            </div>
+
+            <div class="benefit-item">
+                <div class="benefit-icon">
+                    <i class="bi bi-building-check"></i>
+                </div>
+                <div>
+                    <h3>Appropriate service access</h3>
+                    <p>
+                        Supports access according to your account role
+                        and permissions.
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        <div class="verification-divider"></div>
+
+        <!-- SECTION 2: RULES -->
+        <div class="section-heading">
+            <div>
+                <span class="section-number">02</span>
+                <h2>Verification rules</h2>
+            </div>
+        </div>
+
+        <p class="section-description">
+            Read these guidelines before submitting your verification details.
+        </p>
+
+        <div class="rules-list">
+
+            <div class="rule-item">
+                <i class="bi bi-check-circle-fill"></i>
+                <div>
+                    <strong>Provide accurate information</strong>
+                    <p>
+                        Use your correct personal or authorised staff details.
+                    </p>
+                </div>
+            </div>
+
+            <div class="rule-item">
+                <i class="bi bi-check-circle-fill"></i>
+                <div>
+                    <strong>Submit genuine documents</strong>
+                    <p>
+                        Documents must be authentic, readable, and belong
+                        to you or be lawfully authorised for your use.
+                    </p>
+                </div>
+            </div>
+
+            <div class="rule-item">
+                <i class="bi bi-check-circle-fill"></i>
+                <div>
+                    <strong>Protect your private information</strong>
+                    <p>
+                        Upload documents only through the official verification
+                        form. Never share passwords or one-time security codes.
+                    </p>
+                </div>
+            </div>
+
+            <div class="rule-item">
+                <i class="bi bi-check-circle-fill"></i>
+                <div>
+                    <strong>Wait for the review outcome</strong>
+                    <p>
+                        Submitting your details does not automatically mean
+                        your account has been approved.
+                    </p>
+                </div>
+            </div>
+
+            <div class="rule-item">
+                <i class="bi bi-check-circle-fill"></i>
+                <div>
+                    <strong>Correct any issues</strong>
+                    <p>
+                        If your submission is rejected, read the feedback
+                        and provide corrected information where permitted.
+                    </p>
+                </div>
+            </div>
+
+        </div>
+
+        <div class="notice-box">
+            <i class="bi bi-info-circle-fill"></i>
+            <div>
+                <strong>Important privacy notice</strong>
+                <p>
+                    Only submit information requested by the verification form.
+                    Access to identity documents should be restricted to
+                    authorised reviewers. Do not upload unrelated sensitive
+                    information.
+                </p>
+            </div>
+        </div>
+
+        <div class="verification-divider"></div>
+
+        <!-- SECTION 3: PROCESS -->
+        <div class="section-heading">
+            <div>
+                <span class="section-number">03</span>
+                <h2>What happens next?</h2>
+            </div>
+        </div>
+
+        <div class="process-steps">
+
+            <div class="process-step">
+                <div class="step-marker">1</div>
+                <div>
+                    <h3>Prepare your information</h3>
+                    <p>
+                        Review the information and documents requested
+                        for your account role.
+                    </p>
+                </div>
+            </div>
+
+            <div class="process-step">
+                <div class="step-marker">2</div>
+                <div>
+                    <h3>Submit for review</h3>
+                    <p>
+                        Complete the verification form and submit your details.
+                    </p>
+                </div>
+            </div>
+
+            <div class="process-step">
+                <div class="step-marker">3</div>
+                <div>
+                    <h3>Await a decision</h3>
+                    <p>
+                        An authorised reviewer can approve your submission
+                        or reject it with feedback.
+                    </p>
+                </div>
+            </div>
+
+            <div class="process-step">
+                <div class="step-marker">4</div>
+                <div>
+                    <h3>Check your status</h3>
+                    <p>
+                        Return to your account to check the recorded
+                        verification status.
+                    </p>
+                </div>
+            </div>
+
+        </div>
+
+        <!-- STATUS-BASED ACTION -->
+        <div class="verification-action">
+
+            <div class="action-copy">
+                {% if profile.verification_status == "approved" %}
+                    <h2>Verification complete</h2>
+                    <p>
+                        Your account has been verified. You can continue
+                        to the services available to your account role.
+                    </p>
+
+                {% elif profile.verification_status == "rejected" %}
+                    <h2>Review required</h2>
+                    <p>
+                        Your verification was rejected. Review the feedback
+                        on your submission before submitting corrected details.
+                    </p>
+
+                {% elif profile.verification_status == "pending" %}
+                    <h2>Verification in progress</h2>
+                    <p>
+                        Your account is awaiting verification. If you have
+                        already submitted your documents, wait for the review.
+                    </p>
+
+                {% else %}
+                    <h2>Ready to begin?</h2>
+                    <p>
+                        Continue to the verification form to provide
+                        the information required for your account.
+                    </p>
+                {% endif %}
+            </div>
+
+            {% if profile.verification_status == "approved" %}
+
+                <div class="approved-message">
+                    <i class="bi bi-check-circle-fill"></i>
+                    Your account is verified.
+                </div>
+
+            {% elif profile.verification_status == "rejected" %}
+
+                <a href="{% url 'accounts:verification_submit' %}"
+                   class="verification-button">
+                    <i class="bi bi-arrow-repeat"></i>
+                    Review and Resubmit
+                </a>
+
+            {% elif profile.verification_status == "pending" %}
+
+                {% if has_pending_submission %}
+                    <span class="pending-message">
+                        <i class="bi bi-hourglass-split"></i>
+                        Awaiting review
+                    </span>
+                {% else %}
+                    <a href="{% url 'accounts:verification_submit' %}"
+                       class="verification-button">
+                        Continue Verification
+                        <i class="bi bi-arrow-right"></i>
+                    </a>
+                {% endif %}
+
+            {% else %}
+
+                <a href="{% url 'accounts:verification_submit' %}"
+                   class="verification-button">
+                    Start Verification
+                    <i class="bi bi-arrow-right"></i>
+                </a>
+
+            {% endif %}
+
+        </div>
+
+    </div>
+
+    <div class="verification-footer">
+        <i class="bi bi-lock-fill"></i>
+        Your information should be handled securely and reviewed only
+        by authorised personnel.
+    </div>
+
+</div>
+
+<style>
+.verification-page {
+    max-width: 1050px;
+    margin: 0 auto;
+    padding: 28px 18px 45px;
+    color: #26352c;
+}
+
+.verification-hero {
+    background: linear-gradient(135deg, #f0f8f2, #ffffff);
+    border: 1px solid #dcebe0;
+    border-radius: 18px;
+    padding: 35px;
+    margin-bottom: 24px;
+}
+
+.verification-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 58px;
+    height: 58px;
+    border-radius: 16px;
+    background: #dff1e4;
+    color: #187443;
+    font-size: 28px;
+    margin-bottom: 20px;
+}
+
+.verification-label {
+    font-size: 12px;
+    letter-spacing: 1.6px;
+    font-weight: 800;
+    color: #21804a;
+}
+
+.verification-hero h1 {
+    margin: 9px 0 12px;
+    font-size: clamp(27px, 4vw, 38px);
+    font-weight: 800;
+    color: #183b27;
+}
+
+.verification-hero > p {
+    max-width: 720px;
+    color: #5c6d62;
+    line-height: 1.8;
+    margin-bottom: 22px;
+}
+
+.verification-status {
+    display: inline-flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    align-items: center;
+    background: #fff;
+    border: 1px solid #dce8df;
+    border-radius: 9px;
+    padding: 10px 14px;
+    font-size: 14px;
+}
+
+.verification-status i {
+    color: #21804a;
+    font-size: 17px;
+}
+
+.verification-card {
+    background: #fff;
+    border: 1px solid #e3e9e4;
+    border-radius: 18px;
+    padding: 32px;
+    box-shadow: 0 5px 22px rgba(25, 55, 35, .04);
+}
+
+.section-heading {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 14px;
+}
+
+.section-heading > div {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.section-number {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 36px;
+    height: 36px;
+    border-radius: 10px;
+    background: #e8f4eb;
+    color: #197342;
+    font-weight: 800;
+    font-size: 13px;
+}
+
+.section-heading h2 {
+    margin: 0;
+    font-size: 21px;
+    font-weight: 750;
+    color: #203d2b;
+}
+
+.section-description {
+    color: #66746a;
+    line-height: 1.8;
+    margin-bottom: 22px;
+}
+
+.benefit-list {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 14px;
+}
+
+.benefit-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    padding: 17px;
+    border: 1px solid #e7eee8;
+    border-radius: 12px;
+    background: #fcfdfc;
+}
+
+.benefit-icon {
+    color: #23804a;
+    font-size: 22px;
+}
+
+.benefit-item h3,
+.process-step h3 {
+    font-size: 15px;
+    font-weight: 750;
+    margin: 0 0 7px;
+    color: #284332;
+}
+
+.benefit-item p,
+.rule-item p,
+.process-step p {
+    color: #69766d;
+    font-size: 13px;
+    line-height: 1.7;
+    margin: 0;
+}
+
+.verification-divider {
+    border-top: 1px solid #e9eee9;
+    margin: 30px 0;
+}
+
+.rules-list {
+    display: grid;
+    gap: 19px;
+}
+
+.rule-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+}
+
+.rule-item > i {
+    color: #23834c;
+    font-size: 18px;
+    margin-top: 2px;
+}
+
+.rule-item strong {
+    display: block;
+    margin-bottom: 5px;
+    color: #304a38;
+    font-size: 14px;
+}
+
+.notice-box {
+    display: flex;
+    gap: 13px;
+    margin-top: 25px;
+    padding: 18px;
+    border-radius: 12px;
+    background: #f2f7ff;
+    border: 1px solid #dce8fa;
+    color: #345a8a;
+}
+
+.notice-box > i {
+    font-size: 20px;
+}
+
+.notice-box strong {
+    display: block;
+    margin-bottom: 5px;
+}
+
+.notice-box p {
+    color: #536c8c;
+    font-size: 13px;
+    line-height: 1.7;
+    margin: 0;
+}
+
+.process-steps {
+    display: grid;
+    gap: 21px;
+}
+
+.process-step {
+    display: flex;
+    align-items: flex-start;
+    gap: 15px;
+}
+
+.step-marker {
+    display: flex;
+    flex: 0 0 36px;
+    height: 36px;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    background: #e7f4ea;
+    color: #197342;
+    font-weight: 800;
+}
+
+.verification-action {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 22px;
+    flex-wrap: wrap;
+    margin-top: 32px;
+    padding: 23px;
+    border: 1px solid #dce9df;
+    border-radius: 14px;
+    background: #f7fbf8;
+}
+
+.action-copy {
+    flex: 1 1 260px;
+}
+
+.action-copy h2 {
+    color: #21452e;
+    font-size: 20px;
+    font-weight: 800;
+    margin: 0 0 8px;
+}
+
+.action-copy p {
+    color: #68766c;
+    line-height: 1.7;
+    font-size: 13px;
+    margin: 0;
+}
+
+.verification-button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    min-height: 48px;
+    padding: 13px 21px;
+    border-radius: 9px;
+    background: #198348;
+    color: #fff !important;
+    text-decoration: none;
+    font-size: 14px;
+    font-weight: 750;
+    transition: background .2s ease;
+}
+
+.verification-button:hover {
+    background: #126638;
+}
+
+.approved-message {
+    display: flex;
+    align-items: center;
+    gap: 9px;
+    color: #187443;
+    font-weight: 750;
+}
+
+.pending-message {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    color: #8a6d1d;
+    font-size: 14px;
+    font-weight: 750;
+}
+
+.verification-footer {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-top: 24px;
+    color: #7b887e;
+    text-align: center;
+    font-size: 12px;
+    line-height: 1.7;
+}
+
+@media (max-width: 700px) {
+    .verification-page {
+        padding: 18px 10px 30px;
+    }
+
+    .verification-hero,
+    .verification-card {
+        padding: 22px 18px;
+        border-radius: 14px;
+    }
+
+    .benefit-list {
+        grid-template-columns: 1fr;
+    }
+
+    .section-heading h2 {
+        font-size: 18px;
+    }
+
+    .verification-action {
+        align-items: stretch;
+    }
+
+    .verification-button {
+        width: 100%;
+    }
+}
+
+
+</style>
+
+<script>
+(function () {
+    async function checkApproval() {
+        try {
+            const response = await fetch(
+                "{% url 'accounts:verification_status' %}",
+                {
+                    headers: {"X-Requested-With": "XMLHttpRequest"},
+                    credentials: "same-origin"
+                }
+            );
+
+            if (!response.ok) return;
+
+            const data = await response.json();
+
+            if (
+                data.status === "approved" &&
+                data.role === "citizen"
+            ) {
+                window.location.href = "/citizen/";
+            }
+        } catch (error) {
+            console.error("Could not check verification status:", error);
+        }
+    }
+
+    checkApproval();
+    setInterval(checkApproval, 5000);
+})();
+</script>
+
+{% endblock %}

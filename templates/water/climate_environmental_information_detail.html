@@ -1,0 +1,224 @@
+{% extends "base.html" %}
+
+{% block title %}
+    {{ information.title }} | Smart City Uganda
+{% endblock %}
+
+{% block content %}
+
+<div class="container-fluid py-3">
+
+    <div class="mb-3">
+
+        <a
+            href="{% url 'water:climate_environmental_information' %}"
+            class="btn btn-outline-secondary btn-sm"
+        >
+            <i class="bi bi-arrow-left me-1"></i>
+            Back to Climate Information
+        </a>
+
+    </div>
+
+
+    <div class="row g-3">
+
+        <!-- Main Content -->
+        <div class="col-12 col-lg-8">
+
+            <div class="card border-0 shadow-sm">
+
+                <div class="card-body">
+
+                    <span class="badge bg-success mb-3">
+
+                        {{ information.get_category_display }}
+
+                    </span>
+
+
+                    {% if information.is_featured %}
+
+                        <span class="badge bg-warning text-dark mb-3">
+
+                            Featured
+
+                        </span>
+
+                    {% endif %}
+
+
+                    <h3 class="fw-bold">
+
+                        {{ information.title }}
+
+                    </h3>
+
+
+                    {% if information.district %}
+
+                        <p class="text-muted">
+
+                            <i class="bi bi-geo-alt text-success me-1"></i>
+
+                            {{ information.district }}
+
+                        </p>
+
+                    {% else %}
+
+                        <p class="text-muted">
+
+                            <i class="bi bi-globe2 text-success me-1"></i>
+
+                            National Information
+
+                        </p>
+
+                    {% endif %}
+
+
+                    <hr>
+
+
+                    <h6 class="fw-bold">
+                        Summary
+                    </h6>
+
+                    <p class="text-muted">
+                        {{ information.summary }}
+                    </p>
+
+
+                    <h6 class="fw-bold mt-4">
+                        Information
+                    </h6>
+
+                    <div class="text-muted">
+
+                        {{ information.content|linebreaks }}
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <!-- Information Panel -->
+        <div class="col-12 col-lg-4">
+
+            <div class="card border-0 shadow-sm">
+
+                <div class="card-header bg-success text-white">
+
+                    <strong>
+                        Information Source
+                    </strong>
+
+                </div>
+
+
+                <div class="list-group list-group-flush">
+
+                    {% if information.source_organization %}
+
+                        <div class="list-group-item">
+
+                            <small class="text-muted d-block">
+                                Source Organization
+                            </small>
+
+                            <strong>
+                                {{ information.source_organization }}
+                            </strong>
+
+                        </div>
+
+                    {% endif %}
+
+
+                    {% if information.district %}
+
+                        <div class="list-group-item">
+
+                            <small class="text-muted d-block">
+                                Area
+                            </small>
+
+                            <strong>
+                                {{ information.district }}
+                            </strong>
+
+                        </div>
+
+                    {% else %}
+
+                        <div class="list-group-item">
+
+                            <small class="text-muted d-block">
+                                Area
+                            </small>
+
+                            <strong>
+                                Nationwide
+                            </strong>
+
+                        </div>
+
+                    {% endif %}
+
+
+                    {% if information.contact_phone %}
+
+                        <div class="list-group-item">
+
+                            <small class="text-muted d-block">
+                                Contact
+                            </small>
+
+                            <a href="tel:{{ information.contact_phone }}">
+                                {{ information.contact_phone }}
+                            </a>
+
+                        </div>
+
+                    {% endif %}
+
+
+                    <div class="list-group-item">
+
+                        <small class="text-muted d-block">
+                            Published
+                        </small>
+
+                        <strong>
+                            {{ information.created_at|date:"d M Y" }}
+                        </strong>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <div class="alert alert-success mt-3">
+
+                <i class="bi bi-shield-check me-2"></i>
+
+                Always use information published by the
+                relevant government or authorized institution
+                when making important environmental decisions.
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+{% endblock %}

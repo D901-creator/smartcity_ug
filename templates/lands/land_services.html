@@ -1,0 +1,268 @@
+{% extends "base.html" %}
+
+{% block title %}
+Land Services & Information | Smart City Uganda
+{% endblock %}
+
+{% block content %}
+
+<div class="container-fluid py-3">
+
+    <div class="d-flex flex-wrap justify-content-between align-items-center mb-4">
+        <div>
+            <h4 class="mb-1">
+                <i class="bi bi-map text-success me-2"></i>
+                Land Services & Information
+            </h4>
+
+            <p class="text-muted mb-0">
+                Access land-title and land-information services.
+            </p>
+        </div>
+
+        <a href="{% url 'lands:land_title_apply' %}"
+           class="btn btn-success mt-2 mt-md-0">
+            <i class="bi bi-file-earmark-plus me-1"></i>
+            Apply / Make an Inquiry
+        </a>
+    </div>
+
+
+    <!-- Quick information -->
+
+    <div class="row g-3 mb-4">
+
+        <div class="col-md-4">
+            <div class="card border-0 shadow-sm h-100">
+                <div class="card-body">
+                    <div class="d-flex align-items-center mb-2">
+                        <i class="bi bi-file-earmark-text fs-4 text-success me-2"></i>
+                        <h6 class="mb-0">Land Titles</h6>
+                    </div>
+
+                    <p class="text-muted small mb-0">
+                        Learn about land titles and the general process
+                        for making a land-title application.
+                    </p>
+                </div>
+            </div>
+        </div>
+
+
+        <div class="col-md-4">
+            <div class="card border-0 shadow-sm h-100">
+                <div class="card-body">
+                    <div class="d-flex align-items-center mb-2">
+                        <i class="bi bi-search fs-4 text-primary me-2"></i>
+                        <h6 class="mb-0">Land Information</h6>
+                    </div>
+
+                    <p class="text-muted small mb-0">
+                        Access available land-information guidance and
+                        public information.
+                    </p>
+                </div>
+            </div>
+        </div>
+
+
+        <div class="col-md-4">
+            <div class="card border-0 shadow-sm h-100">
+                <div class="card-body">
+                    <div class="d-flex align-items-center mb-2">
+                        <i class="bi bi-arrow-left-right fs-4 text-warning me-2"></i>
+                        <h6 class="mb-0">Land Transfers</h6>
+                    </div>
+
+                    <p class="text-muted small mb-0">
+                        Learn about land ownership transfer information
+                        and related requirements.
+                    </p>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+
+    <!-- Application process -->
+
+    <div class="card border-0 shadow-sm mb-4">
+
+        <div class="card-header bg-white">
+            <h6 class="mb-0">
+                <i class="bi bi-list-check text-success me-2"></i>
+                General Land Title Application Process
+            </h6>
+        </div>
+
+        <div class="card-body">
+
+            <div class="row g-3">
+
+                <div class="col-md-3">
+                    <div class="border rounded p-3 h-100">
+                        <span class="badge bg-success mb-2">Step 1</span>
+                        <h6>Identify the Service</h6>
+                        <p class="small text-muted mb-0">
+                            Determine whether you need a new title,
+                            transfer, replacement or land information.
+                        </p>
+                    </div>
+                </div>
+
+                <div class="col-md-3">
+                    <div class="border rounded p-3 h-100">
+                        <span class="badge bg-success mb-2">Step 2</span>
+                        <h6>Prepare Information</h6>
+                        <p class="small text-muted mb-0">
+                            Prepare the relevant land and applicant
+                            information required for your request.
+                        </p>
+                    </div>
+                </div>
+
+                <div class="col-md-3">
+                    <div class="border rounded p-3 h-100">
+                        <span class="badge bg-success mb-2">Step 3</span>
+                        <h6>Submit Request</h6>
+                        <p class="small text-muted mb-0">
+                            Submit your request through the available
+                            Smart City service channel.
+                        </p>
+                    </div>
+                </div>
+
+                <div class="col-md-3">
+                    <div class="border rounded p-3 h-100">
+                        <span class="badge bg-success mb-2">Step 4</span>
+                        <h6>Follow Up</h6>
+                        <p class="small text-muted mb-0">
+                            Keep your reference number for future
+                            communication and status tracking.
+                        </p>
+                    </div>
+                </div>
+
+            </div>
+
+        </div>
+    </div>
+
+
+    <!-- Published information -->
+
+    <div class="card border-0 shadow-sm">
+
+        <div class="card-header bg-white">
+            <h6 class="mb-0">
+                <i class="bi bi-info-circle text-primary me-2"></i>
+                Published Land Information
+            </h6>
+        </div>
+
+        <div class="card-body">
+
+            {% if information %}
+
+                <div class="row g-3">
+
+                    {% for item in information %}
+
+                        <div class="col-md-6 col-xl-4">
+
+                            <div class="card h-100 border">
+
+                                <div class="card-body">
+
+                                    <span class="badge bg-light text-dark border mb-2">
+                                        {{ item.get_information_type_display }}
+                                    </span>
+
+                                    <h6>
+                                        {{ item.title }}
+                                    </h6>
+
+                                    <p class="small text-muted">
+                                        {{ item.summary }}
+                                    </p>
+
+                                    <button
+                                        class="btn btn-outline-success btn-sm"
+                                        type="button"
+                                        data-bs-toggle="collapse"
+                                        data-bs-target="#info{{ item.id }}">
+                                        View Information
+                                    </button>
+
+                                    <div
+                                        class="collapse mt-3"
+                                        id="info{{ item.id }}">
+
+                                        <div class="small">
+
+                                            <p>
+                                                {{ item.description }}
+                                            </p>
+
+                                            {% if item.required_documents %}
+                                                <strong>
+                                                    Required information/documents
+                                                </strong>
+
+                                                <p class="text-muted">
+                                                    {{ item.required_documents }}
+                                                </p>
+                                            {% endif %}
+
+                                            {% if item.application_steps %}
+                                                <strong>
+                                                    Application steps
+                                                </strong>
+
+                                                <p class="text-muted">
+                                                    {{ item.application_steps }}
+                                                </p>
+                                            {% endif %}
+
+                                            {% if item.fees_information %}
+                                                <strong>
+                                                    Fees information
+                                                </strong>
+
+                                                <p class="text-muted">
+                                                    {{ item.fees_information }}
+                                                </p>
+                                            {% endif %}
+
+                                        </div>
+
+                                    </div>
+
+                                </div>
+
+                            </div>
+
+                        </div>
+
+                    {% endfor %}
+
+                </div>
+
+            {% else %}
+
+                <div class="alert alert-info mb-0">
+                    <i class="bi bi-info-circle me-2"></i>
+                    No additional land information has been published yet.
+                    Authorized departments can add verified information
+                    when the administration module is implemented.
+                </div>
+
+            {% endif %}
+
+        </div>
+    </div>
+
+</div>
+
+{% endblock %}

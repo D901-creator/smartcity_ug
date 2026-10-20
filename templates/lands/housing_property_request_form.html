@@ -1,0 +1,292 @@
+{% extends "base.html" %}
+
+{% block title %}
+    New Housing Request | Smart City Uganda
+{% endblock %}
+
+{% block content %}
+
+<div class="container-fluid">
+
+    <div class="mb-4">
+
+        <a
+            href="{% url 'lands:housing_property_requests' %}"
+            class="btn btn-outline-success"
+        >
+
+            <i class="bi bi-arrow-left"></i>
+            Back to Housing Requests
+
+        </a>
+
+    </div>
+
+
+    <div class="row justify-content-center">
+
+        <div class="col-xl-9">
+
+            <div class="card border-0 shadow-sm">
+
+                <div class="card-header bg-white py-3">
+
+                    <h4 class="fw-bold mb-1">
+
+                        <i class="bi bi-house-check text-success"></i>
+
+                        Submit Housing & Property Request
+
+                    </h4>
+
+                    <p class="text-muted mb-0">
+                        Provide accurate information so your request
+                        can be properly reviewed.
+                    </p>
+
+                </div>
+
+
+                <div class="card-body p-4">
+
+                    <form
+                        method="post"
+                        enctype="multipart/form-data"
+                    >
+
+                        {% csrf_token %}
+
+
+                        {% if form.non_field_errors %}
+
+                            <div class="alert alert-danger">
+
+                                {{ form.non_field_errors }}
+
+                            </div>
+
+                        {% endif %}
+
+
+                        <h5 class="fw-bold mb-3">
+                            Applicant Information
+                        </h5>
+
+                        <div class="row g-3">
+
+                            <div class="col-md-6">
+
+                                <label class="form-label">
+                                    Full Name
+                                </label>
+
+                                {{ form.citizen_name }}
+
+                                {{ form.citizen_name.errors }}
+
+                            </div>
+
+
+                            <div class="col-md-6">
+
+                                <label class="form-label">
+                                    Phone Number
+                                </label>
+
+                                {{ form.phone_number }}
+
+                                {{ form.phone_number.errors }}
+
+                            </div>
+
+
+                            <div class="col-md-6">
+
+                                <label class="form-label">
+                                    Email
+                                </label>
+
+                                {{ form.email }}
+
+                                {{ form.email.errors }}
+
+                            </div>
+
+
+                            <div class="col-md-6">
+
+                                <label class="form-label">
+                                    District / City
+                                </label>
+
+                                {{ form.district }}
+
+                                {{ form.district.errors }}
+
+                            </div>
+
+
+                            <div class="col-12">
+
+                                <label class="form-label">
+                                    Location
+                                </label>
+
+                                {{ form.location }}
+
+                                {{ form.location.errors }}
+
+                            </div>
+
+                        </div>
+
+
+                        <hr class="my-4">
+
+
+                        <h5 class="fw-bold mb-3">
+                            Request Details
+                        </h5>
+
+
+                        <div class="row g-3">
+
+                            <div class="col-md-6">
+
+                                <label class="form-label">
+                                    Request Type
+                                </label>
+
+                                {{ form.request_type }}
+
+                                {{ form.request_type.errors }}
+
+                            </div>
+
+
+                            <div class="col-md-6">
+
+                                <label class="form-label">
+                                    Property Reference
+                                </label>
+
+                                {{ form.property_reference }}
+
+                                <div class="form-text">
+                                    Optional — enter a plot or property
+                                    reference if you have one.
+                                </div>
+
+                                {{ form.property_reference.errors }}
+
+                            </div>
+
+
+                            <div class="col-12">
+
+                                <label class="form-label">
+                                    Subject
+                                </label>
+
+                                {{ form.subject }}
+
+                                {{ form.subject.errors }}
+
+                            </div>
+
+
+                            <div class="col-12">
+
+                                <label class="form-label">
+                                    Description
+                                </label>
+
+                                {{ form.description }}
+
+                                {{ form.description.errors }}
+
+                            </div>
+
+
+                            <div class="col-12">
+
+                                <label class="form-label">
+                                    Additional Information
+                                </label>
+
+                                {{ form.supporting_information }}
+
+                                {{ form.supporting_information.errors }}
+
+                            </div>
+
+
+                            <div class="col-12">
+
+                                <label class="form-label">
+                                    Supporting Attachment
+                                </label>
+
+                                {{ form.attachment }}
+
+                                <div class="form-text">
+                                    Optional supporting document.
+                                </div>
+
+                                {{ form.attachment.errors }}
+
+                            </div>
+
+                        </div>
+
+
+                        <div class="alert alert-warning mt-4">
+
+                            <i class="bi bi-info-circle"></i>
+
+                            Smart City Uganda provides a digital channel
+                            for submitting requests. Official housing
+                            decisions remain the responsibility of the
+                            relevant government authority.
+
+                        </div>
+
+
+                        <div class="d-flex flex-column
+                                    flex-sm-row
+                                    justify-content-end
+                                    gap-2 mt-4">
+
+                            <a
+                                href="{% url 'lands:housing_property_requests' %}"
+                                class="btn btn-outline-secondary"
+                            >
+                                Cancel
+                            </a>
+
+                            <button
+                                type="submit"
+                                class="btn btn-success"
+                            >
+
+                                <i class="bi bi-send"></i>
+
+                                Submit Request
+
+                            </button>
+
+                        </div>
+
+                    </form>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+{% endblock %}

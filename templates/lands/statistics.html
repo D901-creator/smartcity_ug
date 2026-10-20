@@ -1,0 +1,631 @@
+{% extends "base.html" %}
+
+{% block title %}
+    Lands, Housing & Urban Planning Statistics
+{% endblock %}
+
+{% block content %}
+
+<div class="container-fluid">
+
+    <!-- Page Header -->
+    <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center mb-4">
+
+        <div>
+            <h2 class="fw-bold mb-1">
+                <i class="bi bi-bar-chart-line me-2"></i>
+                Lands, Housing & Urban Planning Statistics
+            </h2>
+
+            <p class="text-muted mb-0">
+                Overview of information, applications, requests, projects and notices
+                available through the Smart City Uganda platform.
+            </p>
+        </div>
+
+        <a href="{% url 'lands:home' %}" class="btn btn-outline-secondary mt-3 mt-md-0">
+            <i class="bi bi-arrow-left me-1"></i>
+            Back to Lands & Planning
+        </a>
+
+    </div>
+
+
+    <!-- Main Statistics -->
+    <div class="row g-3 mb-4">
+
+        <div class="col-6 col-lg-3">
+            <div class="card border-0 shadow-sm h-100">
+                <div class="card-body">
+                    <div class="text-primary mb-2">
+                        <i class="bi bi-file-earmark-text fs-3"></i>
+                    </div>
+
+                    <h3 class="fw-bold">
+                        {{ land_information_count }}
+                    </h3>
+
+                    <p class="text-muted mb-0">
+                        Land Information
+                    </p>
+                </div>
+            </div>
+        </div>
+
+
+        <div class="col-6 col-lg-3">
+            <div class="card border-0 shadow-sm h-100">
+                <div class="card-body">
+                    <div class="text-success mb-2">
+                        <i class="bi bi-patch-check fs-3"></i>
+                    </div>
+
+                    <h3 class="fw-bold">
+                        {{ land_title_application_count }}
+                    </h3>
+
+                    <p class="text-muted mb-0">
+                        Land Title Applications
+                    </p>
+                </div>
+            </div>
+        </div>
+
+
+        <div class="col-6 col-lg-3">
+            <div class="card border-0 shadow-sm h-100">
+                <div class="card-body">
+                    <div class="text-warning mb-2">
+                        <i class="bi bi-house-check fs-3"></i>
+                    </div>
+
+                    <h3 class="fw-bold">
+                        {{ land_property_request_count }}
+                    </h3>
+
+                    <p class="text-muted mb-0">
+                        Land & Property Requests
+                    </p>
+                </div>
+            </div>
+        </div>
+
+
+        <div class="col-6 col-lg-3">
+            <div class="card border-0 shadow-sm h-100">
+                <div class="card-body">
+                    <div class="text-info mb-2">
+                        <i class="bi bi-house-door fs-3"></i>
+                    </div>
+
+                    <h3 class="fw-bold">
+                        {{ housing_information_count }}
+                    </h3>
+
+                    <p class="text-muted mb-0">
+                        Housing Information
+                    </p>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+
+    <!-- Second Statistics Row -->
+    <div class="row g-3 mb-4">
+
+        <div class="col-6 col-lg-3">
+            <div class="card border-0 shadow-sm h-100">
+                <div class="card-body">
+                    <div class="text-danger mb-2">
+                        <i class="bi bi-house-add fs-3"></i>
+                    </div>
+
+                    <h3 class="fw-bold">
+                        {{ housing_property_request_count }}
+                    </h3>
+
+                    <p class="text-muted mb-0">
+                        Housing & Property Requests
+                    </p>
+                </div>
+            </div>
+        </div>
+
+
+        <div class="col-6 col-lg-3">
+            <div class="card border-0 shadow-sm h-100">
+                <div class="card-body">
+                    <div class="text-primary mb-2">
+                        <i class="bi bi-buildings fs-3"></i>
+                    </div>
+
+                    <h3 class="fw-bold">
+                        {{ urban_planning_information_count }}
+                    </h3>
+
+                    <p class="text-muted mb-0">
+                        Urban Planning Information
+                    </p>
+                </div>
+            </div>
+        </div>
+
+
+        <div class="col-6 col-lg-3">
+            <div class="card border-0 shadow-sm h-100">
+                <div class="card-body">
+                    <div class="text-success mb-2">
+                        <i class="bi bi-building-add fs-3"></i>
+                    </div>
+
+                    <h3 class="fw-bold">
+                        {{ development_application_count }}
+                    </h3>
+
+                    <p class="text-muted mb-0">
+                        Development Applications
+                    </p>
+                </div>
+            </div>
+        </div>
+
+
+        <div class="col-6 col-lg-3">
+            <div class="card border-0 shadow-sm h-100">
+                <div class="card-body">
+                    <div class="text-secondary mb-2">
+                        <i class="bi bi-kanban fs-3"></i>
+                    </div>
+
+                    <h3 class="fw-bold">
+                        {{ planning_project_count }}
+                    </h3>
+
+                    <p class="text-muted mb-0">
+                        Planning Projects
+                    </p>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+
+    <!-- Notices -->
+    <div class="row g-3 mb-4">
+
+        <div class="col-12 col-lg-4">
+            <div class="card border-0 shadow-sm h-100">
+                <div class="card-body">
+
+                    <div class="d-flex align-items-center mb-3">
+                        <i class="bi bi-megaphone fs-4 me-2"></i>
+                        <h5 class="fw-bold mb-0">
+                            Published Notices
+                        </h5>
+                    </div>
+
+                    <h2 class="fw-bold">
+                        {{ planning_notice_count }}
+                    </h2>
+
+                    <p class="text-muted mb-3">
+                        Published lands, housing and planning notices.
+                    </p>
+
+                    <a href="{% url 'lands:planning_notices' %}"
+                       class="btn btn-outline-primary btn-sm">
+                        View Notices
+                    </a>
+
+                </div>
+            </div>
+        </div>
+
+
+        <!-- Land Title Status -->
+        <div class="col-12 col-lg-8">
+
+            <div class="card border-0 shadow-sm h-100">
+
+                <div class="card-body">
+
+                    <h5 class="fw-bold mb-3">
+                        <i class="bi bi-patch-check me-2"></i>
+                        Land Title Application Status
+                    </h5>
+
+                    <div class="table-responsive">
+
+                        <table class="table table-sm align-middle mb-0">
+
+                            <thead>
+                                <tr>
+                                    <th>Status</th>
+                                    <th class="text-end">Applications</th>
+                                </tr>
+                            </thead>
+
+                            <tbody>
+
+                                {% for item in land_title_status_counts %}
+
+                                <tr>
+                                    <td>
+                                        {{ item.status|title|cut:"_" }}
+                                    </td>
+
+                                    <td class="text-end fw-bold">
+                                        {{ item.total }}
+                                    </td>
+                                </tr>
+
+                                {% empty %}
+
+                                <tr>
+                                    <td colspan="2"
+                                        class="text-center text-muted py-3">
+                                        No land title applications yet.
+                                    </td>
+                                </tr>
+
+                                {% endfor %}
+
+                            </tbody>
+
+                        </table>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- Request Status Tables -->
+    <div class="row g-3 mb-4">
+
+        <div class="col-12 col-lg-6">
+
+            <div class="card border-0 shadow-sm">
+
+                <div class="card-body">
+
+                    <h5 class="fw-bold mb-3">
+                        <i class="bi bi-house-check me-2"></i>
+                        Land & Property Requests
+                    </h5>
+
+                    <div class="table-responsive">
+
+                        <table class="table table-sm align-middle">
+
+                            <thead>
+                                <tr>
+                                    <th>Status</th>
+                                    <th class="text-end">Requests</th>
+                                </tr>
+                            </thead>
+
+                            <tbody>
+
+                                {% for item in property_request_status_counts %}
+
+                                <tr>
+                                    <td>
+                                        {{ item.status|title|cut:"_" }}
+                                    </td>
+
+                                    <td class="text-end fw-bold">
+                                        {{ item.total }}
+                                    </td>
+                                </tr>
+
+                                {% empty %}
+
+                                <tr>
+                                    <td colspan="2"
+                                        class="text-center text-muted">
+                                        No requests yet.
+                                    </td>
+                                </tr>
+
+                                {% endfor %}
+
+                            </tbody>
+
+                        </table>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <div class="col-12 col-lg-6">
+
+            <div class="card border-0 shadow-sm">
+
+                <div class="card-body">
+
+                    <h5 class="fw-bold mb-3">
+                        <i class="bi bi-house-door me-2"></i>
+                        Housing & Property Requests
+                    </h5>
+
+                    <div class="table-responsive">
+
+                        <table class="table table-sm align-middle">
+
+                            <thead>
+                                <tr>
+                                    <th>Status</th>
+                                    <th class="text-end">Requests</th>
+                                </tr>
+                            </thead>
+
+                            <tbody>
+
+                                {% for item in housing_request_status_counts %}
+
+                                <tr>
+                                    <td>
+                                        {{ item.status|title|cut:"_" }}
+                                    </td>
+
+                                    <td class="text-end fw-bold">
+                                        {{ item.total }}
+                                    </td>
+                                </tr>
+
+                                {% empty %}
+
+                                <tr>
+                                    <td colspan="2"
+                                        class="text-center text-muted">
+                                        No housing requests yet.
+                                    </td>
+                                </tr>
+
+                                {% endfor %}
+
+                            </tbody>
+
+                        </table>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- Development Applications -->
+    <div class="row g-3 mb-4">
+
+        <div class="col-12">
+
+            <div class="card border-0 shadow-sm">
+
+                <div class="card-body">
+
+                    <h5 class="fw-bold mb-3">
+                        <i class="bi bi-building-add me-2"></i>
+                        Development & Building Applications
+                    </h5>
+
+                    <div class="table-responsive">
+
+                        <table class="table table-sm align-middle">
+
+                            <thead>
+                                <tr>
+                                    <th>Status</th>
+                                    <th class="text-end">Applications</th>
+                                </tr>
+                            </thead>
+
+                            <tbody>
+
+                                {% for item in development_application_status_counts %}
+
+                                <tr>
+                                    <td>
+                                        {{ item.status|title|cut:"_" }}
+                                    </td>
+
+                                    <td class="text-end fw-bold">
+                                        {{ item.total }}
+                                    </td>
+                                </tr>
+
+                                {% empty %}
+
+                                <tr>
+                                    <td colspan="2"
+                                        class="text-center text-muted">
+                                        No development applications yet.
+                                    </td>
+                                </tr>
+
+                                {% endfor %}
+
+                            </tbody>
+
+                        </table>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- Projects and Notices -->
+    <div class="row g-3 mb-4">
+
+        <div class="col-12 col-lg-6">
+
+            <div class="card border-0 shadow-sm">
+
+                <div class="card-body">
+
+                    <h5 class="fw-bold mb-3">
+                        <i class="bi bi-kanban me-2"></i>
+                        Planning Project Status
+                    </h5>
+
+                    <div class="table-responsive">
+
+                        <table class="table table-sm">
+
+                            <thead>
+                                <tr>
+                                    <th>Status</th>
+                                    <th class="text-end">Projects</th>
+                                </tr>
+                            </thead>
+
+                            <tbody>
+
+                                {% for item in project_status_counts %}
+
+                                <tr>
+                                    <td>
+                                        {{ item.status|title|cut:"_" }}
+                                    </td>
+
+                                    <td class="text-end fw-bold">
+                                        {{ item.total }}
+                                    </td>
+                                </tr>
+
+                                {% empty %}
+
+                                <tr>
+                                    <td colspan="2"
+                                        class="text-center text-muted">
+                                        No published projects yet.
+                                    </td>
+                                </tr>
+
+                                {% endfor %}
+
+                            </tbody>
+
+                        </table>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <div class="col-12 col-lg-6">
+
+            <div class="card border-0 shadow-sm">
+
+                <div class="card-body">
+
+                    <h5 class="fw-bold mb-3">
+                        <i class="bi bi-exclamation-circle me-2"></i>
+                        Notice Priority
+                    </h5>
+
+                    <div class="table-responsive">
+
+                        <table class="table table-sm">
+
+                            <thead>
+                                <tr>
+                                    <th>Priority</th>
+                                    <th class="text-end">Notices</th>
+                                </tr>
+                            </thead>
+
+                            <tbody>
+
+                                {% for item in notice_priority_counts %}
+
+                                <tr>
+                                    <td>
+                                        {{ item.priority|title }}
+                                    </td>
+
+                                    <td class="text-end fw-bold">
+                                        {{ item.total }}
+                                    </td>
+                                </tr>
+
+                                {% empty %}
+
+                                <tr>
+                                    <td colspan="2"
+                                        class="text-center text-muted">
+                                        No published notices yet.
+                                    </td>
+                                </tr>
+
+                                {% endfor %}
+
+                            </tbody>
+
+                        </table>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- Citizen Notice -->
+    <div class="alert alert-light border shadow-sm">
+
+        <div class="d-flex">
+
+            <i class="bi bi-info-circle fs-4 me-3"></i>
+
+            <div>
+                <strong>About these statistics</strong>
+
+                <p class="mb-0 mt-1 text-muted">
+                    These figures are generated from information and requests
+                    currently stored in the Smart City Uganda system.
+                    Official processing and approval of land, housing and
+                    development matters remains the responsibility of the
+                    relevant government authority.
+                </p>
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+{% endblock %}

@@ -1,0 +1,93 @@
+{% extends "base.html" %}
+
+{% block title %}
+    Report Submitted | Smart City Uganda
+{% endblock %}
+
+{% block content %}
+
+<div class="container-fluid">
+
+    <div class="row justify-content-center">
+
+        <div class="col-12 col-md-8 col-lg-6">
+
+            <div class="card border-0 shadow-sm text-center">
+
+                <div class="card-body p-5">
+
+                    <div class="mb-4">
+
+                        <i class="bi bi-check-circle-fill
+                                  text-success"
+                           style="font-size: 70px;"></i>
+
+                    </div>
+
+
+                    <h2 class="fw-bold">
+                        Report Submitted
+                    </h2>
+
+
+                    <p class="text-muted">
+
+                        Your water problem has been successfully
+                        submitted to Smart City Uganda.
+
+                    </p>
+
+
+                    <div class="alert alert-success mt-4">
+
+                        <small class="d-block">
+                            Your Reference Number
+                        </small>
+
+                        <strong class="fs-4">
+                            {{ report.reference_number }}
+                        </strong>
+
+                    </div>
+
+
+                    <p class="small text-muted">
+
+                        Keep this reference number. You will be
+                        able to use it to track your report later.
+
+                    </p>
+
+
+                    <div class="d-grid gap-2 mt-4">
+
+                        <a href="{% url 'water:home' %}"
+                           class="btn btn-primary">
+
+                            <i class="bi bi-droplet"></i>
+
+                            Back to Water Services
+
+                        </a>
+
+
+                        <a href="{% url 'dashboard:home' %}"
+                           class="btn btn-outline-secondary">
+
+                            Return to Dashboard
+
+                        </a>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+{% endblock %}

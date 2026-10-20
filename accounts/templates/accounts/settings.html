@@ -1,0 +1,117 @@
+
+{% extends "officer/base.html" %}
+
+{% block content %}
+<div class="container py-4">
+    <h3 class="mb-1">Account Settings</h3>
+    <p class="text-muted mb-4">
+        Manage your account, notifications and appearance.
+    </p>
+
+    <form method="post">
+        {% csrf_token %}
+
+        <div class="card shadow-sm mb-4">
+            <div class="card-header bg-white">
+                <h5 class="mb-0">Account preferences</h5>
+            </div>
+            <div class="card-body">
+                <div class="mb-3">
+                    <label class="form-label" for="full_name">Full name</label>
+                    <input class="form-control" id="full_name"
+                           name="full_name" required
+                           value="{{ profile.full_name }}">
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label" for="email">Email address</label>
+                    <input class="form-control" type="email" id="email"
+                           name="email" required
+                           value="{{ request.user.email }}">
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label" for="phone_number">Phone number</label>
+                    <input class="form-control" id="phone_number"
+                           name="phone_number"
+                           value="{{ profile.phone_number }}">
+                </div>
+            </div>
+        </div>
+
+        <div class="card shadow-sm mb-4">
+            <div class="card-header bg-white">
+                <h5 class="mb-0">Appearance and theme</h5>
+            </div>
+            <div class="card-body">
+                <label class="form-label" for="theme">Choose a theme</label>
+                <select class="form-select" id="theme" name="theme">
+                    {% for value, label in preferences.Theme.choices %}
+                        <option value="{{ value }}"
+                            {% if preferences.theme == value %}selected{% endif %}>
+                            {{ label }}
+                        </option>
+                    {% endfor %}
+                </select>
+                <small class="text-muted">
+                    Your selection is saved to your account.
+                </small>
+            </div>
+        </div>
+
+        <div class="card shadow-sm mb-4">
+            <div class="card-header bg-white">
+                <h5 class="mb-0">Notification preferences</h5>
+            </div>
+            <div class="card-body">
+                <div class="form-check mb-3">
+                    <input class="form-check-input" type="checkbox"
+                           id="in_app_notifications"
+                           name="in_app_notifications"
+                           {% if preferences.in_app_notifications %}checked{% endif %}>
+                    <label class="form-check-label" for="in_app_notifications">
+                        In-app notifications
+                    </label>
+                </div>
+
+                <div class="form-check mb-3">
+                    <input class="form-check-input" type="checkbox"
+                           id="email_notifications"
+                           name="email_notifications"
+                           {% if preferences.email_notifications %}checked{% endif %}>
+                    <label class="form-check-label" for="email_notifications">
+                        Email notifications
+                    </label>
+                </div>
+
+                <div class="form-check mb-3">
+                    <input class="form-check-input" type="checkbox"
+                           id="request_updates" name="request_updates"
+                           {% if preferences.request_updates %}checked{% endif %}>
+                    <label class="form-check-label" for="request_updates">
+                        Request and case updates
+                    </label>
+                </div>
+
+                <div class="form-check">
+                    <input class="form-check-input" type="checkbox"
+                           id="announcements" name="announcements"
+                           {% if preferences.announcements %}checked{% endif %}>
+                    <label class="form-check-label" for="announcements">
+                        Announcements
+                    </label>
+                </div>
+            </div>
+        </div>
+
+        <button type="submit" class="btn btn-success">
+            <i class="bi bi-check-circle"></i> Save settings
+        </button>
+
+        <a href="{% url 'accounts:change_password' %}"
+           class="btn btn-outline-secondary ms-2">
+            <i class="bi bi-shield-lock"></i> Change password
+        </a>
+    </form>
+</div>
+{% endblock %}

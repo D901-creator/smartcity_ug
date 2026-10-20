@@ -1,0 +1,69 @@
+{% extends "base.html" %}
+
+{% block title %}Notification | Smart City Uganda{% endblock %}
+
+{% block content %}
+
+<div class="container-fluid py-3">
+
+    <div class="mb-3">
+        <a href="{% url 'notifications:list' %}"
+           class="btn btn-sm btn-outline-secondary">
+            <i class="bi bi-arrow-left me-1"></i>
+            Back to notifications
+        </a>
+    </div>
+
+
+    <div class="card border-0 shadow-sm">
+
+        <div class="card-body">
+
+            <div class="d-flex align-items-start gap-3">
+
+                <div class="notification-icon flex-shrink-0">
+                    <i class="bi bi-bell"></i>
+                </div>
+
+                <div class="flex-grow-1">
+
+                    <h4 class="mb-2">
+                        {{ notification.title }}
+                    </h4>
+
+                    <small class="text-muted">
+                        <i class="bi bi-clock me-1"></i>
+                        {{ notification.created_at|timesince }} ago
+                    </small>
+
+                    <hr>
+
+                    <p class="mb-3">
+                        {{ notification.message }}
+                    </p>
+
+                    <span class="badge bg-secondary">
+                        {{ notification.get_notification_type_display }}
+                    </span>
+
+                    {% if notification.is_read %}
+                        <span class="badge bg-success">
+                            Read
+                        </span>
+                    {% else %}
+                        <span class="badge bg-primary">
+                            Read
+                        </span>
+                    {% endif %}
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+{% endblock %}

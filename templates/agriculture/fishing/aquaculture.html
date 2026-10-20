@@ -1,0 +1,186 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<div class="container-fluid py-4">
+
+    <div class="d-flex flex-wrap justify-content-between align-items-center mb-4">
+
+        <div>
+            <h2 class="fw-bold mb-1">
+                <i class="bi bi-droplet-half"></i>
+                Aquaculture / Fish Farming
+            </h2>
+
+            <p class="text-muted mb-0">
+                Manage fish farms, ponds, cages, species and
+                aquaculture production capacity.
+            </p>
+        </div>
+
+        <a href="{% url 'agriculture:home' %}"
+           class="btn btn-outline-secondary mt-2 mt-md-0">
+
+            <i class="bi bi-arrow-left"></i>
+            Back to Agriculture
+
+        </a>
+
+    </div>
+
+
+    <div class="row g-4">
+
+        <!-- FORM -->
+        <div class="col-lg-4">
+
+            <div class="card border-0 shadow-sm">
+
+                <div class="card-header bg-white">
+
+                    <h5 class="fw-bold mb-0">
+                        Register Fish Farm
+                    </h5>
+
+                </div>
+
+                <div class="card-body">
+
+                    <form method="POST">
+
+                        {% csrf_token %}
+
+                        {% for field in form %}
+
+                            <div class="mb-3">
+
+                                <label class="form-label fw-semibold">
+                                    {{ field.label }}
+                                </label>
+
+                                {{ field }}
+
+                                {% for error in field.errors %}
+                                    <div class="text-danger small">
+                                        {{ error }}
+                                    </div>
+                                {% endfor %}
+
+                            </div>
+
+                        {% endfor %}
+
+                        <button type="submit"
+                                class="btn btn-success w-100">
+
+                            <i class="bi bi-plus-circle"></i>
+                            Register Fish Farm
+
+                        </button>
+
+                    </form>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <!-- FARMS -->
+        <div class="col-lg-8">
+
+            <div class="card border-0 shadow-sm">
+
+                <div class="card-header bg-white">
+
+                    <h5 class="fw-bold mb-0">
+                        Registered Fish Farms
+                    </h5>
+
+                </div>
+
+                <div class="card-body">
+
+                    <div class="table-responsive">
+
+                        <table class="table table-hover align-middle">
+
+                            <thead>
+
+                                <tr>
+                                    <th>Farm</th>
+                                    <th>Owner</th>
+                                    <th>Type</th>
+                                    <th>District</th>
+                                    <th>Species</th>
+                                    <th>Capacity</th>
+                                </tr>
+
+                            </thead>
+
+                            <tbody>
+
+                                {% for farm in farms %}
+
+                                <tr>
+
+                                    <td class="fw-semibold">
+                                        {{ farm.farm_name }}
+                                    </td>
+
+                                    <td>
+                                        {{ farm.owner_name }}
+                                    </td>
+
+                                    <td>
+                                        {{ farm.get_farm_type_display }}
+                                    </td>
+
+                                    <td>
+                                        {{ farm.district }}
+                                    </td>
+
+                                    <td>
+                                        {{ farm.fish_species|default:"—" }}
+                                    </td>
+
+                                    <td>
+                                        {{ farm.production_capacity }}
+                                        {{ farm.capacity_unit }}
+                                    </td>
+
+                                </tr>
+
+                                {% empty %}
+
+                                <tr>
+
+                                    <td colspan="6"
+                                        class="text-center text-muted py-4">
+
+                                        No aquaculture farms registered yet.
+
+                                    </td>
+
+                                </tr>
+
+                                {% endfor %}
+
+                            </tbody>
+
+                        </table>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+{% endblock %}

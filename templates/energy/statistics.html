@@ -1,0 +1,406 @@
+{% extends "base.html" %}
+
+{% block title %}
+    Energy & Mineral Development Statistics
+{% endblock %}
+
+{% block content %}
+
+<div class="container-fluid py-3">
+
+    <!-- Header -->
+    <div class="mb-4">
+
+        <h4 class="mb-1">
+            <i class="bi bi-bar-chart-line text-success"></i>
+            Energy & Mineral Development Statistics
+        </h4>
+
+        <p class="text-muted mb-0">
+            Overview of electricity, energy and mineral
+            development information available on Smart City Uganda.
+        </p>
+
+    </div>
+
+
+    <!-- Main Statistics -->
+    <div class="row g-3 mb-4">
+
+        <div class="col-12 col-sm-6 col-xl-3">
+
+            <div class="card border-0 shadow-sm h-100">
+
+                <div class="card-body">
+
+                    <div class="d-flex justify-content-between">
+
+                        <div>
+                            <small class="text-muted">
+                                Electricity Information
+                            </small>
+
+                            <h3 class="mb-0">
+                                {{ electricity_information_count }}
+                            </h3>
+                        </div>
+
+                        <i class="bi bi-lightning-charge fs-2 text-warning"></i>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <div class="col-12 col-sm-6 col-xl-3">
+
+            <div class="card border-0 shadow-sm h-100">
+
+                <div class="card-body">
+
+                    <div class="d-flex justify-content-between">
+
+                        <div>
+                            <small class="text-muted">
+                                Electricity Reports
+                            </small>
+
+                            <h3 class="mb-0">
+                                {{ electricity_problem_count }}
+                            </h3>
+                        </div>
+
+                        <i class="bi bi-exclamation-triangle fs-2 text-danger"></i>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <div class="col-12 col-sm-6 col-xl-3">
+
+            <div class="card border-0 shadow-sm h-100">
+
+                <div class="card-body">
+
+                    <div class="d-flex justify-content-between">
+
+                        <div>
+                            <small class="text-muted">
+                                Energy Information
+                            </small>
+
+                            <h3 class="mb-0">
+                                {{ energy_information_count }}
+                            </h3>
+                        </div>
+
+                        <i class="bi bi-battery-charging fs-2 text-success"></i>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <div class="col-12 col-sm-6 col-xl-3">
+
+            <div class="card border-0 shadow-sm h-100">
+
+                <div class="card-body">
+
+                    <div class="d-flex justify-content-between">
+
+                        <div>
+                            <small class="text-muted">
+                                Energy Projects
+                            </small>
+
+                            <h3 class="mb-0">
+                                {{ energy_project_count }}
+                            </h3>
+                        </div>
+
+                        <i class="bi bi-building-gear fs-2 text-primary"></i>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <div class="col-12 col-sm-6 col-xl-3">
+
+            <div class="card border-0 shadow-sm h-100">
+
+                <div class="card-body">
+
+                    <div class="d-flex justify-content-between">
+
+                        <div>
+                            <small class="text-muted">
+                                Mineral Resources
+                            </small>
+
+                            <h3 class="mb-0">
+                                {{ mineral_resource_count }}
+                            </h3>
+                        </div>
+
+                        <i class="bi bi-gem fs-2 text-secondary"></i>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <div class="col-12 col-sm-6 col-xl-3">
+
+            <div class="card border-0 shadow-sm h-100">
+
+                <div class="card-body">
+
+                    <div class="d-flex justify-content-between">
+
+                        <div>
+                            <small class="text-muted">
+                                Mining Development
+                            </small>
+
+                            <h3 class="mb-0">
+                                {{ mining_development_count }}
+                            </h3>
+                        </div>
+
+                        <i class="bi bi-hammer fs-2 text-dark"></i>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <div class="col-12 col-sm-6 col-xl-3">
+
+            <div class="card border-0 shadow-sm h-100">
+
+                <div class="card-body">
+
+                    <div class="d-flex justify-content-between">
+
+                        <div>
+                            <small class="text-muted">
+                                Citizen Requests
+                            </small>
+
+                            <h3 class="mb-0">
+                                {{ energy_request_count }}
+                            </h3>
+                        </div>
+
+                        <i class="bi bi-clipboard-check fs-2 text-info"></i>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- Detailed Statistics -->
+    <div class="row g-3">
+
+
+        <!-- Request Status -->
+        <div class="col-12 col-lg-4">
+
+            <div class="card border-0 shadow-sm h-100">
+
+                <div class="card-header bg-white">
+
+                    <h6 class="mb-0">
+                        <i class="bi bi-clipboard-check"></i>
+                        Request Status
+                    </h6>
+
+                </div>
+
+                <div class="card-body">
+
+                    {% if request_status_counts %}
+
+                        {% for item in request_status_counts %}
+
+                            <div class="d-flex justify-content-between
+                                        align-items-center mb-3">
+
+                                <span>
+                                    {{ item.status|title|cut:"_" }}
+                                </span>
+
+                                <span class="badge bg-primary">
+                                    {{ item.total }}
+                                </span>
+
+                            </div>
+
+                        {% endfor %}
+
+                    {% else %}
+
+                        <p class="text-muted mb-0">
+                            No requests have been submitted yet.
+                        </p>
+
+                    {% endif %}
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <!-- Project Status -->
+        <div class="col-12 col-lg-4">
+
+            <div class="card border-0 shadow-sm h-100">
+
+                <div class="card-header bg-white">
+
+                    <h6 class="mb-0">
+                        <i class="bi bi-building-gear"></i>
+                        Energy Project Status
+                    </h6>
+
+                </div>
+
+                <div class="card-body">
+
+                    {% if project_status_counts %}
+
+                        {% for item in project_status_counts %}
+
+                            <div class="d-flex justify-content-between
+                                        align-items-center mb-3">
+
+                                <span>
+                                    {{ item.status|title|cut:"_" }}
+                                </span>
+
+                                <span class="badge bg-success">
+                                    {{ item.total }}
+                                </span>
+
+                            </div>
+
+                        {% endfor %}
+
+                    {% else %}
+
+                        <p class="text-muted mb-0">
+                            No published energy projects available.
+                        </p>
+
+                    {% endif %}
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <!-- Electricity Problem Status -->
+        <div class="col-12 col-lg-4">
+
+            <div class="card border-0 shadow-sm h-100">
+
+                <div class="card-header bg-white">
+
+                    <h6 class="mb-0">
+                        <i class="bi bi-lightning-charge"></i>
+                        Electricity Report Status
+                    </h6>
+
+                </div>
+
+                <div class="card-body">
+
+                    {% if problem_status_counts %}
+
+                        {% for item in problem_status_counts %}
+
+                            <div class="d-flex justify-content-between
+                                        align-items-center mb-3">
+
+                                <span>
+                                    {{ item.status|title|cut:"_" }}
+                                </span>
+
+                                <span class="badge bg-danger">
+                                    {{ item.total }}
+                                </span>
+
+                            </div>
+
+                        {% endfor %}
+
+                    {% else %}
+
+                        <p class="text-muted mb-0">
+                            No electricity problem reports yet.
+                        </p>
+
+                    {% endif %}
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- Navigation -->
+    <div class="mt-4">
+
+        <a
+            href="{% url 'energy:home' %}"
+            class="btn btn-outline-secondary"
+        >
+            <i class="bi bi-arrow-left"></i>
+            Back to Energy & Mineral Development
+        </a>
+
+    </div>
+
+</div>
+
+{% endblock %}

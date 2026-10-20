@@ -1,0 +1,66 @@
+{% extends "base.html" %}
+
+{% block title %}Schedule Extension Service{% endblock %}
+
+{% block content %}
+
+<div class="container">
+
+    <div class="card shadow-sm">
+
+        <div class="card-header bg-success text-white">
+
+            <h3 class="mb-0">
+
+                <i class="bi bi-person-video3"></i>
+
+                Schedule Agricultural Extension Service
+
+            </h3>
+
+        </div>
+
+
+        <div class="card-body">
+
+            <p class="text-muted">
+
+                Create a farmer training, field visit,
+                consultation, demonstration or advisory service.
+
+            </p>
+
+
+            <form method="post">
+
+                {% csrf_token %}
+
+                {{ form.as_p }}
+
+
+                <button type="submit"
+                        class="btn btn-success">
+
+                    <i class="bi bi-calendar-check"></i>
+
+                    Schedule Service
+
+                </button>
+
+
+                <a href="{% url 'agriculture:extension_services' %}"
+                   class="btn btn-secondary">
+
+                    Cancel
+
+                </a>
+
+            </form>
+
+        </div>
+
+    </div>
+
+</div>
+
+{% endblock %}

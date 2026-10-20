@@ -1,0 +1,251 @@
+{% extends "base.html" %}
+
+{% block title %}
+{{ facility.name }} | Water Facility
+{% endblock %}
+
+{% block content %}
+
+<div class="container-fluid py-4">
+
+    <!-- Header -->
+    <div class="d-flex flex-column flex-md-row
+                justify-content-between
+                align-items-md-center
+                gap-3 mb-4">
+
+        <div>
+
+            <span class="badge bg-primary mb-2">
+                <i class="bi bi-droplet"></i>
+                WATER FACILITY
+            </span>
+
+            <h2 class="fw-bold mb-1">
+                {{ facility.name }}
+            </h2>
+
+            <p class="text-muted mb-0">
+                Detailed facility information
+            </p>
+
+        </div>
+
+
+        <a
+            href="{% url 'water:water_facilities' %}"
+            class="btn btn-outline-secondary"
+        >
+            <i class="bi bi-arrow-left me-1"></i>
+            Back to Facilities
+        </a>
+
+    </div>
+
+
+    <div class="row g-4">
+
+        <!-- Main Information -->
+        <div class="col-12 col-lg-8">
+
+            <div class="card shadow-sm border-0">
+
+                <div class="card-header bg-white py-3">
+
+                    <h5 class="fw-semibold mb-0">
+                        <i class="bi bi-info-circle me-2"></i>
+                        Facility Information
+                    </h5>
+
+                </div>
+
+
+                <div class="card-body">
+
+                    <div class="row g-4">
+
+                        <div class="col-12 col-md-6">
+
+                            <label class="text-muted small">
+                                Facility Name
+                            </label>
+
+                            <div class="fw-semibold">
+                                {{ facility.name }}
+                            </div>
+
+                        </div>
+
+
+                        <div class="col-12 col-md-6">
+
+                            <label class="text-muted small">
+                                Facility Type
+                            </label>
+
+                            <div class="fw-semibold">
+                                {{ facility.get_facility_type_display }}
+                            </div>
+
+                        </div>
+
+
+                        <div class="col-12 col-md-6">
+
+                            <label class="text-muted small">
+                                District / City
+                            </label>
+
+                            <div class="fw-semibold">
+                                {{ facility.district }}
+                            </div>
+
+                        </div>
+
+
+                        <div class="col-12 col-md-6">
+
+                            <label class="text-muted small">
+                                Location
+                            </label>
+
+                            <div class="fw-semibold">
+                                {{ facility.location }}
+                            </div>
+
+                        </div>
+
+
+                        <div class="col-12">
+
+                            <label class="text-muted small">
+                                Description
+                            </label>
+
+                            {% if facility.description %}
+
+                                <p class="mb-0 mt-1">
+                                    {{ facility.description }}
+                                </p>
+
+                            {% else %}
+
+                                <p class="text-muted mb-0 mt-1">
+                                    No description has been provided.
+                                </p>
+
+                            {% endif %}
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <!-- Status / Contact -->
+        <div class="col-12 col-lg-4">
+
+            <div class="card shadow-sm border-0 mb-4">
+
+                <div class="card-body text-center">
+
+                    <div class="bg-primary-subtle
+                                text-primary
+                                rounded-circle
+                                d-inline-flex
+                                align-items-center
+                                justify-content-center
+                                p-3 mb-3">
+
+                        <i class="bi bi-droplet-fill fs-2"></i>
+
+                    </div>
+
+
+                    <h5 class="fw-bold">
+                        Facility Status
+                    </h5>
+
+
+                    {% if facility.is_operational %}
+
+                        <span class="badge bg-success fs-6 px-3 py-2">
+                            <i class="bi bi-check-circle me-1"></i>
+                            Operational
+                        </span>
+
+                    {% else %}
+
+                        <span class="badge bg-danger fs-6 px-3 py-2">
+                            <i class="bi bi-x-circle me-1"></i>
+                            Not Operational
+                        </span>
+
+                    {% endif %}
+
+                </div>
+
+            </div>
+
+
+            {% if facility.contact_phone %}
+
+                <div class="card shadow-sm border-0 mb-4">
+
+                    <div class="card-body">
+
+                        <h6 class="fw-bold">
+                            <i class="bi bi-telephone me-2"></i>
+                            Contact
+                        </h6>
+
+                        <p class="mb-0">
+                            {{ facility.contact_phone }}
+                        </p>
+
+                    </div>
+
+                </div>
+
+            {% endif %}
+
+
+            <div class="card shadow-sm border-0">
+
+                <div class="card-body">
+
+                    <h6 class="fw-bold">
+                        <i class="bi bi-exclamation-triangle
+                                  me-2"></i>
+                        Report a Problem
+                    </h6>
+
+                    <p class="small text-muted">
+                        If this facility has a water supply
+                        problem, you can submit a report.
+                    </p>
+
+                    <a
+                        href="{% url 'water:report_water_problem' %}"
+                        class="btn btn-primary w-100"
+                    >
+                        <i class="bi bi-send me-1"></i>
+                        Report Water Problem
+                    </a>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+{% endblock %}

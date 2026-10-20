@@ -1,0 +1,116 @@
+{% extends "base.html" %}
+
+{% block title %}
+Report Submitted | Smart City Uganda
+{% endblock %}
+
+{% block content %}
+
+<div class="container-fluid py-5">
+
+    <div class="row justify-content-center">
+
+        <div class="col-12 col-md-8 col-lg-6">
+
+            <div class="card border-0 shadow-sm text-center">
+
+                <div class="card-body p-5">
+
+                    <div class="bg-success-subtle
+                                text-success
+                                rounded-circle
+                                d-inline-flex
+                                align-items-center
+                                justify-content-center
+                                p-3 mb-4">
+
+                        <i class="bi bi-check-lg fs-2"></i>
+
+                    </div>
+
+
+                    <h3 class="fw-bold">
+                        Report Submitted Successfully
+                    </h3>
+
+
+                    <p class="text-muted">
+                        Your drainage/wastewater problem has
+                        been recorded in the system.
+                    </p>
+
+
+                    <div class="alert alert-primary mt-4">
+
+                        <div class="small text-muted">
+                            Your Reference Number
+                        </div>
+
+                        <div class="fs-4 fw-bold">
+                            {{ report.reference_number }}
+                        </div>
+
+                    </div>
+
+
+                    <div class="text-start mt-4">
+
+                        <p class="mb-2">
+                            <strong>Problem:</strong>
+                            {{ report.get_problem_type_display }}
+                        </p>
+
+                        <p class="mb-2">
+                            <strong>District:</strong>
+                            {{ report.district }}
+                        </p>
+
+                        <p class="mb-2">
+                            <strong>Location:</strong>
+                            {{ report.location }}
+                        </p>
+
+                        <p class="mb-0">
+                            <strong>Status:</strong>
+
+                            <span class="badge bg-secondary">
+                                {{ report.get_status_display }}
+                            </span>
+                        </p>
+
+                    </div>
+
+
+                    <div class="d-flex
+                                flex-column flex-sm-row
+                                justify-content-center
+                                gap-2 mt-4">
+
+                        <a
+                            href="{% url 'water:drainage_wastewater' %}"
+                            class="btn btn-primary"
+                        >
+                            <i class="bi bi-list me-1"></i>
+                            View Reports
+                        </a>
+
+                        <a
+                            href="{% url 'water:home' %}"
+                            class="btn btn-outline-secondary"
+                        >
+                            Back to Water & Environment
+                        </a>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+{% endblock %}

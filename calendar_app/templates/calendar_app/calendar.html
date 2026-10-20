@@ -1,0 +1,264 @@
+
+{% extends "officer/base.html" %}
+
+{% block title %}Officer Calendar | Smart City Uganda{% endblock %}
+
+{% block content %}
+<div class="container-fluid py-3 officer-calendar">
+    <div class="d-flex flex-wrap justify-content-between align-items-center gap-3 mb-4">
+        <div>
+            <h4 class="mb-1">My Calendar</h4>
+            <p class="text-muted small mb-0">
+                Manage meetings, field visits, deadlines and appointments.
+            </p>
+        </div>
+
+        <a href="{% url 'calendar_app:create_event' %}"
+           class="btn btn-success btn-sm">
+            <i class="bi bi-plus-lg"></i> Add Event
+        </a>
+    </div>
+
+    {% if messages %}
+        {% for message in messages %}
+            <div class="alert alert-{{ message.tags|default:'info' }} alert-dismissible fade show small">
+                {{ message }}
+                <button type="button" class="btn-close"
+                        data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+        {% endfor %}
+    {% endif %}
+
+    <div class="row g-3">
+        <div class="col-12 col-xl-8">
+            <section class="card border-0 shadow-sm">
+                <div class="card-body p-3">
+                    <div class="d-flex flex-wrap align-items-center justify-content-between gap-2 mb-3">
+                        <div class="d-flex align-items-center gap-2">
+                            <a class="btn btn-outline-secondary btn-sm"
+                               href="?month={{ previous_month }}"
+                               aria-label="Previous month">
+                                <i class="bi bi-chevron-left"></i>
+                            </a>
+
+                            <h5 class="mb-0">{{ month_label }}</h5>
+
+                            <a class="btn btn-outline-secondary btn-sm"
+                               href="?month={{ next_month }}"
+                               aria-label="Next month">
+                                <i class="bi bi-chevron-right"></i>
+                            </a>
+                        </div>
+
+                        <a class="btn btn-outline-success btn-sm"
+                           href="{% url 'calendar_app:calendar' %}">
+                            Today
+                        </a>
+                    </div>
+
+                    <div class="calendar-grid">
+                        {% for weekday in "Mon,Tue,Wed,Thu,Fri,Sat,Sun"|cut:" "|make_list %}
+                        {% endfor %}
+
+                        <div class="calendar-weekday">Mon</div>
+                        <div class="calendar-weekday">Tue</div>
+                        <div class="calendar-weekday">Wed</div>
+                        <div class="calendar-weekday">Thu</div>
+                        <div class="calendar-weekday">Fri</div>
+                        <div class="calendar-weekday">Sat</div>
+                        <div class="calendar-weekday">Sun</div>
+
+                        {% with first_day=month %}
+                            {% for cell in calendar_cells %}
+                                <div class="calendar-cell {% if cell.date == today %}is-today{% endif %}">
+                                    {% if cell.date %}
+                                        <span class="calendar-date">{{ cell.date.day }}</span>
+
+                                        {% for event in cell.events %}
+                                            <a class="calendar-event"
+                                               href="{% url 'calendar_app:event_detail' event.id %}"
+                                               title="{{ event.title }}">
+                                                {{ event.start_time|date:"H:i" }} {{ event.title }}
+                                            </a>
+                                        {% endfor %}
+                                    {% endif %}
+                                </div>
+                            {% endfor %}
+                        {% endwith %}
+                    </div>
+
+                    <p class="text-muted small mt-3 mb-0">
+                        Select an event to view its details.
+                    </p>
+                </div>
+            </section>
+        </div>
+
+        <div class="col-12 col-xl-4">
+            <section class="card border-0 shadow-sm mb-3">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-center mb-3">
+                        <h6 class="mb-0">This month's events</h6>
+                        <span class="badge text-bg-success">{{ event_count }}</span>
+                    </div>
+
+                    {% for event in events %}
+                        <a href="{% url 'calendar_app:event_detail' event.id %}"
+                           class="upcoming-event d-block text-decoration-none py-2">
+                            <div class="d-flex gap-3">
+                                <div class="event-date">
+                                    <strong>{{ event.start_time|date:"d" }}</strong>
+                                    <span>{{ event.start_time|date:"M" }}</span>
+                                </div>
+
+                                <div class="flex-grow-1 min-width-0">
+                                    <div class="small fw-semibold text-dark">
+                                        {{ event.title }}
+                                    </div>
+                                    <div class="text-muted small">
+                                        {{ event.start_time|date:"D, H:i" }}
+                                        · {{ event.get_category_display }}
+                                    </div>
+                                </div>
+                            </div>
+                        </a>
+                    {% empty %}
+                        <p class="text-muted small mb-0">
+                            No events scheduled for this month.
+                        </p>
+                    {% endfor %}
+                </div>
+            </section>
+
+            <section class="card border-0 shadow-sm">
+                <div class="card-body">
+                    <h6 class="mb-3">Coming up next</h6>
+
+                    {% for event in upcoming_events %}
+                        <div class="border-start border-success border-3 ps-3 mb-3">
+                            <div class="small fw-semibold">{{ event.title }}</div>
+                            <div class="small text-muted">
+                                {{ event.start_time|date:"D, d M · H:i" }}
+                            </div>
+                        </div>
+                    {% empty %}
+                        <p class="text-muted small mb-0">
+                            You have no upcoming events this month.
+                        </p>
+                    {% endfor %}
+
+                    <a href="{% url 'calendar_app:create_event' %}"
+                       class="btn btn-outline-success btn-sm w-100 mt-3">
+                        Schedule an event
+                    </a>
+                </div>
+            </section>
+        </div>
+    </div>
+</div>
+
+<style>
+.officer-calendar {
+    font-size: 13px;
+    color: #26352b;
+}
+
+.officer-calendar .calendar-grid {
+    display: grid;
+    grid-template-columns: repeat(7, minmax(0, 1fr));
+    border-top: 1px solid #e7ece8;
+    border-left: 1px solid #e7ece8;
+}
+
+.officer-calendar .calendar-weekday {
+    text-align: center;
+    padding: 9px 2px;
+    font-size: 11px;
+    font-weight: 700;
+    color: #66736a;
+    background: #f7faf7;
+    border-right: 1px solid #e7ece8;
+    border-bottom: 1px solid #e7ece8;
+}
+
+.officer-calendar .calendar-cell {
+    min-height: 105px;
+    min-width: 0;
+    padding: 5px;
+    overflow-wrap: anywhere;
+    border-right: 1px solid #e7ece8;
+    border-bottom: 1px solid #e7ece8;
+}
+
+.officer-calendar .calendar-cell.is-today {
+    background: #edf8ef;
+}
+
+.officer-calendar .calendar-date {
+    display: inline-block;
+    margin-bottom: 4px;
+    font-size: 12px;
+    font-weight: 700;
+}
+
+.officer-calendar .calendar-event {
+    display: block;
+    margin-top: 3px;
+    padding: 4px;
+    border-radius: 4px;
+    background: #e2f3e6;
+    color: #216b36;
+    font-size: 10px;
+    line-height: 1.35;
+    text-decoration: none;
+}
+
+.officer-calendar .calendar-event:hover {
+    background: #cdebd4;
+}
+
+.officer-calendar .upcoming-event + .upcoming-event {
+    border-top: 1px solid #edf0ed;
+}
+
+.officer-calendar .event-date {
+    width: 42px;
+    min-width: 42px;
+    text-align: center;
+    padding: 5px 2px;
+    border-radius: 6px;
+    background: #edf8ef;
+    color: #216b36;
+}
+
+.officer-calendar .event-date strong,
+.officer-calendar .event-date span {
+    display: block;
+}
+
+.officer-calendar .event-date strong {
+    font-size: 17px;
+}
+
+.officer-calendar .event-date span {
+    font-size: 10px;
+    text-transform: uppercase;
+}
+
+@media (max-width: 575.98px) {
+    .officer-calendar .calendar-cell {
+        min-height: 68px;
+        padding: 3px;
+    }
+
+    .officer-calendar .calendar-weekday {
+        font-size: 10px;
+    }
+
+    .officer-calendar .calendar-event {
+        font-size: 9px;
+        padding: 3px 2px;
+    }
+}
+</style>
+{% endblock %}

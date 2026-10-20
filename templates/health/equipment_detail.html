@@ -1,0 +1,81 @@
+{% extends "base.html" %}
+
+{% block title %}{{ equipment.title }} | Smart City Uganda{% endblock %}
+
+{% block content %}
+
+<div class="container-fluid py-3">
+
+    <a href="{% url 'health:equipment' %}"
+       class="small text-decoration-none">
+        <i class="bi bi-arrow-left"></i>
+        Back to equipment
+    </a>
+
+    <div class="card border-0 shadow-sm mt-3">
+
+        {% if equipment.image %}
+        <img src="{{ equipment.image.url }}"
+             class="card-img-top"
+             style="max-height:350px;object-fit:cover;"
+             alt="{{ equipment.title }}">
+        {% endif %}
+
+        <div class="card-body p-4">
+
+            <span class="badge text-bg-success mb-2">
+                {{ equipment.get_status_display }}
+            </span>
+
+            <h3 class="fw-bold">
+                {{ equipment.title }}
+            </h3>
+
+            {% if equipment.equipment_type %}
+            <p class="text-muted">
+                {{ equipment.equipment_type }}
+            </p>
+            {% endif %}
+
+            <hr>
+
+            <div class="small text-muted mb-4">
+                {{ equipment.description|linebreaks }}
+            </div>
+
+            <div class="row g-3">
+
+                <div class="col-md-6">
+                    <strong>Facility</strong>
+                    <div class="small text-muted">
+                        {% if equipment.facility %}
+                            {{ equipment.facility.title }}
+                        {% else %}
+                            Not specified
+                        {% endif %}
+                    </div>
+                </div>
+
+                <div class="col-md-6">
+                    <strong>District</strong>
+                    <div class="small text-muted">
+                        {{ equipment.district|default:"Not specified" }}
+                    </div>
+                </div>
+
+                <div class="col-md-6">
+                    <strong>Contact</strong>
+                    <div class="small text-muted">
+                        {{ equipment.contact_information|default:"Not provided" }}
+                    </div>
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+{% endblock %}

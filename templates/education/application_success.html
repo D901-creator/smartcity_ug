@@ -1,0 +1,34 @@
+{% extends "base.html" %}
+
+{% block title %}
+Application Submitted | Smart City Uganda
+{% endblock %}
+
+{% block content %}
+
+<div class="container education-module">
+
+    <div class="education-empty">
+
+        <i class="bi bi-check-circle"></i>
+
+        <h3>Application Submitted</h3>
+
+        <p>
+            Your education application has been submitted successfully.
+            Keep your reference number for future follow-up.
+        </p>
+
+        <a
+            href="{% url 'education:home' %}"
+            class="education-button"
+        >
+            <i class="bi bi-house"></i>
+            Back to Education
+        </a>
+
+    </div>
+
+</div>
+
+{% endblock %}

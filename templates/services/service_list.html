@@ -1,0 +1,185 @@
+{% extends "base.html" %}
+
+{% block title %}
+Smart City Uganda | Government Services
+{% endblock %}
+
+{% block content %}
+
+<div class="services-page">
+
+    <div class="services-page-header">
+
+        <div>
+
+            <span class="section-kicker">
+                CITIZEN SERVICES
+            </span>
+
+            <h1>
+                Government Services
+            </h1>
+
+            <p>
+                Access digital government services available through
+                Smart City Uganda.
+            </p>
+
+        </div>
+
+    </div>
+
+
+    <!-- SEARCH -->
+
+    <div class="service-search-panel">
+
+        <form method="get">
+
+            <div class="service-search-box">
+
+                <i class="bi bi-search"></i>
+
+                <input
+                    type="text"
+                    name="search"
+                    value="{{ search }}"
+                    placeholder="Search for a government service..."
+                >
+
+            </div>
+
+
+            <select
+                name="category"
+                class="service-category-select"
+                onchange="this.form.submit()"
+            >
+
+                <option value="">
+                    All Departments
+                </option>
+
+                {% for value, label in categories %}
+
+                    <option
+                        value="{{ value }}"
+                        {% if selected_category == value %}
+                            selected
+                        {% endif %}
+                    >
+                        {{ label }}
+                    </option>
+
+                {% endfor %}
+
+            </select>
+
+
+            <button
+                type="submit"
+                class="service-search-button"
+            >
+                Search
+            </button>
+
+        </form>
+
+    </div>
+
+
+    <!-- SERVICES -->
+
+    <div class="service-results-header">
+
+        <div>
+
+            <h2>
+                Available Services
+            </h2>
+
+            <span>
+                {{ services|length }} services found
+            </span>
+
+        </div>
+
+    </div>
+
+
+    <div class="service-list-grid">
+
+        {% for service in services %}
+
+            <a
+                href="{% url 'services:detail' service.id %}"
+                class="service-list-card"
+            >
+
+                <div class="service-list-card-top">
+
+                    <div class="service-icon service-green">
+                        <i class="bi {{ service.icon }}"></i>
+                    </div>
+
+                    <i class="bi bi-arrow-up-right"></i>
+
+                </div>
+
+
+                <span class="service-category">
+
+                    {{ service.get_category_display }}
+
+                </span>
+
+
+                <h3>
+                    {{ service.name }}
+                </h3>
+
+
+                <p>
+                    {{ service.short_description }}
+                </p>
+
+
+                <div class="service-card-footer">
+
+                    <span>
+                        <i class="bi bi-clock"></i>
+                        {{ service.estimated_days }} days
+                    </span>
+
+                    <strong>
+                        View service
+                        <i class="bi bi-arrow-right"></i>
+                    </strong>
+
+                </div>
+
+            </a>
+
+        {% empty %}
+
+            <div class="empty-services">
+
+                <i class="bi bi-search"></i>
+
+                <h3>
+                    No services found
+                </h3>
+
+                <p>
+                    Try another search term or select another department.
+                </p>
+
+            </div>
+
+        {% endfor %}
+
+    </div>
+
+</div>
+
+{% endblock %}

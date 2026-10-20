@@ -1,0 +1,530 @@
+{% extends "base.html" %}
+
+{% block title %}
+Water Projects | Smart City Uganda
+{% endblock %}
+
+{% block content %}
+
+<div class="container-fluid py-4">
+
+    <!-- HEADER -->
+    <div class="d-flex
+                flex-column flex-md-row
+                justify-content-between
+                align-items-md-center
+                gap-3 mb-4">
+
+        <div>
+
+            <span class="badge bg-primary mb-2">
+                <i class="bi bi-droplet-fill me-1"></i>
+                WATER & ENVIRONMENT
+            </span>
+
+            <h2 class="fw-bold mb-1">
+                Water Projects
+            </h2>
+
+            <p class="text-muted mb-0">
+                View water infrastructure and supply projects
+                registered in Smart City Uganda.
+            </p>
+
+        </div>
+
+        <a
+            href="{% url 'water:home' %}"
+            class="btn btn-outline-secondary"
+        >
+            <i class="bi bi-arrow-left me-1"></i>
+            Back to Water & Environment
+        </a>
+
+    </div>
+
+
+    <!-- INFORMATION ALERT -->
+    <div class="alert alert-info d-flex
+                align-items-start gap-3">
+
+        <i class="bi bi-info-circle-fill fs-4"></i>
+
+        <div>
+
+            <strong>
+                About Water Projects
+            </strong>
+
+            <p class="mb-0 small mt-1">
+                This page provides citizens with information
+                about water projects recorded in the system.
+                Official project information will be maintained
+                by authorized government officers and administrators.
+            </p>
+
+        </div>
+
+    </div>
+
+
+    <!-- FILTERS -->
+    <div class="card border-0 shadow-sm mb-4">
+
+        <div class="card-header bg-white py-3">
+
+            <h5 class="fw-semibold mb-0">
+                <i class="bi bi-funnel me-2"></i>
+                Find Water Projects
+            </h5>
+
+        </div>
+
+        <div class="card-body">
+
+            <form method="get">
+
+                <div class="row g-3">
+
+                    <!-- DISTRICT -->
+                    <div class="col-12 col-md-6">
+
+                        <label class="form-label fw-semibold">
+                            District / City
+                        </label>
+
+                        <input
+                            type="text"
+                            name="district"
+                            class="form-control"
+                            value="{{ district }}"
+                            placeholder="e.g. Kampala, Jinja, Mbarara"
+                        >
+
+                    </div>
+
+
+                    <!-- STATUS -->
+                    <div class="col-12 col-md-6">
+
+                        <label class="form-label fw-semibold">
+                            Project Status
+                        </label>
+
+                        <select
+                            name="status"
+                            class="form-select"
+                        >
+
+                            <option value="">
+                                All project statuses
+                            </option>
+
+                            {% for value, label in status_choices %}
+
+                                <option
+                                    value="{{ value }}"
+                                    {% if status == value %}
+                                        selected
+                                    {% endif %}
+                                >
+                                    {{ label }}
+                                </option>
+
+                            {% endfor %}
+
+                        </select>
+
+                    </div>
+
+
+                    <div class="col-12">
+
+                        <button
+                            type="submit"
+                            class="btn btn-primary"
+                        >
+                            <i class="bi bi-search me-1"></i>
+                            Search Projects
+                        </button>
+
+                        <a
+                            href="{% url 'water:water_projects' %}"
+                            class="btn btn-outline-secondary"
+                        >
+                            <i class="bi bi-x-circle me-1"></i>
+                            Clear
+                        </a>
+
+                    </div>
+
+                </div>
+
+            </form>
+
+        </div>
+
+    </div>
+
+
+    <!-- RESULT HEADER -->
+    <div class="d-flex
+                justify-content-between
+                align-items-center
+                mb-3">
+
+        <h5 class="fw-semibold mb-0">
+            Registered Water Projects
+        </h5>
+
+        <span class="badge bg-primary">
+            {{ total_projects }} found
+        </span>
+
+    </div>
+
+
+    <!-- PROJECT CARDS -->
+    <div class="row g-4">
+
+        {% for project in projects %}
+
+            <div class="col-12 col-md-6 col-xl-4">
+
+                <div class="card h-100
+                            border-0
+                            shadow-sm">
+
+                    <div class="card-body">
+
+                        <!-- ICON + STATUS -->
+                        <div class="d-flex
+                                    justify-content-between
+                                    align-items-start
+                                    gap-2
+                                    mb-3">
+
+                            <div class="bg-primary-subtle
+                                        text-primary
+                                        rounded
+                                        p-3">
+
+                                <i class="bi bi-droplet-fill fs-4"></i>
+
+                            </div>
+
+
+                            {% if project.status == "completed" %}
+
+                                <span class="badge bg-success">
+                                    Completed
+                                </span>
+
+                            {% elif project.status == "ongoing" %}
+
+                                <span class="badge bg-primary">
+                                    Ongoing
+                                </span>
+
+                            {% elif project.status == "suspended" %}
+
+                                <span class="badge bg-danger">
+                                    Suspended
+                                </span>
+
+                            {% else %}
+
+                                <span class="badge bg-warning text-dark">
+                                    Planned
+                                </span>
+
+                            {% endif %}
+
+                        </div>
+
+
+                        <!-- PROJECT NAME -->
+                        <h5 class="fw-bold">
+                            {{ project.name }}
+                        </h5>
+
+
+                        <!-- PROJECT CODE -->
+                        <p class="small text-muted mb-2">
+
+                            <i class="bi bi-hash me-1"></i>
+
+                            {{ project.project_code }}
+
+                        </p>
+
+
+                        <!-- LOCATION -->
+                        <p class="small mb-2">
+
+                            <i class="bi bi-geo-alt
+                                      text-primary me-1"></i>
+
+                            <strong>
+                                {{ project.district }}
+                            </strong>
+
+                            <br>
+
+                            <span class="text-muted ms-3">
+                                {{ project.location }}
+                            </span>
+
+                        </p>
+
+
+                        <!-- DESCRIPTION -->
+                        <p class="small text-muted">
+
+                            {{ project.description|truncatewords:25 }}
+
+                        </p>
+
+
+                        <!-- PROGRESS -->
+                        <div class="mb-3">
+
+                            <div class="d-flex
+                                        justify-content-between
+                                        small
+                                        mb-1">
+
+                                <span>
+                                    Project Progress
+                                </span>
+
+                                <strong>
+                                    {{ project.completion_percentage }}%
+                                </strong>
+
+                            </div>
+
+
+                            <div
+                                class="progress"
+                                role="progressbar"
+                                aria-valuenow="{{ project.completion_percentage }}"
+                                aria-valuemin="0"
+                                aria-valuemax="100"
+                            >
+
+                                <div
+                                    class="progress-bar"
+                                    style="width: {{ project.completion_percentage }}%;"
+                                ></div>
+
+                            </div>
+
+                        </div>
+
+
+                        <!-- DATES -->
+                        <div class="small text-muted">
+
+                            {% if project.start_date %}
+
+                                <div class="mb-1">
+
+                                    <i class="bi bi-calendar-event me-1"></i>
+
+                                    Started:
+                                    {{ project.start_date|date:"d M Y" }}
+
+                                </div>
+
+                            {% endif %}
+
+
+                            {% if project.expected_completion_date %}
+
+                                <div>
+
+                                    <i class="bi bi-calendar-check me-1"></i>
+
+                                    Expected:
+                                    {{ project.expected_completion_date|date:"d M Y" }}
+
+                                </div>
+
+                            {% endif %}
+
+                        </div>
+
+
+                        {% if project.implementing_agency %}
+
+                            <hr>
+
+                            <p class="small mb-0">
+
+                                <i class="bi bi-building me-1"></i>
+
+                                <strong>
+                                    Implementing Agency:
+                                </strong>
+
+                                {{ project.implementing_agency }}
+
+                            </p>
+
+                        {% endif %}
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        {% empty %}
+
+            <div class="col-12">
+
+                <div class="card
+                            border-0
+                            shadow-sm">
+
+                    <div class="card-body
+                                text-center
+                                py-5">
+
+                        <i class="bi bi-droplet
+                                  display-5
+                                  text-muted"></i>
+
+                        <h5 class="mt-3">
+                            No Water Projects Found
+                        </h5>
+
+                        <p class="text-muted mb-0">
+
+                            There are currently no water
+                            projects matching your search.
+
+                        </p>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        {% endfor %}
+
+    </div>
+
+
+    <!-- CITIZEN INFORMATION -->
+    <div class="card
+                border-0
+                shadow-sm
+                mt-4">
+
+        <div class="card-body">
+
+            <div class="row g-4">
+
+                <div class="col-12 col-md-4">
+
+                    <div class="d-flex gap-3">
+
+                        <i class="bi bi-eye
+                                  text-primary
+                                  fs-3"></i>
+
+                        <div>
+
+                            <h6 class="fw-bold">
+                                View Projects
+                            </h6>
+
+                            <p class="small text-muted mb-0">
+
+                                Citizens can view registered
+                                water projects in their areas.
+
+                            </p>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+                <div class="col-12 col-md-4">
+
+                    <div class="d-flex gap-3">
+
+                        <i class="bi bi-graph-up
+                                  text-primary
+                                  fs-3"></i>
+
+                        <div>
+
+                            <h6 class="fw-bold">
+                                Project Progress
+                            </h6>
+
+                            <p class="small text-muted mb-0">
+
+                                View the recorded progress of
+                                ongoing projects.
+
+                            </p>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+                <div class="col-12 col-md-4">
+
+                    <div class="d-flex gap-3">
+
+                        <i class="bi bi-exclamation-triangle
+                                  text-warning
+                                  fs-3"></i>
+
+                        <div>
+
+                            <h6 class="fw-bold">
+                                Report Water Problems
+                            </h6>
+
+                            <p class="small text-muted mb-2">
+
+                                If you experience a water
+                                problem, report it through
+                                the water reporting service.
+
+                            </p>
+
+                            <a
+                                href="{% url 'water:report_water_problem' %}"
+                                class="btn btn-sm btn-outline-primary"
+                            >
+                                Report Problem
+                            </a>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+{% endblock %}

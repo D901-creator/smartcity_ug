@@ -1,0 +1,205 @@
+{% extends "base.html" %}
+
+{% block title %}
+Submit Health Request | Smart City Uganda
+{% endblock %}
+
+{% block content %}
+
+<div class="health-page">
+
+    <a
+        href="{% url 'health:home' %}"
+        class="health-back-link"
+    >
+        <i class="bi bi-arrow-left"></i>
+        Back to Health Services
+    </a>
+
+
+    <div class="health-form-wrapper">
+
+        <div class="health-form-header">
+
+            <div class="facility-detail-icon">
+                <i class="bi bi-heart-pulse"></i>
+            </div>
+
+            <div>
+
+                <h1>
+                    Submit Health Request
+                </h1>
+
+                <p>
+                    Provide the information below so your request
+                    can be processed by the appropriate health department.
+                </p>
+
+            </div>
+
+        </div>
+
+
+        {% if error %}
+
+            <div class="health-form-error">
+
+                <i class="bi bi-exclamation-triangle"></i>
+
+                {{ error }}
+
+            </div>
+
+        {% endif %}
+
+
+        <form method="post">
+
+            {% csrf_token %}
+
+
+            <div class="health-form-grid">
+
+
+                <div class="health-form-group">
+
+                    <label>
+                        Request Type
+                    </label>
+
+                    <select name="request_type" required>
+
+                        {% for value, label in request_types %}
+
+                            <option value="{{ value }}">
+                                {{ label }}
+                            </option>
+
+                        {% endfor %}
+
+                    </select>
+
+                </div>
+
+
+                <div class="health-form-group">
+
+                    <label>
+                        Health Facility
+                    </label>
+
+                    <select name="facility">
+
+                        <option value="">
+                            Select facility (optional)
+                        </option>
+
+                        {% for facility in facilities %}
+
+                            <option value="{{ facility.id }}">
+                                {{ facility.name }} — {{ facility.district }}
+                            </option>
+
+                        {% endfor %}
+
+                    </select>
+
+                </div>
+
+
+                <div class="health-form-group">
+
+                    <label>
+                        Your Name
+                    </label>
+
+                    <input
+                        type="text"
+                        name="citizen_name"
+                        placeholder="Enter your full name"
+                        value="Guest Citizen"
+                        required
+                    >
+
+                </div>
+
+
+                <div class="health-form-group">
+
+                    <label>
+                        Phone Number
+                    </label>
+
+                    <input
+                        type="text"
+                        name="citizen_phone"
+                        placeholder="+256 7XX XXX XXX"
+                    >
+
+                </div>
+
+
+                <div class="health-form-group">
+
+                    <label>
+                        District / City
+                    </label>
+
+                    <input
+                        type="text"
+                        name="citizen_district"
+                        placeholder="e.g. Kampala"
+                    >
+
+                </div>
+
+
+                <div class="health-form-group health-full-width">
+
+                    <label>
+                        Describe Your Request
+                    </label>
+
+                    <textarea
+                        name="description"
+                        rows="7"
+                        placeholder="Describe the health service or information you need..."
+                        required
+                    ></textarea>
+
+                </div>
+
+
+            </div>
+
+
+            <div class="health-form-actions">
+
+                <a
+                    href="{% url 'health:home' %}"
+                    class="health-cancel-button"
+                >
+                    Cancel
+                </a>
+
+                <button
+                    type="submit"
+                    class="health-primary-button"
+                >
+
+                    <i class="bi bi-send"></i>
+
+                    Submit Health Request
+
+                </button>
+
+            </div>
+
+        </form>
+
+    </div>
+
+</div>
+
+{% endblock %}

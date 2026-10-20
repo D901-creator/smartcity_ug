@@ -1,0 +1,60 @@
+{% extends "base.html" %}
+
+{% block title %}Request Submitted | Smart City Uganda{% endblock %}
+
+{% block content %}
+
+<div class="container py-5">
+
+    <div class="card border-0 shadow-sm text-center">
+
+        <div class="card-body p-5">
+
+            <div class="text-success mb-3">
+                <i class="bi bi-check-circle-fill"
+                   style="font-size:4rem;"></i>
+            </div>
+
+            <h3 class="fw-bold">
+                Health Request Submitted
+            </h3>
+
+            <p class="text-muted">
+                Your request has been recorded successfully.
+            </p>
+
+            <div class="alert alert-success d-inline-block px-4">
+                <div class="small text-muted">
+                    Reference Number
+                </div>
+
+                <div class="fs-4 fw-bold">
+                    {{ health_request.reference_number }}
+                </div>
+            </div>
+
+            <p class="small text-muted">
+                Keep this reference number so you can identify your request.
+            </p>
+
+            <div class="d-flex justify-content-center gap-2 flex-wrap">
+
+                <a href="{% url 'health:request_detail' health_request.id %}"
+                   class="btn btn-success">
+                    View Request
+                </a>
+
+                <a href="{% url 'health:home' %}"
+                   class="btn btn-outline-secondary">
+                    Health Home
+                </a>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+{% endblock %}

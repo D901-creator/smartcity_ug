@@ -1,0 +1,268 @@
+{% extends "base.html" %}
+
+{% block title %}
+    Energy & Mineral Reports / Requests
+{% endblock %}
+
+{% block content %}
+
+<div class="container-fluid py-3">
+
+    <div class="row justify-content-center">
+
+        <div class="col-12 col-xl-9">
+
+            <div class="d-flex align-items-center mb-3">
+
+                <div>
+                    <h4 class="mb-1">
+                        <i class="bi bi-clipboard-check text-info"></i>
+                        Energy & Mineral Reports / Requests
+                    </h4>
+
+                    <p class="text-muted mb-0">
+                        Submit an energy, electricity or mineral-related
+                        report or service request.
+                    </p>
+                </div>
+
+            </div>
+
+
+            <div class="card shadow-sm border-0">
+
+                <div class="card-header bg-info text-white">
+
+                    <h5 class="mb-0">
+                        Submit Request
+                    </h5>
+
+                </div>
+
+
+                <div class="card-body">
+
+                    <div class="alert alert-light border">
+
+                        <i class="bi bi-info-circle"></i>
+
+                        Provide accurate information so that your
+                        request can be properly reviewed.
+
+                    </div>
+
+
+                    <form method="POST" enctype="multipart/form-data">
+
+                        {% csrf_token %}
+
+
+                        {% if form.non_field_errors %}
+
+                            <div class="alert alert-danger">
+
+                                {{ form.non_field_errors }}
+
+                            </div>
+
+                        {% endif %}
+
+
+                        <div class="row g-3">
+
+
+                            <div class="col-12 col-md-6">
+
+                                <label class="form-label">
+                                    {{ form.citizen_name.label }}
+                                </label>
+
+                                {{ form.citizen_name }}
+
+                                {% for error in form.citizen_name.errors %}
+                                    <div class="text-danger small">
+                                        {{ error }}
+                                    </div>
+                                {% endfor %}
+
+                            </div>
+
+
+                            <div class="col-12 col-md-6">
+
+                                <label class="form-label">
+                                    {{ form.phone_number.label }}
+                                </label>
+
+                                {{ form.phone_number }}
+
+                                {% for error in form.phone_number.errors %}
+                                    <div class="text-danger small">
+                                        {{ error }}
+                                    </div>
+                                {% endfor %}
+
+                            </div>
+
+
+                            <div class="col-12 col-md-6">
+
+                                <label class="form-label">
+                                    {{ form.email.label }}
+                                </label>
+
+                                {{ form.email }}
+
+                                {% if form.email.help_text %}
+                                    <div class="form-text">
+                                        {{ form.email.help_text }}
+                                    </div>
+                                {% endif %}
+
+                            </div>
+
+
+                            <div class="col-12 col-md-6">
+
+                                <label class="form-label">
+                                    {{ form.district.label }}
+                                </label>
+
+                                {{ form.district }}
+
+                                {% for error in form.district.errors %}
+                                    <div class="text-danger small">
+                                        {{ error }}
+                                    </div>
+                                {% endfor %}
+
+                            </div>
+
+
+                            <div class="col-12">
+
+                                <label class="form-label">
+                                    {{ form.location.label }}
+                                </label>
+
+                                {{ form.location }}
+
+                                {% if form.location.help_text %}
+                                    <div class="form-text">
+                                        {{ form.location.help_text }}
+                                    </div>
+                                {% endif %}
+
+                            </div>
+
+
+                            <div class="col-12">
+
+                                <label class="form-label">
+                                    {{ form.request_type.label }}
+                                </label>
+
+                                {{ form.request_type }}
+
+                                {% for error in form.request_type.errors %}
+                                    <div class="text-danger small">
+                                        {{ error }}
+                                    </div>
+                                {% endfor %}
+
+                            </div>
+
+
+                            <div class="col-12">
+
+                                <label class="form-label">
+                                    {{ form.subject.label }}
+                                </label>
+
+                                {{ form.subject }}
+
+                                {% for error in form.subject.errors %}
+                                    <div class="text-danger small">
+                                        {{ error }}
+                                    </div>
+                                {% endfor %}
+
+                            </div>
+
+
+                            <div class="col-12">
+
+                                <label class="form-label">
+                                    {{ form.description.label }}
+                                </label>
+
+                                {{ form.description }}
+
+                                {% for error in form.description.errors %}
+                                    <div class="text-danger small">
+                                        {{ error }}
+                                    </div>
+                                {% endfor %}
+
+                            </div>
+
+
+                            <div class="col-12">
+
+                                <label class="form-label">
+                                    {{ form.attachment.label }}
+                                </label>
+
+                                {{ form.attachment }}
+
+                                {% if form.attachment.help_text %}
+                                    <div class="form-text">
+                                        {{ form.attachment.help_text }}
+                                    </div>
+                                {% endif %}
+
+                            </div>
+
+
+                            <div class="col-12">
+
+                                <hr>
+
+                                <div class="d-flex flex-wrap gap-2">
+
+                                    <button
+                                        type="submit"
+                                        class="btn btn-info text-white"
+                                    >
+                                        <i class="bi bi-send"></i>
+                                        Submit Request
+                                    </button>
+
+
+                                    <a
+                                        href="{% url 'energy:home' %}"
+                                        class="btn btn-outline-secondary"
+                                    >
+                                        <i class="bi bi-arrow-left"></i>
+                                        Back to Energy
+                                    </a>
+
+                                </div>
+
+                            </div>
+
+                        </div>
+
+                    </form>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+{% endblock %}

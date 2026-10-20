@@ -1,0 +1,139 @@
+{% extends "city_admin/base.html" %}
+
+{% block title %}Security Events{% endblock %}
+{% block page_heading %}Security Events{% endblock %}
+
+{% block content %}
+<div class="container-fluid px-0">
+
+    <div class="mb-4">
+        <h1 class="h3">Security Events</h1>
+        <p class="text-muted">
+            Search recorded events and manage their investigation status.
+        </p>
+    </div>
+
+    <div class="card border-0 shadow-sm mb-4">
+        <div class="card-body">
+            <form method="get" class="row g-3">
+                <div class="col-12 col-lg-4">
+                    <label class="form-label" for="q">Search</label>
+                    <input id="q" name="q" value="{{ search }}"
+                           class="form-control"
+                           placeholder="Summary, user, IP or request path">
+                </div>
+
+                <div class="col-12 col-sm-4 col-lg-2">
+                    <label class="form-label" for="severity">Severity</label>
+                    <select id="severity" name="severity" class="form-select">
+                        <option value="">All severities</option>
+                        {% for value, label in severity_choices %}
+                            <option value="{{ value }}"
+                                {% if selected_severity == value %}selected{% endif %}>
+                                {{ label }}
+                            </option>
+                        {% endfor %}
+                    </select>
+                </div>
+
+                <div class="col-12 col-sm-4 col-lg-3">
+                    <label class="form-label" for="status">Status</label>
+                    <select id="status" name="status" class="form-select">
+                        <option value="">All statuses</option>
+                        {% for value, label in status_choices %}
+                            <option value="{{ value }}"
+                                {% if selected_status == value %}selected{% endif %}>
+                                {{ label }}
+                            </option>
+                        {% endfor %}
+                    </select>
+                </div>
+
+                <div class="col-12 col-sm-4 col-lg-3">
+                    <label class="form-label" for="event_type">Event Type</label>
+                    <select id="event_type" name="event_type" class="form-select">
+                        <option value="">All event types</option>
+                        {% for value, label in event_type_choices %}
+                            <option value="{{ value }}"
+                                {% if selected_event_type == value %}selected{% endif %}>
+                                {{ label }}
+                            </option>
+                        {% endfor %}
+                    </select>
+                </div>
+
+                <div class="col-12 d-flex gap-2">
+                    <button class="btn btn-success" type="submit">
+                        <i class="bi bi-search me-1"></i> Apply Filters
+                    </button>
+                    <a href="{% url 'city_admin:security_events' %}"
+                       class="btn btn-outline-secondary">Clear</a>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <div class="card border-0 shadow-sm">
+        <div class="card-body">
+            {% if events %}
+                <div class="table-responsive">
+                    <table class="table table-hover align-middle">
+                        <thead>
+                            <tr>
+                                <th>Date</th>
+                                <th>Event</th>
+                                <th>Type</th>
+                                <th>Severity</th>
+                                <th>Status</th>
+                                <th>User</th>
+                                <th>IP Address</th>
+                                <th></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for event in events %}
+                                <tr>
+                                    <td>{{ event.created_at|date:"d M Y H:i" }}</td>
+                                    <td>
+                                        <strong>{{ event.summary }}</strong>
+                                        {% if event.request_path %}
+                                            <div class="small text-muted">
+                                                {{ event.request_path }}
+                                            </div>
+                                        {% endif %}
+                                    </td>
+                                    <td>{{ event.get_event_type_display }}</td>
+                                    <td>{{ event.get_severity_display }}</td>
+                                    <td>{{ event.get_status_display }}</td>
+                                    <td>
+                                        {% if event.user %}
+                                            {{ event.user.get_username }}
+                                        {% else %}
+                                            Unknown
+                                        {% endif %}
+                                    </td>
+                                    <td>{{ event.ip_address|default:"—" }}</td>
+                                    <td>
+                                        <a href="{% url 'city_admin:security_event_detail' event.id %}"
+                                           class="btn btn-sm btn-outline-primary">
+                                            Review
+                                        </a>
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+                <p class="small text-muted mb-0">
+                    Showing up to 300 matching events.
+                </p>
+            {% else %}
+                <p class="text-muted mb-0">
+                    No events match your filters.
+                </p>
+            {% endif %}
+        </div>
+    </div>
+
+</div>
+{% endblock %}

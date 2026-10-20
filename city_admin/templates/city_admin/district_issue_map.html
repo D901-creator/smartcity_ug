@@ -1,0 +1,251 @@
+
+{% extends "city_admin/base.html" %}
+
+{% block content %}
+<div class="container-fluid py-4">
+
+    <div class="d-flex flex-wrap justify-content-between align-items-center mb-4">
+        <div>
+            <h2 class="mb-1">District Issue Maps</h2>
+            <p class="text-muted mb-0">
+                View recorded citizen reports and service requests by district.
+            </p>
+        </div>
+    </div>
+
+    <div class="card border-0 shadow-sm mb-4">
+        <div class="card-body">
+            <form method="get" class="row g-3 align-items-end">
+                <div class="col-md-8">
+                    <label for="district" class="form-label">
+                        Select district
+                    </label>
+
+                    <select
+                        name="district"
+                        id="district"
+                        class="form-select"
+                        required
+                    >
+                        <option value="">Choose a district</option>
+
+                        {% for district in districts %}
+                        <option
+                            value="{{ district.id }}"
+                            {% if selected_district and selected_district.id == district.id %}
+                                selected
+                            {% endif %}
+                        >
+                            {{ district.name }} — {{ district.region.name }}
+                        </option>
+                        {% endfor %}
+                    </select>
+                </div>
+
+                <div class="col-md-4">
+                    <button type="submit" class="btn btn-success w-100">
+                        <i class="fas fa-map-marked-alt me-2"></i>
+                        Generate District Map
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    {% if selected_district %}
+
+    <div class="row g-3 mb-4">
+        <div class="col-md-6">
+            <div class="card border-0 shadow-sm h-100">
+                <div class="card-body">
+                    <div class="text-muted">Issues mapped</div>
+                    <h3 class="mb-0">{{ located_count }}</h3>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-6">
+            <div class="card border-0 shadow-sm h-100">
+                <div class="card-body">
+                    <div class="text-muted">Issues without coordinates</div>
+                    <h3 class="mb-0">{{ unlocated_count }}</h3>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="card border-0 shadow-sm mb-4">
+        <div class="card-header bg-white py-3">
+            <h5 class="mb-0">
+                {{ selected_district.name }} District
+            </h5>
+        </div>
+
+        <div class="card-body">
+            <div
+                id="districtMap"
+                style="height: 520px; width: 100%; border-radius: 8px;"
+            ></div>
+
+            <p id="mapMessage" class="text-muted mt-3 mb-0"></p>
+        </div>
+    </div>
+
+    <div class="card border-0 shadow-sm">
+        <div class="card-header bg-white py-3">
+            <h5 class="mb-0">Mapped Issues</h5>
+        </div>
+
+        <div class="table-responsive">
+            <table class="table table-hover align-middle mb-0">
+                <thead class="table-light">
+                    <tr>
+                        <th>Reference</th>
+                        <th>Type</th>
+                        <th>Title</th>
+                        <th>Department</th>
+                        <th>Status</th>
+                        <th>Coordinates</th>
+                    </tr>
+                </thead>
+
+                <tbody id="issueTableBody">
+                    <tr>
+                        <td colspan="6" class="text-center text-muted py-4">
+                            Loading mapped issues...
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    {% endif %}
+</div>
+
+{% if selected_district %}
+{{ markers_json|json_script:"district-markers-data" }}
+{{ center_json|json_script:"district-center-data" }}
+
+<link
+    rel="stylesheet"
+    href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+/>
+
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+
+<script>
+(function () {
+    "use strict";
+
+    const markers = JSON.parse(
+        document.getElementById("district-markers-data").textContent
+    );
+
+    const center = JSON.parse(
+        document.getElementById("district-center-data").textContent
+    );
+
+    const mapElement = document.getElementById("districtMap");
+    const messageElement = document.getElementById("mapMessage");
+    const tableBody = document.getElementById("issueTableBody");
+
+    // Do not invent a district center when coordinates are missing.
+    if (!center) {
+        mapElement.style.display = "none";
+        messageElement.textContent =
+            "Enter verified latitude and longitude for this district " +
+            "in the District Maps management page before displaying its map.";
+    } else {
+        const map = L.map("districtMap").setView(
+            [center.latitude, center.longitude],
+            10
+        );
+
+        L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
+            maxZoom: 19,
+            attribution: "&copy; OpenStreetMap contributors"
+        }).addTo(map);
+
+        L.marker([center.latitude, center.longitude])
+            .addTo(map)
+            .bindPopup("District reference point");
+
+        const bounds = [
+            [center.latitude, center.longitude]
+        ];
+
+        markers.forEach(function (item) {
+            const point = [item.latitude, item.longitude];
+
+            const marker = L.circleMarker(point, {
+                radius: 8,
+                color: item.type === "Citizen report" ? "#dc3545" : "#0d6efd",
+                fillOpacity: 0.8
+            }).addTo(map);
+
+            const popup = document.createElement("div");
+            const title = document.createElement("strong");
+            title.textContent = item.title;
+
+            const details = document.createElement("p");
+            details.textContent =
+                item.type + " | " + item.reference +
+                " | " + item.status;
+
+            popup.appendChild(title);
+            popup.appendChild(document.createElement("br"));
+            popup.appendChild(details);
+
+            marker.bindPopup(popup);
+            bounds.push(point);
+        });
+
+        if (markers.length > 0) {
+            map.fitBounds(bounds, { padding: [30, 30], maxZoom: 13 });
+        }
+
+        setTimeout(function () {
+            map.invalidateSize();
+        }, 150);
+    }
+
+    tableBody.replaceChildren();
+
+    if (markers.length === 0) {
+        const row = document.createElement("tr");
+        const cell = document.createElement("td");
+
+        cell.colSpan = 6;
+        cell.className = "text-center text-muted py-4";
+        cell.textContent =
+            "No issues with recorded coordinates were found for this district.";
+
+        row.appendChild(cell);
+        tableBody.appendChild(row);
+        return;
+    }
+
+    markers.forEach(function (item) {
+        const row = document.createElement("tr");
+
+        [
+            item.reference,
+            item.type,
+            item.title,
+            item.department,
+            item.status,
+            item.latitude + ", " + item.longitude
+        ].forEach(function (value) {
+            const cell = document.createElement("td");
+            cell.textContent = value;
+            row.appendChild(cell);
+        });
+
+        tableBody.appendChild(row);
+    });
+})();
+</script>
+{% endif %}
+
+{% endblock %}

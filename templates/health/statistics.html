@@ -1,0 +1,387 @@
+{% extends "base.html" %}
+
+{% block title %}Health Statistics | Smart City Uganda{% endblock %}
+
+{% block content %}
+
+<div class="container-fluid py-3">
+
+    <div class="mb-4">
+
+        <h4 class="fw-bold mb-1">
+            Health Statistics
+        </h4>
+
+        <p class="text-muted small mb-0">
+            Statistics generated from information currently stored
+            in the Smart City Uganda Health database.
+        </p>
+
+    </div>
+
+
+    <!-- TOTALS -->
+
+    <div class="row g-3 mb-4">
+
+        <div class="col-6 col-md-4 col-xl-3">
+            <div class="card border-0 shadow-sm">
+                <div class="card-body">
+                    <div class="small text-muted">
+                        Facilities
+                    </div>
+                    <div class="fs-3 fw-bold">
+                        {{ total_facilities }}
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+        <div class="col-6 col-md-4 col-xl-3">
+            <div class="card border-0 shadow-sm">
+                <div class="card-body">
+                    <div class="small text-muted">
+                        Services
+                    </div>
+                    <div class="fs-3 fw-bold">
+                        {{ total_services }}
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+        <div class="col-6 col-md-4 col-xl-3">
+            <div class="card border-0 shadow-sm">
+                <div class="card-body">
+                    <div class="small text-muted">
+                        Medicines
+                    </div>
+                    <div class="fs-3 fw-bold">
+                        {{ total_medicines }}
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+        <div class="col-6 col-md-4 col-xl-3">
+            <div class="card border-0 shadow-sm">
+                <div class="card-body">
+                    <div class="small text-muted">
+                        Equipment
+                    </div>
+                    <div class="fs-3 fw-bold">
+                        {{ total_equipment }}
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+        <div class="col-6 col-md-4 col-xl-3">
+            <div class="card border-0 shadow-sm">
+                <div class="card-body">
+                    <div class="small text-muted">
+                        Projects
+                    </div>
+                    <div class="fs-3 fw-bold">
+                        {{ total_projects }}
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+        <div class="col-6 col-md-4 col-xl-3">
+            <div class="card border-0 shadow-sm">
+                <div class="card-body">
+                    <div class="small text-muted">
+                        Information Entries
+                    </div>
+                    <div class="fs-3 fw-bold">
+                        {{ total_information }}
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+        <div class="col-6 col-md-4 col-xl-3">
+            <div class="card border-0 shadow-sm">
+                <div class="card-body">
+                    <div class="small text-muted">
+                        Health Requests
+                    </div>
+                    <div class="fs-3 fw-bold">
+                        {{ total_requests }}
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+        <div class="col-6 col-md-4 col-xl-3">
+            <div class="card border-0 shadow-sm">
+                <div class="card-body">
+                    <div class="small text-muted">
+                        Facility Reports
+                    </div>
+                    <div class="fs-3 fw-bold">
+                        {{ total_reports }}
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+
+    <!-- CHARTS -->
+
+    <div class="row g-3">
+
+        <div class="col-lg-6">
+
+            <div class="card border-0 shadow-sm h-100">
+
+                <div class="card-body">
+
+                    <h6 class="fw-bold">
+                        Facilities by Type
+                    </h6>
+
+                    <canvas id="facilityTypeChart"></canvas>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <div class="col-lg-6">
+
+            <div class="card border-0 shadow-sm h-100">
+
+                <div class="card-body">
+
+                    <h6 class="fw-bold">
+                        Health Services by Type
+                    </h6>
+
+                    <canvas id="serviceTypeChart"></canvas>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <div class="col-lg-6">
+
+            <div class="card border-0 shadow-sm h-100">
+
+                <div class="card-body">
+
+                    <h6 class="fw-bold">
+                        Medicines by Availability
+                    </h6>
+
+                    <canvas id="medicineChart"></canvas>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <div class="col-lg-6">
+
+            <div class="card border-0 shadow-sm h-100">
+
+                <div class="card-body">
+
+                    <h6 class="fw-bold">
+                        Equipment by Status
+                    </h6>
+
+                    <canvas id="equipmentChart"></canvas>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <div class="col-lg-6">
+
+            <div class="card border-0 shadow-sm h-100">
+
+                <div class="card-body">
+
+                    <h6 class="fw-bold">
+                        Health Requests by Status
+                    </h6>
+
+                    <canvas id="requestChart"></canvas>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <div class="col-lg-6">
+
+            <div class="card border-0 shadow-sm h-100">
+
+                <div class="card-body">
+
+                    <h6 class="fw-bold">
+                        Facility Reports by Status
+                    </h6>
+
+                    <canvas id="reportStatusChart"></canvas>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <div class="alert alert-info small mt-4">
+
+        <i class="bi bi-info-circle me-1"></i>
+
+        These figures are generated from records currently stored in
+        the application database. They should not be presented as
+        official national health statistics until verified data has
+        been entered by authorized authorities.
+
+    </div>
+
+</div>
+
+
+<!-- Chart.js -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<script>
+
+function chartData(items, labelKey) {
+
+    return {
+        labels: items.map(item => item[labelKey]),
+        values: items.map(item => item.total)
+    };
+
+}
+
+
+const facilityTypeData = {{ facilities_by_type|safe }};
+const serviceTypeData = {{ services_by_type|safe }};
+const medicineData = {{ medicines_by_availability|safe }};
+const equipmentData = {{ equipment_by_status|safe }};
+const requestData = {{ requests_by_status|safe }};
+const reportStatusData = {{ reports_by_status|safe }};
+
+
+function createChart(elementId, data, labelKey) {
+
+    const element = document.getElementById(elementId);
+
+    if (!element) {
+        return;
+    }
+
+    const prepared = chartData(data, labelKey);
+
+    new Chart(element, {
+        type: "bar",
+
+        data: {
+            labels: prepared.labels,
+
+            datasets: [{
+                label: "Records",
+                data: prepared.values,
+                borderWidth: 1
+            }]
+        },
+
+        options: {
+            responsive: true,
+
+            plugins: {
+                legend: {
+                    display: false
+                }
+            },
+
+            scales: {
+                y: {
+                    beginAtZero: true,
+                    ticks: {
+                        precision: 0
+                    }
+                }
+            }
+        }
+    });
+
+}
+
+
+createChart(
+    "facilityTypeChart",
+    facilityTypeData,
+    "facility_type"
+);
+
+
+createChart(
+    "serviceTypeChart",
+    serviceTypeData,
+    "service_type"
+);
+
+
+createChart(
+    "medicineChart",
+    medicineData,
+    "availability_status"
+);
+
+
+createChart(
+    "equipmentChart",
+    equipmentData,
+    "status"
+);
+
+
+createChart(
+    "requestChart",
+    requestData,
+    "status"
+);
+
+
+createChart(
+    "reportStatusChart",
+    reportStatusData,
+    "status"
+);
+
+</script>
+
+{% endblock %}

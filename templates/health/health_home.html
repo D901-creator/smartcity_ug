@@ -1,0 +1,109 @@
+{% extends "base.html" %}
+
+{% block title %}
+Health Request Submitted | Smart City Uganda
+{% endblock %}
+
+{% block content %}
+
+<div class="health-page">
+
+    <div class="health-success">
+
+        <div class="health-success-icon">
+
+            <i class="bi bi-check-lg"></i>
+
+        </div>
+
+        <h1>
+            Health Request Submitted
+        </h1>
+
+        <p>
+            Your health-related request has been successfully
+            submitted to Smart City Uganda.
+        </p>
+
+
+        <div class="health-reference">
+
+            <span>
+                Your Reference Number
+            </span>
+
+            <strong>
+                {{ health_request.reference_number }}
+            </strong>
+
+            <small>
+                Keep this reference number for tracking your request.
+            </small>
+
+        </div>
+
+
+        <div class="health-success-details">
+
+            <div>
+
+                <span>Request Type</span>
+
+                <strong>
+                    {{ health_request.get_request_type_display }}
+                </strong>
+
+            </div>
+
+
+            <div>
+
+                <span>Status</span>
+
+                <strong>
+                    {{ health_request.get_status_display }}
+                </strong>
+
+            </div>
+
+
+            <div>
+
+                <span>Submitted</span>
+
+                <strong>
+                    {{ health_request.submitted_at|date:"d M Y, H:i" }}
+                </strong>
+
+            </div>
+
+        </div>
+
+
+        <div class="health-success-actions">
+
+            <a
+                href="{% url 'health:home' %}"
+                class="health-primary-button"
+            >
+
+                Browse Health Facilities
+
+            </a>
+
+            <a
+                href="{% url 'health:request' %}"
+                class="health-secondary-button"
+            >
+
+                Submit Another Request
+
+            </a>
+
+        </div>
+
+    </div>
+
+</div>
+
+{% endblock %}

@@ -1,0 +1,116 @@
+{% extends "base.html" %}
+
+{% block title %}Agricultural Disease Reports{% endblock %}
+
+{% block content %}
+
+<div class="container-fluid">
+
+    <div class="d-flex justify-content-between align-items-center mb-4">
+
+        <div>
+            <h2>
+                <i class="bi bi-bug"></i>
+                Agricultural Disease Reports
+            </h2>
+
+            <p class="text-muted mb-0">
+                View and track reported crop and livestock diseases.
+            </p>
+        </div>
+
+        <a href="{% url 'agriculture:create_disease_report' %}"
+           class="btn btn-danger">
+
+            <i class="bi bi-exclamation-triangle"></i>
+            Report Disease
+
+        </a>
+
+    </div>
+
+
+    <div class="row g-4">
+
+        {% for report in reports %}
+
+        <div class="col-lg-6 col-xl-4">
+
+            <div class="card h-100 shadow-sm border-0">
+
+                <div class="card-body">
+
+                    <div class="d-flex justify-content-between">
+
+                        <h5 class="card-title">
+                            {{ report.crop_or_animal }}
+                        </h5>
+
+                        <span class="badge
+                            {% if report.urgency == 'emergency' %}
+                                bg-danger
+                            {% elif report.urgency == 'high' %}
+                                bg-warning text-dark
+                            {% elif report.urgency == 'medium' %}
+                                bg-info
+                            {% else %}
+                                bg-secondary
+                            {% endif %}
+                        ">
+                            {{ report.get_urgency_display }}
+                        </span>
+
+                    </div>
+
+                    <p class="mt-3">
+                        {{ report.symptoms }}
+                    </p>
+
+                    <hr>
+
+                    <p class="mb-2">
+                        <strong>District:</strong>
+                        {{ report.district }}
+                    </p>
+
+                    <p class="mb-2">
+                        <strong>Location:</strong>
+                        {{ report.location }}
+                    </p>
+
+                    <p class="mb-0">
+                        <strong>Status:</strong>
+                        {{ report.get_status_display }}
+                    </p>
+
+                    <small class="text-muted">
+                        Reported {{ report.created_at|date:"d M Y H:i" }}
+                    </small>
+
+                </div>
+
+            </div>
+
+        </div>
+
+        {% empty %}
+
+        <div class="col-12">
+
+            <div class="alert alert-info">
+
+                <i class="bi bi-info-circle"></i>
+
+                No agricultural disease reports have been submitted.
+
+            </div>
+
+        </div>
+
+        {% endfor %}
+
+    </div>
+
+</div>
+
+{% endblock %}

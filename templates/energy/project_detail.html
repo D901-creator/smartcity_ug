@@ -1,0 +1,219 @@
+{% extends "base.html" %}
+
+{% block title %}
+    {{ project.name }} | Smart City Uganda
+{% endblock %}
+
+{% block content %}
+
+<div class="container-fluid py-3">
+
+    <div class="mb-3">
+
+        <a href="{% url 'energy:energy_projects' %}"
+           class="text-decoration-none small">
+
+            <i class="bi bi-arrow-left"></i>
+            Back to Energy Projects
+
+        </a>
+
+    </div>
+
+
+    <div class="row justify-content-center">
+
+        <div class="col-12 col-lg-9">
+
+            <div class="card border-0 shadow-sm overflow-hidden">
+
+                {% if project.project_image %}
+
+                    <img
+                        src="{{ project.project_image.url }}"
+                        class="w-100"
+                        alt="{{ project.name }}"
+                        style="max-height: 350px; object-fit: cover;"
+                    >
+
+                {% endif %}
+
+
+                <div class="card-body p-3 p-md-4">
+
+                    <div class="mb-3">
+
+                        <span class="badge bg-primary">
+                            {{ project.get_project_type_display }}
+                        </span>
+
+                        {% if project.status == "completed" %}
+
+                            <span class="badge bg-success">
+                                {{ project.get_status_display }}
+                            </span>
+
+                        {% elif project.status == "ongoing" %}
+
+                            <span class="badge bg-primary">
+                                {{ project.get_status_display }}
+                            </span>
+
+                        {% elif project.status == "planned" %}
+
+                            <span class="badge bg-warning text-dark">
+                                {{ project.get_status_display }}
+                            </span>
+
+                        {% else %}
+
+                            <span class="badge bg-secondary">
+                                {{ project.get_status_display }}
+                            </span>
+
+                        {% endif %}
+
+                    </div>
+
+
+                    <h4 class="mb-2">
+                        {{ project.name }}
+                    </h4>
+
+
+                    <div class="text-muted small mb-4">
+
+                        <i class="bi bi-geo-alt"></i>
+
+                        {{ project.district }}
+
+                        {% if project.location %}
+                            — {{ project.location }}
+                        {% endif %}
+
+                    </div>
+
+
+                    <div class="mb-4">
+
+                        <h6 class="fw-bold">
+                            Project Description
+                        </h6>
+
+                        <div class="text-muted"
+                             style="white-space: pre-line;">
+
+                            {{ project.description }}
+
+                        </div>
+
+                    </div>
+
+
+                    <div class="row g-3 mb-4">
+
+                        {% if project.implementing_organization %}
+
+                            <div class="col-12 col-md-6">
+
+                                <div class="bg-light rounded p-3">
+
+                                    <div class="small text-muted">
+                                        Implementing Organization
+                                    </div>
+
+                                    <strong>
+                                        {{ project.implementing_organization }}
+                                    </strong>
+
+                                </div>
+
+                            </div>
+
+                        {% endif %}
+
+
+                        {% if project.contractor %}
+
+                            <div class="col-12 col-md-6">
+
+                                <div class="bg-light rounded p-3">
+
+                                    <div class="small text-muted">
+                                        Contractor
+                                    </div>
+
+                                    <strong>
+                                        {{ project.contractor }}
+                                    </strong>
+
+                                </div>
+
+                            </div>
+
+                        {% endif %}
+
+
+                        {% if project.start_date %}
+
+                            <div class="col-12 col-md-6">
+
+                                <div class="bg-light rounded p-3">
+
+                                    <div class="small text-muted">
+                                        Start Date
+                                    </div>
+
+                                    <strong>
+                                        {{ project.start_date|date:"d M Y" }}
+                                    </strong>
+
+                                </div>
+
+                            </div>
+
+                        {% endif %}
+
+
+                        {% if project.expected_completion_date %}
+
+                            <div class="col-12 col-md-6">
+
+                                <div class="bg-light rounded p-3">
+
+                                    <div class="small text-muted">
+                                        Expected Completion
+                                    </div>
+
+                                    <strong>
+                                        {{ project.expected_completion_date|date:"d M Y" }}
+                                    </strong>
+
+                                </div>
+
+                            </div>
+
+                        {% endif %}
+
+                    </div>
+
+
+                    <a href="{% url 'energy:energy_projects' %}"
+                       class="btn btn-outline-secondary btn-sm">
+
+                        <i class="bi bi-arrow-left"></i>
+                        Back to Projects
+
+                    </a>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+{% endblock %}

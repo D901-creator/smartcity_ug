@@ -1,0 +1,229 @@
+{% extends "base.html" %}
+
+{% block title %}
+    Report Sanitation Problem | Smart City Uganda
+{% endblock %}
+
+{% block content %}
+
+<div class="container-fluid">
+
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <div>
+            <h2 class="fw-bold">
+                <i class="bi bi-trash3 text-success"></i>
+                Report Sanitation Problem
+            </h2>
+
+            <p class="text-muted mb-0">
+                Report sanitation, drainage, sewage or
+                waste-related problems in your community.
+            </p>
+        </div>
+
+        <a href="{% url 'water:home' %}"
+           class="btn btn-outline-secondary">
+            <i class="bi bi-arrow-left"></i>
+            Back
+        </a>
+    </div>
+
+
+    <div class="row justify-content-center">
+
+        <div class="col-lg-9 col-xl-8">
+
+            <div class="card border-0 shadow-sm">
+
+                <div class="card-header bg-success text-white">
+                    <h5 class="mb-0">
+                        <i class="bi bi-exclamation-circle"></i>
+                        Sanitation Problem Report
+                    </h5>
+                </div>
+
+                <div class="card-body p-4">
+
+                    <form method="POST"
+                          enctype="multipart/form-data">
+
+                        {% csrf_token %}
+
+                        {% if form.non_field_errors %}
+                            <div class="alert alert-danger">
+                                {{ form.non_field_errors }}
+                            </div>
+                        {% endif %}
+
+
+                        <div class="row g-3">
+
+                            <div class="col-md-6">
+                                <label class="form-label fw-semibold">
+                                    Your Name
+                                </label>
+
+                                {{ form.citizen_name }}
+
+                                {% for error in form.citizen_name.errors %}
+                                    <div class="text-danger small">
+                                        {{ error }}
+                                    </div>
+                                {% endfor %}
+                            </div>
+
+
+                            <div class="col-md-6">
+                                <label class="form-label fw-semibold">
+                                    Phone Number
+                                </label>
+
+                                {{ form.phone_number }}
+
+                                {% for error in form.phone_number.errors %}
+                                    <div class="text-danger small">
+                                        {{ error }}
+                                    </div>
+                                {% endfor %}
+                            </div>
+
+
+                            <div class="col-md-6">
+                                <label class="form-label fw-semibold">
+                                    Sanitation Problem
+                                </label>
+
+                                {{ form.problem_type }}
+
+                                {% for error in form.problem_type.errors %}
+                                    <div class="text-danger small">
+                                        {{ error }}
+                                    </div>
+                                {% endfor %}
+                            </div>
+
+
+                            <div class="col-md-6">
+                                <label class="form-label fw-semibold">
+                                    Urgency Level
+                                </label>
+
+                                {{ form.urgency }}
+
+                                {% for error in form.urgency.errors %}
+                                    <div class="text-danger small">
+                                        {{ error }}
+                                    </div>
+                                {% endfor %}
+                            </div>
+
+
+                            <div class="col-md-6">
+                                <label class="form-label fw-semibold">
+                                    District / City
+                                </label>
+
+                                {{ form.district }}
+
+                                {% for error in form.district.errors %}
+                                    <div class="text-danger small">
+                                        {{ error }}
+                                    </div>
+                                {% endfor %}
+                            </div>
+
+
+                            <div class="col-md-6">
+                                <label class="form-label fw-semibold">
+                                    Exact Location
+                                </label>
+
+                                {{ form.location }}
+
+                                {% for error in form.location.errors %}
+                                    <div class="text-danger small">
+                                        {{ error }}
+                                    </div>
+                                {% endfor %}
+                            </div>
+
+
+                            <div class="col-12">
+                                <label class="form-label fw-semibold">
+                                    Problem Description
+                                </label>
+
+                                {{ form.description }}
+
+                                {% for error in form.description.errors %}
+                                    <div class="text-danger small">
+                                        {{ error }}
+                                    </div>
+                                {% endfor %}
+                            </div>
+
+
+                            <div class="col-12">
+                                <label class="form-label fw-semibold">
+                                    Photo Evidence
+                                </label>
+
+                                {{ form.photo }}
+
+                                <div class="form-text">
+                                    You may upload a photo showing
+                                    the sanitation problem.
+                                </div>
+
+                                {% for error in form.photo.errors %}
+                                    <div class="text-danger small">
+                                        {{ error }}
+                                    </div>
+                                {% endfor %}
+                            </div>
+
+                        </div>
+
+
+                        <hr class="my-4">
+
+
+                        <div class="alert alert-light border">
+                            <i class="bi bi-info-circle text-success"></i>
+
+                            <strong>Important:</strong>
+
+                            Please provide accurate location
+                            information so the responsible
+                            department can identify the problem.
+                        </div>
+
+
+                        <div class="d-flex gap-2 justify-content-end">
+
+                            <a href="{% url 'water:home' %}"
+                               class="btn btn-outline-secondary">
+                                Cancel
+                            </a>
+
+                            <button type="submit"
+                                    class="btn btn-success">
+                                <i class="bi bi-send"></i>
+                                Submit Report
+                            </button>
+
+                        </div>
+
+                    </form>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+{% endblock %}
