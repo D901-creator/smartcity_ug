@@ -9,17 +9,17 @@ __pycache__/
 venv/
 env/
 
-# Django environment and secrets
+# Django secrets and environment files
 .env
 .env.*
 !.env.example
 
-# Local databases and database exports
+# Local databases and exports
 *.sqlite3
 sqlite_export.json
 data.json
 
-# Django generated files
+# Generated Django files
 staticfiles/
 media/
 
