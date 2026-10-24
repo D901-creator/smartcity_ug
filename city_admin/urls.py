@@ -6,6 +6,7 @@ from . import database_views
 from . import notification_views
 from . import portal_settings_views
 from . import security_audit_views
+from .map_views import district_issue_map
 from django.contrib.auth import views as auth_views
 from locations import views as location_views
 from .access import city_admin_required
@@ -106,7 +107,11 @@ path(
     map_views.district_issue_map,
     name="district_issue_map",
 ),
-
+path(
+    "district-issue-map/",
+    district_issue_map,
+    name="district_issue_map",
+),
 path(
     "notifications/",
     notification_views.notification_list,

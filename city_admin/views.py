@@ -1,4 +1,4 @@
-
+import json
 from functools import wraps
 from decimal import Decimal, InvalidOperation
 
@@ -623,14 +623,19 @@ def city_admin_analytics(request):
 # DISTRICT MAP MANAGEMENT
 # ============================================================
 
-@city_admin_required
-def district_map_generator(request):
-    """View and update map coordinates for a district."""
 
-    districts = District.objects.select_related("region").order_by(
-        "region__name",
-        "name",
-    )
+# ============================================================
+# DISTRICT MAP MANAGEMENT
+# ============================================================
+
+@city_admin_required
+@require_http_methods(["GET", "POST"])
+def district_map_generator(request):
+    """Manage district coordinates and show the Uganda map."""
+
+    districts = District.objects.select_related(
+        "region"
+    ).order_by("region__name", "name")
 
     district_id = (
         request.POST.get("district_id")
@@ -640,13 +645,13 @@ def district_map_generator(request):
     selected_district = None
 
     if district_id:
-        selected_district = District.objects.filter(
+        selected_district = districts.filter(
             pk=district_id
         ).first()
 
     if request.method == "POST":
         if not selected_district:
-            messages.error(request, "Select a valid district.")
+            messages.error(request, "Please select a valid district.")
         else:
             try:
                 latitude = Decimal(
@@ -656,11 +661,13 @@ def district_map_generator(request):
                     request.POST.get("longitude", "").strip()
                 )
 
+                # Approximate geographic limits of Uganda.
+                # These are rectangular bounds, not the exact border.
                 if (
                     not latitude.is_finite()
                     or not longitude.is_finite()
-                    or not Decimal("-90") <= latitude <= Decimal("90")
-                    or not Decimal("-180") <= longitude <= Decimal("180")
+                    or not Decimal("-1.6") <= latitude <= Decimal("4.3")
+                    or not Decimal("29.5") <= longitude <= Decimal("35.1")
                 ):
                     raise InvalidOperation
 
@@ -673,8 +680,7 @@ def district_map_generator(request):
 
                 messages.success(
                     request,
-                    "District map coordinates saved for "
-                    f"{selected_district.name}.",
+                    f"Coordinates saved for {selected_district.name}."
                 )
 
                 return redirect(
@@ -685,18 +691,43 @@ def district_map_generator(request):
             except (InvalidOperation, ValueError, TypeError):
                 messages.error(
                     request,
-                    "Enter valid numeric latitude and longitude coordinates.",
+                    "Coordinates must be within Uganda's approximate "
+                    "latitude and longitude range. Select a point on "
+                    "the Uganda map and try again."
                 )
+
+    # Only districts with saved coordinates receive overview markers.
+    district_markers = []
+
+    for district in districts:
+        if (
+            district.latitude is not None
+            and district.longitude is not None
+        ):
+            district_markers.append({
+                "id": district.pk,
+                "name": district.name,
+                "region": (
+                    district.region.name if district.region else ""
+                ),
+                "latitude": float(district.latitude),
+                "longitude": float(district.longitude),
+            })
+
+    context = {
+        "active_section": "district_map",
+        "districts": districts,
+        "selected_district": selected_district,
+        "district_markers_json": json.dumps(district_markers),
+        "uganda_center_latitude": 1.3733,
+        "uganda_center_longitude": 32.2903,
+    }
 
     return render(
         request,
         "city_admin/district_map.html",
-        {
-            "districts": districts,
-            "selected_district": selected_district,
-        },
+        context,
     )
-
 
 # ============================================================
 # DJANGO USER UPDATE AND DELETE

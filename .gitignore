@@ -1,36 +1,42 @@
-
 # Python
 __pycache__/
 *.py[cod]
-*.pyo
+*.log
 
 # Virtual environments
 .venv/
 venv/
 env/
 
-# Django secrets and environment files
+# Environment secrets
 .env
 .env.*
 !.env.example
 
-# Local databases and exports
-*.sqlite3
-sqlite_export.json
-data.json
+# Local database
+db.sqlite3
+db.sqlite3-journal
 
-# Generated Django files
-staticfiles/
+# User uploads and generated files
 media/
+staticfiles/
 
-# Logs and temporary files
-*.log
-*.tmp
+# Python tooling
 .pytest_cache/
 .coverage
+
+
+# Local database exports
+data.json
+sqlite_export.json
+*.sqlite3
+*.sqlite3-*
 
 # IDE and operating system files
 .vscode/
 .idea/
 .DS_Store
 Thumbs.db
+
+# Temporary files
+*.tmp

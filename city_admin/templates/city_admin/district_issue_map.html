@@ -3,249 +3,216 @@
 
 {% block content %}
 <div class="container-fluid py-4">
-
-    <div class="d-flex flex-wrap justify-content-between align-items-center mb-4">
+    <div class="d-flex flex-wrap justify-content-between align-items-center mb-3">
         <div>
-            <h2 class="mb-1">District Issue Maps</h2>
-            <p class="text-muted mb-0">
-                View recorded citizen reports and service requests by district.
+            <h2>Smart City Uganda Map</h2>
+            <p class="text-muted">
+                Explore districts and geographically located service issues.
             </p>
         </div>
+
+        <a href="{% url 'city_admin:district_issue_map' %}"
+           class="btn btn-outline-primary">
+            View All Uganda
+        </a>
     </div>
 
-    <div class="card border-0 shadow-sm mb-4">
-        <div class="card-body">
-            <form method="get" class="row g-3 align-items-end">
-                <div class="col-md-8">
-                    <label for="district" class="form-label">
-                        Select district
-                    </label>
+    <form method="get" class="mb-3">
+        <label for="district" class="form-label">
+            Select a district
+        </label>
 
-                    <select
-                        name="district"
-                        id="district"
-                        class="form-select"
-                        required
-                    >
-                        <option value="">Choose a district</option>
+        <div class="d-flex gap-2 flex-wrap">
+            <select name="district" id="district"
+                    class="form-select" style="max-width: 400px;">
+                <option value="">All Uganda</option>
 
-                        {% for district in districts %}
-                        <option
-                            value="{{ district.id }}"
-                            {% if selected_district and selected_district.id == district.id %}
-                                selected
-                            {% endif %}
-                        >
-                            {{ district.name }} — {{ district.region.name }}
-                        </option>
-                        {% endfor %}
-                    </select>
+                {% for district in districts %}
+                    <option value="{{ district.pk }}"
+                        {% if selected_district and selected_district.pk == district.pk %}
+                            selected
+                        {% endif %}>
+                        {{ district.name }}
+                        {% if district.region %} — {{ district.region.name }}{% endif %}
+                    </option>
+                {% endfor %}
+            </select>
+
+            <button type="submit" class="btn btn-primary">
+                Show on Map
+            </button>
+        </div>
+    </form>
+
+    <div class="row g-3 mb-3">
+        <div class="col-md-4">
+            <div class="card shadow-sm">
+                <div class="card-body">
+                    <small class="text-muted">Districts with coordinates</small>
+                    <h3>{{ district_count }}</h3>
                 </div>
+            </div>
+        </div>
 
-                <div class="col-md-4">
-                    <button type="submit" class="btn btn-success w-100">
-                        <i class="fas fa-map-marked-alt me-2"></i>
-                        Generate District Map
-                    </button>
+        <div class="col-md-4">
+            <div class="card shadow-sm">
+                <div class="card-body">
+                    <small class="text-muted">Located issues</small>
+                    <h3>{{ located_count }}</h3>
                 </div>
-            </form>
+            </div>
+        </div>
+
+        <div class="col-md-4">
+            <div class="card shadow-sm">
+                <div class="card-body">
+                    <small class="text-muted">Issues without coordinates</small>
+                    <h3>{{ unlocated_count }}</h3>
+                </div>
+            </div>
         </div>
     </div>
 
     {% if selected_district %}
-
-    <div class="row g-3 mb-4">
-        <div class="col-md-6">
-            <div class="card border-0 shadow-sm h-100">
-                <div class="card-body">
-                    <div class="text-muted">Issues mapped</div>
-                    <h3 class="mb-0">{{ located_count }}</h3>
-                </div>
-            </div>
-        </div>
-
-        <div class="col-md-6">
-            <div class="card border-0 shadow-sm h-100">
-                <div class="card-body">
-                    <div class="text-muted">Issues without coordinates</div>
-                    <h3 class="mb-0">{{ unlocated_count }}</h3>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <div class="card border-0 shadow-sm mb-4">
-        <div class="card-header bg-white py-3">
-            <h5 class="mb-0">
-                {{ selected_district.name }} District
-            </h5>
-        </div>
-
-        <div class="card-body">
-            <div
-                id="districtMap"
-                style="height: 520px; width: 100%; border-radius: 8px;"
-            ></div>
-
-            <p id="mapMessage" class="text-muted mt-3 mb-0"></p>
-        </div>
-    </div>
-
-    <div class="card border-0 shadow-sm">
-        <div class="card-header bg-white py-3">
-            <h5 class="mb-0">Mapped Issues</h5>
-        </div>
-
-        <div class="table-responsive">
-            <table class="table table-hover align-middle mb-0">
-                <thead class="table-light">
-                    <tr>
-                        <th>Reference</th>
-                        <th>Type</th>
-                        <th>Title</th>
-                        <th>Department</th>
-                        <th>Status</th>
-                        <th>Coordinates</th>
-                    </tr>
-                </thead>
-
-                <tbody id="issueTableBody">
-                    <tr>
-                        <td colspan="6" class="text-center text-muted py-4">
-                            Loading mapped issues...
-                        </td>
-                    </tr>
-                </tbody>
-            </table>
-        </div>
-    </div>
-
+        <h5 class="mb-3">
+            Issues in {{ selected_district.name }}
+        </h5>
+    {% else %}
+        <h5 class="mb-3">Uganda District Overview</h5>
     {% endif %}
+
+    <div id="uganda-map"
+         style="height: 620px; width: 100%; border-radius: 12px;
+                border: 1px solid #dee2e6; z-index: 1;">
+    </div>
+
+    <p class="text-muted small mt-2">
+        Map data © OpenStreetMap contributors.
+        Click a district or issue marker for details.
+    </p>
 </div>
 
-{% if selected_district %}
-{{ markers_json|json_script:"district-markers-data" }}
-{{ center_json|json_script:"district-center-data" }}
-
-<link
-    rel="stylesheet"
-    href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
-/>
+<link rel="stylesheet"
+      href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
 
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 
 <script>
-(function () {
-    "use strict";
-
-    const markers = JSON.parse(
-        document.getElementById("district-markers-data").textContent
-    );
-
+document.addEventListener("DOMContentLoaded", function () {
     const center = JSON.parse(
-        document.getElementById("district-center-data").textContent
+        '{{ center_json|escapejs }}'
     );
 
-    const mapElement = document.getElementById("districtMap");
-    const messageElement = document.getElementById("mapMessage");
-    const tableBody = document.getElementById("issueTableBody");
+    const districtMarkers = JSON.parse(
+        '{{ district_markers_json|escapejs }}'
+    );
 
-    // Do not invent a district center when coordinates are missing.
-    if (!center) {
-        mapElement.style.display = "none";
-        messageElement.textContent =
-            "Enter verified latitude and longitude for this district " +
-            "in the District Maps management page before displaying its map.";
-    } else {
-        const map = L.map("districtMap").setView(
-            [center.latitude, center.longitude],
-            10
-        );
+    const issueMarkers = JSON.parse(
+        '{{ markers_json|escapejs }}'
+    );
 
-        L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
-            maxZoom: 19,
-            attribution: "&copy; OpenStreetMap contributors"
-        }).addTo(map);
+    const map = L.map("uganda-map").setView(
+        [center.latitude, center.longitude],
+        {% if selected_district %}11{% else %}7{% endif %}
+    );
 
-        L.marker([center.latitude, center.longitude])
-            .addTo(map)
-            .bindPopup("District reference point");
+    L.tileLayer(
+    "https://server.arcgisonline.com/ArcGIS/rest/services/World_Street_Map/MapServer/tile/{z}/{y}/{x}",
+    {
+        attribution: "Tiles &copy; Esri and its contributors",
+        maxZoom: 19
+    }
+).addTo(map);
 
-        const bounds = [
-            [center.latitude, center.longitude]
-        ];
+    const districtLayer = L.layerGroup().addTo(map);
+    const issueLayer = L.layerGroup().addTo(map);
 
-        markers.forEach(function (item) {
-            const point = [item.latitude, item.longitude];
-
-            const marker = L.circleMarker(point, {
-                radius: 8,
-                color: item.type === "Citizen report" ? "#dc3545" : "#0d6efd",
-                fillOpacity: 0.8
-            }).addTo(map);
-
-            const popup = document.createElement("div");
-            const title = document.createElement("strong");
-            title.textContent = item.title;
-
-            const details = document.createElement("p");
-            details.textContent =
-                item.type + " | " + item.reference +
-                " | " + item.status;
-
-            popup.appendChild(title);
-            popup.appendChild(document.createElement("br"));
-            popup.appendChild(details);
-
-            marker.bindPopup(popup);
-            bounds.push(point);
-        });
-
-        if (markers.length > 0) {
-            map.fitBounds(bounds, { padding: [30, 30], maxZoom: 13 });
+    districtMarkers.forEach(function (district) {
+        if (
+            !Number.isFinite(district.latitude) ||
+            !Number.isFinite(district.longitude)
+        ) {
+            return;
         }
 
-        setTimeout(function () {
-            map.invalidateSize();
-        }, 150);
-    }
+        const marker = L.circleMarker(
+            [district.latitude, district.longitude],
+            {
+                radius: 6,
+                color: "#075985",
+                fillColor: "#38bdf8",
+                fillOpacity: 0.9,
+                weight: 2
+            }
+        );
 
-    tableBody.replaceChildren();
+        marker.bindPopup(
+            "<strong>" + escapeHtml(district.name) + "</strong>" +
+            "<br>" + escapeHtml(district.region || "Uganda") +
+            '<br><a href="' + district.url +
+            '">View district issues</a>'
+        );
 
-    if (markers.length === 0) {
-        const row = document.createElement("tr");
-        const cell = document.createElement("td");
-
-        cell.colSpan = 6;
-        cell.className = "text-center text-muted py-4";
-        cell.textContent =
-            "No issues with recorded coordinates were found for this district.";
-
-        row.appendChild(cell);
-        tableBody.appendChild(row);
-        return;
-    }
-
-    markers.forEach(function (item) {
-        const row = document.createElement("tr");
-
-        [
-            item.reference,
-            item.type,
-            item.title,
-            item.department,
-            item.status,
-            item.latitude + ", " + item.longitude
-        ].forEach(function (value) {
-            const cell = document.createElement("td");
-            cell.textContent = value;
-            row.appendChild(cell);
-        });
-
-        tableBody.appendChild(row);
+        marker.addTo(districtLayer);
     });
-})();
-</script>
-{% endif %}
 
+    issueMarkers.forEach(function (item) {
+        if (
+            !Number.isFinite(item.latitude) ||
+            !Number.isFinite(item.longitude)
+        ) {
+            return;
+        }
+
+        const marker = L.marker([
+            item.latitude,
+            item.longitude
+        ]);
+
+        marker.bindPopup(
+            "<strong>" + escapeHtml(item.title) + "</strong>" +
+            "<br><b>Type:</b> " + escapeHtml(item.type) +
+            "<br><b>Reference:</b> " + escapeHtml(item.reference) +
+            "<br><b>Status:</b> " + escapeHtml(item.status) +
+            "<br><b>Department:</b> " + escapeHtml(item.department) +
+            "<br><b>Location:</b> " + escapeHtml(item.location) +
+            "<br><b>Date:</b> " + escapeHtml(item.date)
+        );
+
+        marker.addTo(issueLayer);
+    });
+
+    {% if selected_district and selected_district.latitude is not None and selected_district.longitude is not None %}
+        map.setView(
+            [center.latitude, center.longitude],
+            11
+        );
+    {% else %}
+        if (districtMarkers.length > 0) {
+            const bounds = L.latLngBounds(
+                districtMarkers
+                    .filter(d => Number.isFinite(d.latitude) &&
+                                 Number.isFinite(d.longitude))
+                    .map(d => [d.latitude, d.longitude])
+            );
+
+            if (bounds.isValid()) {
+                map.fitBounds(bounds, { padding: [25, 25] });
+            }
+        }
+    {% endif %}
+
+    function escapeHtml(value) {
+        return String(value ?? "").replace(/[&<>"']/g, function (char) {
+            return {
+                "&": "&amp;",
+                "<": "&lt;",
+                ">": "&gt;",
+                '"': "&quot;",
+                "'": "&#39;"
+            }[char];
+        });
+    }
+});
+</script>
 {% endblock %}

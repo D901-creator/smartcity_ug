@@ -1,13 +1,8 @@
-
-"""
-Django settings for Smart City Uganda.
-Supports local development and Render deployment.
-"""
-
 import os
 from pathlib import Path
 
 import dj_database_url
+
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -16,7 +11,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # SECURITY AND ENVIRONMENT
 # --------------------------------------------------
 
-DEBUG = os.environ.get("DEBUG", "True").lower() == "true"
+DEBUG = os.environ.get("DEBUG", "True").strip().lower() == "true"
 
 SECRET_KEY = os.environ.get(
     "DJANGO_SECRET_KEY",
@@ -34,7 +29,9 @@ ALLOWED_HOSTS = [
 
 CSRF_TRUSTED_ORIGINS = [
     origin.strip()
-    for origin in os.environ.get("CSRF_TRUSTED_ORIGINS", "").split(",")
+    for origin in os.environ.get(
+        "CSRF_TRUSTED_ORIGINS", ""
+    ).split(",")
     if origin.strip()
 ]
 
@@ -147,28 +144,47 @@ WSGI_APPLICATION = "config.wsgi.application"
 # DATABASE
 # --------------------------------------------------
 
-if os.environ.get("DATABASE_URL"):
-    # Production database supplied by Render.
+DATABASE_URL = os.environ.get("DATABASE_URL", "").strip()
+
+if DATABASE_URL:
+    # Production database supplied by Render, or another
+    # environment explicitly configured with DATABASE_URL.
     DATABASES = {
-        "default": dj_database_url.config(
+        "default": dj_database_url.parse(
+            DATABASE_URL,
             conn_max_age=600,
             ssl_require=not DEBUG,
         )
     }
+
 else:
-    # Local development PostgreSQL.
+    # Local PostgreSQL development database.
+    # Supply LOCAL_DB_PASSWORD in your PowerShell session.
     DATABASES = {
         "default": {
             "ENGINE": "django.db.backends.postgresql",
-            "NAME": os.environ.get("LOCAL_DB_NAME", "smartcity_ug"),
-            "USER": os.environ.get("LOCAL_DB_USER", "postgres"),
-            "PASSWORD": os.environ.get("LOCAL_DB_PASSWORD", ""),
-            "HOST": os.environ.get("LOCAL_DB_HOST", "localhost"),
-            "PORT": os.environ.get("LOCAL_DB_PORT", "5432"),
+            "NAME": os.environ.get(
+                "LOCAL_DB_NAME", "smartcity_ug"
+            ),
+            "USER": os.environ.get(
+                "LOCAL_DB_USER", "postgres"
+            ),
+            "PASSWORD": os.environ.get(
+                "LOCAL_DB_PASSWORD",
+                os.environ.get("DB_PASSWORD", ""),
+            ),
+            "HOST": os.environ.get(
+                "LOCAL_DB_HOST", "127.0.0.1"
+            ),
+            "PORT": os.environ.get(
+                "LOCAL_DB_PORT", "5432"
+            ),
+            "CONN_MAX_AGE": 60,
         }
     }
 
-# Retain the original SQLite source database alias.
+# Optional secondary database for reading the original SQLite data.
+# This does NOT automatically migrate or copy SQLite records.
 DATABASES["sqlite_source"] = {
     "ENGINE": "django.db.backends.sqlite3",
     "NAME": BASE_DIR / "db.sqlite3",
@@ -222,6 +238,7 @@ AUTH_PASSWORD_VALIDATORS = [
 
 LANGUAGE_CODE = "en-us"
 TIME_ZONE = "UTC"
+
 USE_I18N = True
 USE_TZ = True
 
@@ -239,7 +256,9 @@ STATICFILES_DIRS = [
 
 STORAGES = {
     "default": {
-        "BACKEND": "django.core.files.storage.FileSystemStorage",
+        "BACKEND": (
+            "django.core.files.storage.FileSystemStorage"
+        ),
     },
     "staticfiles": {
         "BACKEND": (
@@ -256,13 +275,10 @@ MEDIA_ROOT = BASE_DIR / "media"
 # EMAIL
 # --------------------------------------------------
 
-MAILERS = {
-    "default": {
-        "BACKEND": (
-            "django.core.mail.backends.console.EmailBackend"
-        ),
-    },
-}
+# Emails are printed to the terminal during development.
+EMAIL_BACKEND = (
+    "django.core.mail.backends.console.EmailBackend"
+)
 
 
 # --------------------------------------------------

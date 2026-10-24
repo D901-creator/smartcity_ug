@@ -3,9 +3,11 @@
 
 {% block content %}
 <div class="container-fluid py-3">
-    <h2>District Map Management</h2>
+
+    <h2>Uganda District Map Management</h2>
     <p class="text-muted">
-        Select a district, save verified coordinates and preview its real map.
+        Select a district, click its approximate location on the map,
+        then save its coordinates.
     </p>
 
     {% for message in messages %}
@@ -29,6 +31,7 @@
                     required
                 >
                     <option value="">Choose a district</option>
+
                     {% for district in districts %}
                         <option
                             value="{{ district.pk }}"
@@ -36,12 +39,16 @@
                                 selected
                             {% endif %}
                         >
-                            {{ district.name }} — {{ district.region.name }}
+                            {{ district.name }}
+                            {% if district.region %}
+                                — {{ district.region.name }}
+                            {% endif %}
                         </option>
                     {% endfor %}
                 </select>
+
                 <noscript>
-                    <button class="btn btn-primary mt-3" type="submit">
+                    <button type="submit" class="btn btn-primary mt-2">
                         Load District
                     </button>
                 </noscript>
@@ -49,33 +56,60 @@
         </div>
     </div>
 
+    <div class="card shadow-sm mb-4">
+        <div class="card-body">
+            <h4>General Map of Uganda</h4>
+
+            <p class="text-muted">
+                {% if selected_district %}
+                    Click the map to place the marker for
+                    {{ selected_district.name }}.
+                {% else %}
+                    Select a district first to enable coordinate selection.
+                {% endif %}
+            </p>
+
+            <div id="district-map"
+                 style="height: 550px; width: 100%;
+                        border-radius: 10px; z-index: 1;">
+            </div>
+
+            <small class="text-muted d-block mt-2">
+                Map tiles © OpenStreetMap contributors.
+                District markers are approximate locations, not boundaries.
+            </small>
+        </div>
+    </div>
+
     {% if selected_district %}
         <div class="card shadow-sm mb-4">
             <div class="card-body">
+
                 <h4>{{ selected_district.name }} District</h4>
 
-                <form method="post">
+                <form method="post" id="coordinates-form">
                     {% csrf_token %}
-                    <input
-                        type="hidden"
-                        name="district_id"
-                        value="{{ selected_district.pk }}"
-                    >
+
+                    <input type="hidden"
+                           name="district_id"
+                           value="{{ selected_district.pk }}">
 
                     <div class="row g-3">
                         <div class="col-md-6">
                             <label for="latitude" class="form-label">
                                 Latitude
                             </label>
+
                             <input
                                 class="form-control"
                                 type="number"
                                 step="any"
-                                min="-90"
-                                max="90"
+                                min="-1.6"
+                                max="4.3"
                                 id="latitude"
                                 name="latitude"
                                 value="{{ selected_district.latitude|default_if_none:'' }}"
+                                placeholder="Click the map to select"
                                 required
                             >
                         </div>
@@ -84,81 +118,210 @@
                             <label for="longitude" class="form-label">
                                 Longitude
                             </label>
+
                             <input
                                 class="form-control"
                                 type="number"
                                 step="any"
-                                min="-180"
-                                max="180"
+                                min="29.5"
+                                max="35.1"
                                 id="longitude"
                                 name="longitude"
                                 value="{{ selected_district.longitude|default_if_none:'' }}"
+                                placeholder="Click the map to select"
                                 required
                             >
                         </div>
                     </div>
 
-                    <button type="submit" class="btn btn-success mt-3">
-                        Save Coordinates &amp; Generate Map
+                    <button type="button"
+                            id="locate-marker"
+                            class="btn btn-outline-primary mt-3">
+                        Show Entered Coordinates
+                    </button>
+
+                    <button type="submit"
+                            class="btn btn-success mt-3">
+                        Save District Coordinates
                     </button>
                 </form>
+
             </div>
         </div>
-
-        {% if selected_district.latitude != None and selected_district.longitude != None %}
-            <div class="card shadow-sm">
-                <div class="card-body">
-                    <h4>Interactive District Map</h4>
-                    <p class="text-muted">
-                        {{ selected_district.name }} — OpenStreetMap
-                    </p>
-                    <div id="district-map"
-                         style="height: 500px; width: 100%; border-radius: 10px;">
-                    </div>
-                    <small class="text-muted">
-                        Map tiles © OpenStreetMap contributors.
-                    </small>
-                </div>
-            </div>
-        {% else %}
-            <div class="alert alert-warning">
-                Save verified coordinates to display this district on the map.
-            </div>
-        {% endif %}
     {% endif %}
+
 </div>
 
-{% if selected_district and selected_district.latitude != None and selected_district.longitude != None %}
 <link
     rel="stylesheet"
     href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
 >
+
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 
-<script>
-    const districtLatitude = Number("{{ selected_district.latitude }}");
-    const districtLongitude = Number("{{ selected_district.longitude }}");
+{{ district_markers_json|json_script:"district-markers-data" }}
 
-    const districtMap = L.map("district-map").setView(
-        [districtLatitude, districtLongitude],
-        10
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+    const ugandaCenter = [
+        {{ uganda_center_latitude }},
+        {{ uganda_center_longitude }}
+    ];
+
+    const map = L.map("district-map").setView(
+        ugandaCenter, 7
     );
 
-    L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
-        maxZoom: 19,
-        attribution: "&copy; OpenStreetMap contributors"
-    }).addTo(districtMap);
 
-    const popup = document.createElement("div");
-    const heading = document.createElement("strong");
-    heading.textContent = "{{ selected_district.name|escapejs }} District";
+L.tileLayer(
+    "https://server.arcgisonline.com/ArcGIS/rest/services/World_Street_Map/MapServer/tile/{z}/{y}/{x}",
+    {
+        attribution:
+            "Tiles &copy; Esri and its contributors",
+        maxZoom: 19
+    }
+).addTo(map);
 
-    popup.appendChild(heading);
 
-    L.marker([districtLatitude, districtLongitude])
-        .addTo(districtMap)
-        .bindPopup(popup)
-        .openPopup();
+    const savedDistricts = JSON.parse(
+    JSON.parse(
+        document.getElementById("district-markers-data").textContent
+    )
+);
+
+    const selectedDistrictId = {% if selected_district %}{{ selected_district.pk }}{% else %}null{% endif %};
+
+    const selectedLatitude = {% if selected_district and selected_district.latitude != None %}{{ selected_district.latitude }}{% else %}null{% endif %};
+
+    const selectedLongitude = {% if selected_district and selected_district.longitude != None %}{{ selected_district.longitude }}{% else %}null{% endif %};
+
+    // Display saved locations for all districts.
+    savedDistricts.forEach(function (district) {
+        const marker = L.circleMarker(
+            [district.latitude, district.longitude],
+            {
+                radius: district.id === selectedDistrictId ? 9 : 5,
+                color: district.id === selectedDistrictId ? "#166534" : "#075985",
+                fillColor: district.id === selectedDistrictId ? "#22c55e" : "#38bdf8",
+                fillOpacity: 0.9,
+                weight: 2
+            }
+        ).addTo(map);
+
+        const popup = document.createElement("div");
+        const title = document.createElement("strong");
+
+        title.textContent = district.name + " District";
+        popup.appendChild(title);
+
+        const region = document.createElement("div");
+        region.textContent = district.region;
+        popup.appendChild(region);
+
+        marker.bindPopup(popup);
+
+        if (district.id === selectedDistrictId) {
+            marker.bindTooltip(district.name, {
+                permanent: true,
+                direction: "top"
+            });
+        }
+    });
+
+    // Uganda's approximate rectangular geographic bounds.
+    const ugandaBounds = L.latLngBounds(
+        [-1.6, 29.5],
+        [4.3, 35.1]
+    );
+
+    {% if selected_district %}
+    map.fitBounds(ugandaBounds, { padding: [10, 10] });
+
+    const latitudeInput = document.getElementById("latitude");
+    const longitudeInput = document.getElementById("longitude");
+
+    let selectedMarker = null;
+const selectedDistrictName = "Hoima";
+
+   
+function updateCoordinates(lat, lng) {
+    latitudeInput.value = lat.toFixed(6);
+    longitudeInput.value = lng.toFixed(6);
+
+    if (!selectedMarker) {
+        selectedMarker = L.marker([lat, lng], {
+            draggable: true
+        }).addTo(map);
+
+        // Create the popup safely.
+        const popup = document.createElement("div");
+        const heading = document.createElement("strong");
+
+        heading.textContent = selectedDistrictName + " District";
+        popup.appendChild(heading);
+
+        selectedMarker.bindPopup(popup);
+
+        // Update the coordinate fields when the marker is dragged.
+        selectedMarker.on("dragend", function (event) {
+            const position = event.target.getLatLng();
+
+            latitudeInput.value = position.lat.toFixed(6);
+            longitudeInput.value = position.lng.toFixed(6);
+        });
+    } else {
+        selectedMarker.setLatLng([lat, lng]);
+    }
+}
+
+
+    // Show the selected district's saved coordinates if present.
+    if (selectedLatitude !== null && selectedLongitude !== null) {
+        updateCoordinates(selectedLatitude, selectedLongitude);
+       map.setView([1.3733, 32.2903], 7);
+    }
+
+    // Clicking on the map chooses the coordinates for this district.
+    map.on("click", function (event) {
+        const lat = event.latlng.lat;
+        const lng = event.latlng.lng;
+
+        if (
+            lat < -1.6 || lat > 4.3 ||
+            lng < 29.5 || lng > 35.1
+        ) {
+            alert("Please select a point within Uganda's approximate map area.");
+            return;
+        }
+
+        updateCoordinates(lat, lng);
+    });
+
+    document.getElementById("locate-marker").addEventListener(
+        "click", function () {
+            const lat = Number(latitudeInput.value);
+            const lng = Number(longitudeInput.value);
+
+            if (
+                latitudeInput.value === "" ||
+                longitudeInput.value === "" ||
+                !Number.isFinite(lat) ||
+                !Number.isFinite(lng) ||
+                lat < -1.6 || lat > 4.3 ||
+                lng < 29.5 || lng > 35.1
+            ) {
+                alert("Enter valid coordinates within Uganda's approximate bounds.");
+                return;
+            }
+
+            updateCoordinates(lat, lng);
+            map.setView([lat, lng], 10);
+        }
+    );
+    {% else %}
+    map.fitBounds(ugandaBounds, { padding: [10, 10] });
+    {% endif %}
+});
 </script>
-{% endif %}
+
 {% endblock %}
